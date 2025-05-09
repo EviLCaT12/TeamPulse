@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{00F83C9F-BD30-480A-8C25-E637D5350555}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{633EA5FC-AC74-4734-87B9-1C3BCBB03B41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamPulse.SharedKernel", "src\Shared\TeamPulse.SharedKernel\TeamPulse.SharedKernel.csproj", "{7E0B6FA4-E65D-426F-9D86-2874B251974B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E0B6FA4-E65D-426F-9D86-2874B251974B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0B6FA4-E65D-426F-9D86-2874B251974B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0B6FA4-E65D-426F-9D86-2874B251974B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0B6FA4-E65D-426F-9D86-2874B251974B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{633EA5FC-AC74-4734-87B9-1C3BCBB03B41} = {00F83C9F-BD30-480A-8C25-E637D5350555}
+		{7E0B6FA4-E65D-426F-9D86-2874B251974B} = {633EA5FC-AC74-4734-87B9-1C3BCBB03B41}
+	EndGlobalSection
+EndGlobal
