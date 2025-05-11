@@ -9,21 +9,21 @@ public class Employee : Entity<EmployeeId>
     //efcore
     private Employee() {}
 
-    private Employee(EmployeeId id, Guid teamId)
+    private Employee(EmployeeId id)
     {
         Id = id;
-        TeamId = teamId;
     }
     
     public EmployeeId Id { get; private set; }
     
-    public Guid TeamId { get; private set; }
+    public Team Team { get; private set; }
+    public Team ManagedTeam { get; private set; }
+    public Department Department { get; private set; }
+    
+    public Guid DepartmentId { get; private set; }
 
     public static Result<Employee, Error> Create(EmployeeId id, Guid teamId)
     {
-        if (teamId == Guid.Empty)
-            return Errors.General.ValueIsRequired("Cannot create an employee without a team");
-        
-        return new Employee(id, teamId);
+        return new Employee(id);
     }
 }

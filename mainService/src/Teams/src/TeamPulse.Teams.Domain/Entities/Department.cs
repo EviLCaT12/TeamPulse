@@ -13,8 +13,8 @@ public class Department : Entity<DepartmentId>
     private Department(
         DepartmentId id,
         Name name,
-        IEnumerable<Guid> teams,
-        Guid headOfDepartment)
+        IEnumerable<Team> teams,
+        Employee headOfDepartment)
     {
         Id = id;
         Name = name;
@@ -26,23 +26,20 @@ public class Department : Entity<DepartmentId>
     
     public Name Name { get; private set; }
 
-    private List<Guid> _teams = [];
+    private List<Team> _teams = [];
 
-    public IReadOnlyList<Guid> Teams => _teams;
+    public IReadOnlyList<Team> Teams => _teams;
     
-    public Guid HeadOfDepartment { get; private set; }
+    public Employee HeadOfDepartment { get; private set; }
 
     public static Result<Department, Error> Create(
         DepartmentId id,
         Name name,
-        List<Guid> teams,
-        Guid headOfDepartment)
+        List<Team> teams,
+        Employee headOfDepartment)
     {
         if (teams.Count != 0)
             return Errors.General.ValueIsRequired("Cannot create a department without any teams");
-        
-        if (headOfDepartment == Guid.Empty)
-            return Errors.General.ValueIsRequired("Cannot create a department without a head of department");
         
         return new Department(id, name, teams, headOfDepartment);
     }
