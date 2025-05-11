@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TeamPulse.SharedKernel\TeamPulse.SharedKernel.csproj" />
+    </ItemGroup>
+
 </Project>
