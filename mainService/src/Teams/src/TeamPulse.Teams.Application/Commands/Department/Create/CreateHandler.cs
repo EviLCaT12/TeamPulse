@@ -6,15 +6,16 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
+using TeamPulse.Teams.Application.DatabaseAbstraction;
 using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Department.Create;
 
-public class CreateHandler : ICommandHandler<Guid, CreateCommand>
+public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
 {
     private readonly ILogger<CreateHandler> _logger;
-    private readonly IValidator<CreateCommand> _validator;
+    private readonly IValidator<CreateDepartmentCommand> _validator;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ITeamRepository _teamRepository;
@@ -22,7 +23,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 
     public CreateHandler(
         ILogger<CreateHandler> logger,
-        IValidator<CreateCommand> validator,
+        IValidator<CreateDepartmentCommand> validator,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork,
         IDepartmentRepository departmentRepository,
         ITeamRepository teamRepository,
@@ -36,20 +37,20 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<Result<Guid, ErrorList>> HandleAsync(CreateCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid, ErrorList>> HandleAsync(CreateDepartmentCommand departmentCommand, CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(departmentCommand, cancellationToken);
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
 
         //Тут можно сразу брать value, так как команда уже прошла валидацию
         var departmentId = DepartmentId.CreateNewId();
 
-        var name = Name.Create(command.Name).Value;
+        var name = Name.Create(departmentCommand.Name).Value;
 
-        var teams = command.Teams?.ToList() ?? [];
+        var teams = departmentCommand.Teams?.ToList() ?? [];
         List<Team> departmentTeams = [];
         if (teams.Count != 0)
         {
@@ -67,10 +68,10 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
         }
 
         Employee? employee = null;
-        if (command.HeadOfDepartment is not null)
+        if (departmentCommand.HeadOfDepartment is not null)
         {
             var headOfDepartment = await _employeeRepository
-                .GetEmployeeByIdAsync(command.HeadOfDepartment, cancellationToken);
+                .GetEmployeeByIdAsync(departmentCommand.HeadOfDepartment, cancellationToken);
             if (headOfDepartment is not null)
             {
                 if (headOfDepartment.Department is not null)
@@ -82,7 +83,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
             }
             else
             {
-                _logger.LogWarning($"Employee with id {command.HeadOfDepartment} was not found");
+                _logger.LogWarning($"Employee with id {departmentCommand.HeadOfDepartment} was not found");
             }
         }
 

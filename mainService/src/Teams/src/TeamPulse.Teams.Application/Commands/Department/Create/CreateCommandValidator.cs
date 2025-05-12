@@ -5,7 +5,7 @@ using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Department.Create;
 
-public class CreateCommandValidator : AbstractValidator<CreateCommand>
+public class CreateCommandValidator : AbstractValidator<CreateDepartmentCommand>
 {
     public CreateCommandValidator()
     {

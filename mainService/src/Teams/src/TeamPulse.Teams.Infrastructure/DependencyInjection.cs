@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Constants;
 using TeamPulse.Teams.Application;
+using TeamPulse.Teams.Application.DatabaseAbstraction;
 using TeamPulse.Teams.Infrastructure.DbContexts;
 using TeamPulse.Teams.Infrastructure.Repositories;
 

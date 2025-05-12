@@ -1,6 +1,8 @@
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using TeamPulse.SharedKernel.Constants;
+using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +21,20 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddSerilog();
 builder.Services.AddOpenApi();
 
-builder.Services.AddTeamInfrastructure(builder.Configuration);
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "TeamPulse api",
+        Description = "Application for management it teams",
+    }));
+
+builder.Services
+    .AddTeamApplication()
+    .AddTeamInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -27,10 +42,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
-
+app.MapControllers();
 
 app.Run();
