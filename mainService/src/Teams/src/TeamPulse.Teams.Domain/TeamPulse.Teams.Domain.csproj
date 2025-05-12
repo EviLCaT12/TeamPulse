@@ -7,8 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5"/>
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.SharedKernel\TeamPulse.SharedKernel.csproj" />
     </ItemGroup>
-    
 
 </Project>
