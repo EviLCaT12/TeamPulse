@@ -10,15 +10,15 @@ public class Department : Entity<DepartmentId>
     //efcore
     private Department() {}
 
-    private Department(
+    public Department(
         DepartmentId id,
         Name name,
-        IEnumerable<Team> teams,
-        Employee headOfDepartment)
+        IEnumerable<Team>? teams,
+        Employee? headOfDepartment)
     {
         Id = id;
         Name = name;
-        _teams = teams.ToList();
+        _teams = teams?.ToList() ?? [];
         HeadOfDepartment = headOfDepartment;
     }
 
@@ -30,17 +30,10 @@ public class Department : Entity<DepartmentId>
 
     public IReadOnlyList<Team> Teams => _teams;
     
-    public Employee HeadOfDepartment { get; private set; }
+    public Employee? HeadOfDepartment { get; private set; }
 
-    public static Result<Department, Error> Create(
-        DepartmentId id,
-        Name name,
-        List<Team> teams,
-        Employee headOfDepartment)
+    public void AddTeams(IEnumerable<Team> teams)
     {
-        if (teams.Count != 0)
-            return Errors.General.ValueIsRequired("Cannot create a department without any teams");
-        
-        return new Department(id, name, teams, headOfDepartment);
+        _teams.AddRange(teams);
     }
 }

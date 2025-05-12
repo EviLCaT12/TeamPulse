@@ -19,4 +19,4 @@ public static class CheckValueObjectValidator
             context.AddFailure(result.Error.Serialize());
         });
     }
-}
+}   

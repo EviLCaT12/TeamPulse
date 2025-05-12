@@ -2,14 +2,15 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TeamPulse.Core.Abstractions;
+using TeamPulse.Teams.Infrastructure.DbContexts;
 
 namespace TeamPulse.Teams.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly DbContext _context;
+    private readonly WriteDbContext _context;
 
-    public UnitOfWork(DbContext context)
+    public UnitOfWork(WriteDbContext context)
     {
         _context = context;
     }
