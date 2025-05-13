@@ -5,6 +5,7 @@ using TeamPulse.SharedKernel.Constants;
 using TeamPulse.Team.Presentation;
 using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Infrastructure;
+using TeamPulse.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseExceptionMiddleware();
 
 app.UseSerilogRequestLogging();
 app.MapControllers();

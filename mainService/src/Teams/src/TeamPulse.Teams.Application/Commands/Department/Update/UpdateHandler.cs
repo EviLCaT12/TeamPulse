@@ -52,7 +52,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-        
+
         /*
          * Если прислали такие же значения, значит ничего не меняем
          * Если null, то кидаем ошибку
@@ -76,12 +76,13 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 newDepartmentTeams.Add(departmentTeam);
             }
         }
+
         if (department.Teams.SequenceEqual(newDepartmentTeams) == false)
         {
             department.UpdateTeams(newDepartmentTeams);
         }
 
-        
+
         Employee? employee = null;
         if (command.NewHeadOfDepartment is not null)
         {
@@ -111,9 +112,9 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         {
             department.UpdateHeadOfDepartment(employee);
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         transaction.Commit();
 
         return departmentId.Value;

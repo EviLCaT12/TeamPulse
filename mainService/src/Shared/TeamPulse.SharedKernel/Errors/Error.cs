@@ -54,7 +54,8 @@ public class Error
     {
         Validation,
         NotFound,
-        Failure
+        Failure,
+        Conflict
     }
     
 }

@@ -37,7 +37,8 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<Result<Guid, ErrorList>> HandleAsync(CreateDepartmentCommand departmentCommand, CancellationToken cancellationToken)
+    public async Task<Result<Guid, ErrorList>> HandleAsync(CreateDepartmentCommand departmentCommand,
+        CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
@@ -94,13 +95,13 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             name,
             departmentTeams,
             employee);
-        
+
         await _departmentRepository.AddDepartmentAsync(department, cancellationToken);
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         transaction.Commit();
-        
+
         return department.Id.Value;
     }
 }
