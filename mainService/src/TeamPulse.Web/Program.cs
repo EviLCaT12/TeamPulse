@@ -46,7 +46,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
 app.UseSerilogRequestLogging();
 app.MapControllers();
 
 app.Run();
+
+namespace TeamPulse.Web
+{
+    public partial class Program;
+}
