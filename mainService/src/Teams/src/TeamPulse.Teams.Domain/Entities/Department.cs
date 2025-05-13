@@ -36,4 +36,20 @@ public class Department : Entity<DepartmentId>
     {
         _teams.AddRange(teams);
     }
+
+    public void UpdateName(Name newName)
+    {
+        Name = newName;
+    }
+
+    public void UpdateTeams(IEnumerable<Team> teams)
+    {
+        _teams.Clear();
+        _teams.AddRange(teams);
+    }
+
+    public void UpdateHeadOfDepartment(Employee newHeadOfDepartment)
+    {
+        HeadOfDepartment = newHeadOfDepartment;
+    }
 }

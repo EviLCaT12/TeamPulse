@@ -56,10 +56,11 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
         {
             foreach (var team in teams)
             {
-                var departmentTeam = await _teamRepository.GetTeamIdAsync(team, cancellationToken);
+                var teamId = TeamId.Create(team).Value;
+                var departmentTeam = await _teamRepository.GetTeamIdAsync(teamId, cancellationToken);
                 if (departmentTeam is null)
                 {
-                    _logger.LogWarning($"Team with id {team} was not found");
+                    _logger.LogWarning($"Team with id {teamId.Value} was not found");
                     continue;
                 }
 
@@ -70,20 +71,21 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
         Employee? employee = null;
         if (departmentCommand.HeadOfDepartment is not null)
         {
+            var employeeId = EmployeeId.Create(departmentCommand.HeadOfDepartment!.Value).Value;
             var headOfDepartment = await _employeeRepository
-                .GetEmployeeByIdAsync(departmentCommand.HeadOfDepartment, cancellationToken);
+                .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
                 if (headOfDepartment.Department is not null)
                 {
-                    _logger.LogWarning($"Employee with id {headOfDepartment.Id} is already head of department");
+                    _logger.LogWarning($"Employee with id {employeeId.Value} is already head of department");
                 }
 
                 employee = headOfDepartment;
             }
             else
             {
-                _logger.LogWarning($"Employee with id {departmentCommand.HeadOfDepartment} was not found");
+                _logger.LogWarning($"Employee with id {employeeId.Value} was not found");
             }
         }
 

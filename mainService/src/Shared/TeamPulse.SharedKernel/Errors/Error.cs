@@ -44,6 +44,11 @@ public class Error
 
         return new Error(parts[0], parts[1], errorType);
     }
+
+    public ErrorList ToErrorList()
+    {
+        return new ErrorList([this]);
+    }
     
     public enum ErrorType
     {

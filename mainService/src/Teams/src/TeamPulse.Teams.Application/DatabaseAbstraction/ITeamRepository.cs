@@ -1,8 +1,9 @@
 using TeamPulse.Teams.Domain.Entities;
+using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.DatabaseAbstraction;
 
 public interface ITeamRepository
 {
-    Task<Team?> GetTeamIdAsync(Guid teamId, CancellationToken cancellationToken);
+    Task<Team?> GetTeamIdAsync(TeamId teamId, CancellationToken cancellationToken);
 }

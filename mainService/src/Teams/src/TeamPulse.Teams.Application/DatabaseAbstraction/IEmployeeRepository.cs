@@ -1,8 +1,9 @@
 using TeamPulse.Teams.Domain.Entities;
+using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.DatabaseAbstraction;
 
 public interface IEmployeeRepository
 {
-    Task<Employee?> GetEmployeeByIdAsync(Guid? id, CancellationToken cancellationToken);
+    Task<Employee?> GetEmployeeByIdAsync(EmployeeId? id, CancellationToken cancellationToken);
 }
