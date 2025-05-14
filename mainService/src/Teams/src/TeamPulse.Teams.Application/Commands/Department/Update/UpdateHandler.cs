@@ -83,7 +83,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         }
 
 
-        Employee? employee = null;
+        Domain.Entities.Employee? employee = null;
         if (command.NewHeadOfDepartment is not null)
         {
             var employeeId = EmployeeId.Create(command.NewHeadOfDepartment!.Value).Value;
@@ -91,7 +91,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.Department is not null)
+                if (headOfDepartment.ManagedDepartment is not null)
                 {
                     var errorMessage = $"Employee with id {employeeId.Value} is already head of department";
                     _logger.LogError(errorMessage);

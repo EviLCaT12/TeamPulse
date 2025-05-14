@@ -53,7 +53,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateTeamCommand>
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
-        List<Employee> employees = [];
+        List<Domain.Entities.Employee> employees = [];
         var employeeIds = teamCommand.EmployeeIds ?? [];
         foreach (var employeeId in employeeIds)
         {
@@ -68,7 +68,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateTeamCommand>
             employees.Add(employee);
         }
         
-        Employee? headOfTeam = null;
+        Domain.Entities.Employee? headOfTeam = null;
         if (teamCommand.HeadOfTeamId is not null)
         {
             var employeeId = EmployeeId.Create(teamCommand.HeadOfTeamId!.Value).Value;

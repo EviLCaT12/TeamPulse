@@ -18,4 +18,9 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return await _writeDbContext.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
+
+    public async Task AddEmployeeAsync(Employee employee, CancellationToken cancellationToken)
+    {
+        await _writeDbContext.Employees.AddAsync(employee, cancellationToken);
+    }
 }

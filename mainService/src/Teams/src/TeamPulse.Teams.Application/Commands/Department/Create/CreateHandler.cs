@@ -69,7 +69,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             }
         }
 
-        Employee? employee = null;
+        Domain.Entities.Employee? employee = null;
         if (departmentCommand.HeadOfDepartment is not null)
         {
             var employeeId = EmployeeId.Create(departmentCommand.HeadOfDepartment!.Value).Value;
@@ -77,7 +77,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.Department is not null)
+                if (headOfDepartment.ManagedDepartment is not null)
                 {
                     _logger.LogWarning($"Employee with id {employeeId.Value} is already head of department");
                 }
