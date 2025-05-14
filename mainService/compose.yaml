@@ -19,6 +19,7 @@
     environment:
       - ACCEPT_EULA=Y
     ports:
+      - "80:80"
       - "5341:5341"
   
 

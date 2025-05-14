@@ -3,6 +3,7 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Department.Create;
+using TeamPulse.Teams.Application.Commands.Department.Delete;
 using TeamPulse.Teams.Application.Commands.Department.Update;
 using TeamPulse.Teams.Contract;
 using TeamPulse.Teams.Contract.Requests.Department;
@@ -48,5 +49,20 @@ public class DepartmentController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(result.Value);
+    }
+
+    [HttpDelete("{departmentId:guid}")]
+    public async Task<ActionResult> DeleteDepartment(
+        [FromRoute] Guid departmentId,
+        [FromServices] ICommandHandler<DeleteCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteCommand(departmentId);
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
     }
 }

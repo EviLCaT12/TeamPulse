@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Debug()
-    .WriteTo.Seq(builder.Configuration.GetConnectionString(LoggerConstants.LOG_SERVER)
-                ?? throw new ArgumentNullException($"Unable to find a connection string."))
+    .WriteTo.Seq("http://localhost:5341")
     .Enrich.WithEnvironmentName()
     .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning)
@@ -48,8 +47,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.UseExceptionMiddleware();
 

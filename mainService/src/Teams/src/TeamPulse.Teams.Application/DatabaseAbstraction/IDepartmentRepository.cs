@@ -8,4 +8,6 @@ public interface IDepartmentRepository
     Task AddDepartmentAsync(Department department, CancellationToken cancellationToken);
 
     Task<Department?> GetDepartmentByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken);
+    
+    void DeleteDepartment(Department department);
 }

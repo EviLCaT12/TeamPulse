@@ -24,4 +24,9 @@ public class DepartmentRepository : IDepartmentRepository
     {
         return await _context.Departments.FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
     }
+
+    public void DeleteDepartment(Department department)
+    {
+        _context.Departments.Remove(department);
+    }
 }
