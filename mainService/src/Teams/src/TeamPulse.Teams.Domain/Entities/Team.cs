@@ -37,5 +37,20 @@ public class Team : Entity<TeamId>
     public Name Name { get; private set; }
 
     public Employee? HeadOfTeam { get; private set; }
-    
+
+    internal void UpdateName(Name newName)
+    {
+        Name = newName;
+    }
+
+    internal void UpdateEmployees(IEnumerable<Employee> newEmployees)
+    {
+        _employees.Clear();
+        _employees.AddRange(newEmployees);
+    }
+
+    internal void UpdateHeadOfTeam(Employee newHeadOfTeam)
+    {
+        HeadOfTeam = newHeadOfTeam;
+    }
 }

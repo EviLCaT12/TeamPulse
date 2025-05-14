@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
+using TeamPulse.SharedKernel.SharedVO;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
 using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
@@ -52,12 +53,18 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-
+        
         /*
          * Если прислали такие же значения, значит ничего не меняем
          * Если null, то кидаем ошибку
          * Если новое, то сохраняем
          */
+        if (command.NewName is not null && department.Name.Value != command.NewName)
+        {
+            var newName = Name.Create(command.NewName).Value;
+            department.UpdateName(newName);
+        }
+        
         var teams = command.NewTeams?.ToList() ?? [];
         List<Domain.Entities.Team> newDepartmentTeams = [];
         if (teams.Count != 0)

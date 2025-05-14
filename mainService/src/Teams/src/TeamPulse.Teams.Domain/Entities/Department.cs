@@ -8,7 +8,9 @@ namespace TeamPulse.Teams.Domain.Entities;
 public class Department : Entity<DepartmentId>
 {
     //efcore
-    private Department() {}
+    private Department()
+    {
+    }
 
     public Department(
         DepartmentId id,
@@ -23,18 +25,23 @@ public class Department : Entity<DepartmentId>
     }
 
     public DepartmentId Id { get; private set; }
-    
+
     public Name Name { get; private set; }
 
     private List<Team> _teams = [];
 
     public IReadOnlyList<Team> Teams => _teams;
-    
+
     public Employee? HeadOfDepartment { get; private set; }
 
     public void AddTeams(IEnumerable<Team> teams)
     {
         _teams.AddRange(teams);
+    }
+
+    public void RemoveTeam(Team team)
+    {
+        _teams.Remove(team);
     }
 
     public void UpdateName(Name newName)
@@ -52,4 +59,38 @@ public class Department : Entity<DepartmentId>
     {
         HeadOfDepartment = newHeadOfDepartment;
     }
+
+    public UnitResult<Error> UpdateTeamName(TeamId teamId, Name newName)
+    {
+        var team = _teams.FirstOrDefault(t => t.Id == teamId);
+        if (team is null)
+            return Errors.General
+                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
+        
+        team.UpdateName(newName);
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> UpdateTeamEmployees(TeamId teamId, IEnumerable<Employee> newEmployees)
+    {
+        var team = _teams.FirstOrDefault(t => t.Id == teamId);
+        if (team is null)
+            return Errors.General
+                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
+        
+        team.UpdateEmployees(newEmployees);
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> UpdateHeadOfTeam(TeamId teamId, Employee employee)
+    {
+        var team = _teams.FirstOrDefault(t => t.Id == teamId);
+        if (team is null)
+            return Errors.General
+                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
+
+        team.UpdateHeadOfTeam(employee);
+        return UnitResult.Success<Error>();
+    }
+    
 }

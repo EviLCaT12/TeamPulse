@@ -1,6 +1,6 @@
 namespace TeamPulse.Teams.Contract.Requests.Department;
 
 public record UpdateDepartmentRequest(    
-    string NewName,
+    string? NewName,
     IEnumerable<Guid>? NewTeams,
     Guid? NewHeadOfDepartment);

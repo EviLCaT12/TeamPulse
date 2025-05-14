@@ -5,7 +5,6 @@ using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Department.Delete;
 using TeamPulse.Teams.Application.Commands.Department.Update;
-using TeamPulse.Teams.Contract;
 using TeamPulse.Teams.Contract.Requests.Department;
 
 namespace TeamPulse.Team.Presentation;
