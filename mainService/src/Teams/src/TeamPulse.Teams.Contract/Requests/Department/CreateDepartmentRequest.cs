@@ -1,4 +1,4 @@
-namespace TeamPulse.Teams.Contract;
+namespace TeamPulse.Teams.Contract.Requests.Department;
 
 public record CreateDepartmentRequest(
     string Name,

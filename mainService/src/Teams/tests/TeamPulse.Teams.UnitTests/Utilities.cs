@@ -23,7 +23,7 @@ public static class Utilities
         {
             var teamId = TeamId.CreateNewId();
             var name = Name.Create(Guid.NewGuid().ToString()).Value;
-            var team = new Team(teamId, null, name, department, null);
+            var team = new Team(teamId, name, department, null, null);
             teams.Add(team);
         }
 

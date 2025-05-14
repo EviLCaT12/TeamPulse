@@ -52,7 +52,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
         var name = Name.Create(departmentCommand.Name).Value;
 
         var teams = departmentCommand.Teams?.ToList() ?? [];
-        List<Team> departmentTeams = [];
+        List<Domain.Entities.Team> departmentTeams = [];
         if (teams.Count != 0)
         {
             foreach (var team in teams)

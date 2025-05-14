@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\TeamPulse.Web\TeamPulse.Web.csproj" />
+      <ProjectReference Include="..\TeamPulse.Teams.UnitTests\TeamPulse.Teams.UnitTests.csproj" />
     </ItemGroup>
 
 </Project>

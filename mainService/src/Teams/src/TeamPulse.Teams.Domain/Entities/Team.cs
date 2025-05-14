@@ -14,9 +14,9 @@ public class Team : Entity<TeamId>
 
     public Team(
         TeamId id,
-        IEnumerable<Employee>? employees,
         Name name,
         Department department,
+        IEnumerable<Employee>? employees,
         Employee? headOfTeam)
     {
         Id = id;
@@ -30,7 +30,7 @@ public class Team : Entity<TeamId>
 
     private List<Employee> _employees = [];
 
-    public IReadOnlyList<Employee> Employees => _employees;
+    public IReadOnlyList<Employee> Employees => _employees; 
 
     public Department Department { get; private set; }
 

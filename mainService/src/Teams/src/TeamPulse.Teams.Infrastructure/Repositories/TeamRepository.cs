@@ -18,4 +18,9 @@ public class TeamRepository: ITeamRepository
     {
         return await _writeDbContext.Teams.FirstOrDefaultAsync(t => t.Id == teamId, cancellationToken);
     }
+
+    public async Task AddTeamAsync(Team team, CancellationToken cancellationToken)
+    {
+        await _writeDbContext.Teams.AddAsync(team, cancellationToken);
+    }
 }

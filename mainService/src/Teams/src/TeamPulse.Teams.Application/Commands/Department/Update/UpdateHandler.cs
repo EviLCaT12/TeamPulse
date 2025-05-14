@@ -59,7 +59,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
          * Если новое, то сохраняем
          */
         var teams = command.NewTeams?.ToList() ?? [];
-        List<Team> newDepartmentTeams = [];
+        List<Domain.Entities.Team> newDepartmentTeams = [];
         if (teams.Count != 0)
         {
             foreach (var team in teams)

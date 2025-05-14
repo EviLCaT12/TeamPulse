@@ -5,7 +5,7 @@ using TeamPulse.Teams.Application.Commands.Department.Create;
 
 namespace TeamPulse.Teams.IntegrationTests.Department;
 
-public class Create : DepartmentBaseTest
+public class Create : BaseTest
 {
     public Create(IntegrationTestsWebFactory factory) : base(factory)
     {

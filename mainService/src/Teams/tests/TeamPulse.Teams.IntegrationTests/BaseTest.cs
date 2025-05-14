@@ -2,16 +2,16 @@ using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Teams.Infrastructure.DbContexts;
 
-namespace TeamPulse.Teams.IntegrationTests.Department;
+namespace TeamPulse.Teams.IntegrationTests;
 
-public class DepartmentBaseTest : IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
+public class BaseTest : IClassFixture<IntegrationTestsWebFactory>, IAsyncLifetime
 {
     protected readonly IntegrationTestsWebFactory Factory;
     protected readonly IServiceScope Scope;
     protected readonly WriteDbContext WriteDbContext;
     protected readonly Fixture Fixture;
 
-    public DepartmentBaseTest(IntegrationTestsWebFactory factory)
+    public BaseTest(IntegrationTestsWebFactory factory)
     {
         Factory = factory;
         Scope = Factory.Services.CreateScope();
