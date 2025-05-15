@@ -39,6 +39,11 @@ public class Department : Entity<DepartmentId>
         _teams.AddRange(teams);
     }
 
+    public void AddHeadOfDepartment(Employee employee)
+    {
+        HeadOfDepartment = employee;
+    }
+
     public void RemoveTeam(Team team)
     {
         _teams.Remove(team);
@@ -55,6 +60,28 @@ public class Department : Entity<DepartmentId>
         _teams.AddRange(teams);
     }
 
+    public UnitResult<Error> AddTeamEmployees(TeamId teamId, IEnumerable<Employee> employee)
+    {
+        var team = _teams.FirstOrDefault(t => t.Id == teamId);
+        if (team is null)
+            return Errors.General
+                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
+        
+        team.AddEmployee(employee);
+        return UnitResult.Success<Error>();
+    }
+    
+    public UnitResult<Error> AddHeadOfTeam(TeamId teamId, Employee employee)
+    {
+        var team = _teams.FirstOrDefault(t => t.Id == teamId);
+        if (team is null)
+            return Errors.General
+                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
+        
+        team.AddHeadOfTeam(employee);
+        return UnitResult.Success<Error>();
+    }
+    
     public void UpdateHeadOfDepartment(Employee newHeadOfDepartment)
     {
         HeadOfDepartment = newHeadOfDepartment;

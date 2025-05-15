@@ -29,4 +29,17 @@ public static class Utilities
 
         return teams;
     }
+
+    public static List<Employee> SeedEmployees(int count)
+    {
+        List<Employee> employees = [];
+        for (int i = 0; i < count; i++)
+        {
+            var employeeId = EmployeeId.CreateNewId();
+            var employee = new Employee(employeeId);
+            employees.Add(employee);
+        }
+        
+        return employees;
+    }
 }

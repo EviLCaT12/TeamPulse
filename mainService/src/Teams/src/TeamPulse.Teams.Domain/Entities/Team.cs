@@ -38,6 +38,16 @@ public class Team : Entity<TeamId>
 
     public Employee? HeadOfTeam { get; private set; }
 
+    internal void AddEmployee(IEnumerable<Employee> employee)
+    {
+        _employees.AddRange(employee);
+    }
+
+    internal void AddHeadOfTeam(Employee employee)
+    {
+        HeadOfTeam = employee;
+    }
+    
     internal void UpdateName(Name newName)
     {
         Name = newName;
