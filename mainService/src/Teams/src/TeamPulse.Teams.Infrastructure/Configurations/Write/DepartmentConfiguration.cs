@@ -32,12 +32,12 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .WithOne(t => t.Department)
             .HasForeignKey("department_id")
             .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.HasOne(d => d.HeadOfDepartment)
-            .WithOne(e => e.Department)
+            .WithOne(e => e.ManagedDepartment)
             .HasForeignKey<Employee>("managed_department_id")
             .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            .IsRequired(false);
     }
 }

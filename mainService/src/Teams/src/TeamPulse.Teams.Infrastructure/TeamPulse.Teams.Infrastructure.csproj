@@ -13,6 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
+      <ProjectReference Include="..\TeamPulse.Teams.Application\TeamPulse.Teams.Application.csproj" />
       <ProjectReference Include="..\TeamPulse.Teams.Domain\TeamPulse.Teams.Domain.csproj" />
     </ItemGroup>
 

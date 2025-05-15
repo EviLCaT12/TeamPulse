@@ -24,7 +24,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
             .WithOne(e => e.Team)
             .HasForeignKey("team_id")
             .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.ComplexProperty(t => t.Name, nb =>
         {
@@ -38,6 +38,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
             .WithOne(e => e.ManagedTeam)
             .HasForeignKey<Employee>("managed_team_id")
             .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired();
+            .IsRequired(false);
     }
 }

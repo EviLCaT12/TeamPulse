@@ -10,5 +10,8 @@ public static class Errors
         public static Error ValueIsInvalid(string errorMessage) =>
             Error.Validation(errorMessage, "value.is.invalid");
         
+        public static Error ValueNotFound(string errorMessage) =>
+            Error.NotFound(errorMessage, "value.not.found");
+        
     }
 }

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TeamPulse.Team.Presentation</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Framework\TeamPulse.Framework.csproj" />
+      <ProjectReference Include="..\TeamPulse.Teams.Application\TeamPulse.Teams.Application.csproj" />
+      <ProjectReference Include="..\TeamPulse.Teams.Contract\TeamPulse.Teams.Contract.csproj" />
+    </ItemGroup>
+
+</Project>
