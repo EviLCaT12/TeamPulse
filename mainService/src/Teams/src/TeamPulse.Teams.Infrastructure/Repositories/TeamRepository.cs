@@ -25,4 +25,9 @@ public class TeamRepository: ITeamRepository
     {
         await _writeDbContext.Teams.AddAsync(team, cancellationToken);
     }
+
+    public void DeleteTeam(Team team)
+    {
+        _writeDbContext.Teams.Remove(team);
+    }
 }

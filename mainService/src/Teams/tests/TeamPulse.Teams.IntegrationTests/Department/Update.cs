@@ -51,6 +51,6 @@ public class Update : BaseTest
         newDepartment.Should().NotBeNull();
         newDepartment.Name.Value.Should().Be(newName);
         newDepartment.Teams.Should().BeEquivalentTo(newTeams);
-        newDepartment.HeadOfDepartment.Id.Should().Be(newHeadOfDepartment.Id);
+        newDepartment.HeadOfDepartment!.Id.Should().Be(newHeadOfDepartment.Id);
     }
 }
