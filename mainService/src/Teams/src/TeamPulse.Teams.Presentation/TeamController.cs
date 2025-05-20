@@ -6,6 +6,8 @@ using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Commands.Team.Delete;
 using TeamPulse.Teams.Application.Commands.Team.Update;
+using TeamPulse.Teams.Application.Queries.Team;
+using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Team;
 
 namespace TeamPulse.Team.Presentation;
@@ -65,5 +67,20 @@ public class TeamController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok();
+    }
+
+    [HttpGet("{teamId:guid}")]
+    public async Task<ActionResult> GetTeamById(
+        [FromRoute] Guid teamId,
+        [FromServices] IQueryHandler<TeamDto, GetByIdQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new GetByIdQuery(teamId);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok(result.Value);
     }
 }

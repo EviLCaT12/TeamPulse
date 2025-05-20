@@ -36,7 +36,7 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         builder.HasOne(d => d.HeadOfDepartment)
             .WithOne(e => e.ManagedDepartment)
-            .HasForeignKey<Employee>("managed_department_id")
+            .HasForeignKey<Employee>(e => e.ManagedDepartmentId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false);
     }

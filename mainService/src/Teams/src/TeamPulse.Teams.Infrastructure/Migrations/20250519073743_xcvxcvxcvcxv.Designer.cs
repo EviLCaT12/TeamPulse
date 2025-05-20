@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeamPulse.Teams.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using TeamPulse.Teams.Infrastructure.DbContexts;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    partial class WriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519073743_xcvxcvxcvcxv")]
+    partial class xcvxcvxcvcxv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("ManagedDepartmentId")
+                    b.Property<Guid?>("managed_department_id")
                         .HasColumnType("uuid")
                         .HasColumnName("managed_department_id");
 
@@ -68,7 +71,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_employees");
 
-                    b.HasIndex("ManagedDepartmentId")
+                    b.HasIndex("managed_department_id")
                         .IsUnique()
                         .HasDatabaseName("ix_employees_managed_department_id");
 
@@ -116,7 +119,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                 {
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Department", "ManagedDepartment")
                         .WithOne("HeadOfDepartment")
-                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "ManagedDepartmentId")
+                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_department_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_employees_departments_managed_department_id");
 

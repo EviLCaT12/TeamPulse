@@ -8,8 +8,8 @@ public class EmployeeDtoConfiguration : IEntityTypeConfiguration<EmployeeDto>
 {
     public void Configure(EntityTypeBuilder<EmployeeDto> builder)
     {
-        builder.ToTable("employee");
+        builder.ToTable("employees");
 
-        builder.HasKey(e => e.EmployeeId);
+        builder.HasKey(e => e.Id);
     }
 }
