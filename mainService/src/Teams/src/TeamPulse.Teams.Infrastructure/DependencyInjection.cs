@@ -27,6 +27,10 @@ public static class DependencyInjection
         services.AddScoped<WriteDbContext>(_ =>
             new WriteDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE) 
                                ?? throw new ApplicationException("Cannot connect to the database.")));
+
+        services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+            new ReadDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE)
+                              ?? throw new ApplicationException("Cannot connect to the database.")));
         
         return services;
     }

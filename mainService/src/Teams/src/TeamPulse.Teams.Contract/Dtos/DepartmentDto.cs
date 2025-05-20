@@ -6,7 +6,7 @@ public class DepartmentDto
     
     public string Name { get; init; }
     
-    public TeamDto[] Teams { get; init; }
+    public IReadOnlyList<TeamDto> Teams { get; init; }
     
-    public Guid? HeadOfDepartment { get; init; }
+    public EmployeeDto? HeadOfDepartment { get; init; }
 }

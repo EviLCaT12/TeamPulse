@@ -12,9 +12,14 @@ public class DepartmentDtoConfiguration : IEntityTypeConfiguration<DepartmentDto
         
         builder.HasKey(d => d.Id);
 
-        builder.HasMany<TeamDto>(d => d.Teams)
+        builder.HasMany(d => d.Teams)
             .WithOne()
             .HasForeignKey(t => t.DepartmentId)
+            .IsRequired(false);
+        
+        builder.HasOne(d => d.HeadOfDepartment)
+            .WithOne()
+            .HasForeignKey<EmployeeDto>(e => e.ManagedDepartmentId)
             .IsRequired(false);
     }
 }
