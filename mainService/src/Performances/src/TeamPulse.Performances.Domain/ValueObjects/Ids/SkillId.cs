@@ -3,31 +3,31 @@ using TeamPulse.SharedKernel.Errors;
 
 namespace TeamPulse.Performances.Domain.ValueObjects.Ids;
 
-public class SkillIds : ValueObject
+public class SkillId : ValueObject
 {
     //For ef core
-    private SkillIds()
+    private SkillId()
     {
     }
 
-    private SkillIds(Guid id)
+    private SkillId(Guid id)
     {
         Value = id;
     }
 
     public Guid Value { get; }
 
-    public static Result<SkillIds, Error> Create(Guid id)
+    public static Result<SkillId, Error> Create(Guid id)
     {
         if (id == Guid.Empty)
             return Errors.General.ValueIsInvalid("Value for skill identifier is empty.");
 
-        return new SkillIds(id);
+        return new SkillId(id);
     }
 
-    public static SkillIds NewId() => new SkillIds(Guid.NewGuid());
+    public static SkillId NewId() => new SkillId(Guid.NewGuid());
     
-    public static SkillIds Empty() => new SkillIds(Guid.Empty);
+    public static SkillId Empty() => new SkillId(Guid.Empty);
 
 
     protected override IEnumerable<IComparable> GetEqualityComponents()

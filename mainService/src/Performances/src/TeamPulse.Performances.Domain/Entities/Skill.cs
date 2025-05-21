@@ -4,18 +4,22 @@ using TeamPulse.SharedKernel.SharedVO;
 
 namespace TeamPulse.Performances.Domain.Entities;
 
-public class Skill : Entity<SkillIds>
+public class Skill : Entity<SkillId>
 {
     //For ef core
     private Skill() {}
     
-    public SkillIds Id { get; private set; }
+    public SkillId Id { get; private set; }
     
     public Guid TeamId { get; private set; }
     
-    public Guid SkillGradeId { get; private set; }
+    public SkillGradeId SkillGradeId { get; private set; }
     
     public Name Name { get; private set; }
     
     public Description Description { get; private set; }
+
+    private List<Guid> _employees = [];
+    
+    public IReadOnlyList<Guid> Employees => _employees;
 }
