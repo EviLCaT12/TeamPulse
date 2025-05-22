@@ -10,7 +10,7 @@ namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 /// </summary>
 public static class SkillGradeFactory
 {
-    public static Result<IGrade, Error> CreateSkillGrade(IEnumerable<object> grades)
+    public static Result<IGradeBase, Error> CreateSkillGrade(IEnumerable<object> grades)
     {
         if (grades.Any() == false)
             return Errors.General.ValueIsRequired("grades cannot be empty");

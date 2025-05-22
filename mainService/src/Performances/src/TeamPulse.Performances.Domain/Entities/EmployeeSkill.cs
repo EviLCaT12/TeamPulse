@@ -14,8 +14,8 @@ public class EmployeeSkill
     
     public SkillId SkillId {get; private set;}
     
-    public IGrade SelGrade {get; private set;}
+    public IGradeBase SelfGrade {get; private set;}
     
-    public IGrade ManagerGrade {get; private set;}
+    public IGradeBase ManagerGrade {get; private set;}
     
  }
