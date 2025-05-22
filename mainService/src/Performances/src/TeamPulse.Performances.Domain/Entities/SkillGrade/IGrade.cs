@@ -1,6 +1,8 @@
-using CSharpFunctionalExtensions;
-using TeamPulse.SharedKernel.Errors;
+
 
 namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
-public interface IGrade;
+public interface IGrade<T> : IGradeBase
+{
+    IReadOnlyList<T> Grades { get; }
+}

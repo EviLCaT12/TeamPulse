@@ -1,14 +1,17 @@
 using CSharpFunctionalExtensions;
+using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
 
 namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
-public class NumericSkillGrade : IGrade
+public class NumericSkillGrade : IGrade<int>
 {
     private NumericSkillGrade(IEnumerable<int> grades)
     {
         _grades = grades.ToList();
     }
+    
+    public SkillGradeId Id { get; private set; }
     
     private List<int> _grades;
     
@@ -27,5 +30,13 @@ public class NumericSkillGrade : IGrade
         }
 
         return new NumericSkillGrade(intGrades);
+    }
+
+    
+    public IReadOnlyList<string> GetGradesAsString()
+    {
+        var grades = _grades.Select(g => g.ToString()).ToList();
+        
+        return grades;
     }
 }
