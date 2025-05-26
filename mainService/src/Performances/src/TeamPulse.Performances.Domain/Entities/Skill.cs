@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.SharedVO;
 
@@ -11,15 +12,10 @@ public class Skill : Entity<SkillId>
     
     public SkillId Id { get; private set; }
     
-    public Guid TeamId { get; private set; }
-    
-    public SkillGradeId SkillGradeId { get; private set; }
+    public BaseSkillGrade SkillGrade { get; private set; }
     
     public Name Name { get; private set; }
     
     public Description Description { get; private set; }
-
-    private List<Guid> _employees = [];
     
-    public IReadOnlyList<Guid> Employees => _employees;
 }

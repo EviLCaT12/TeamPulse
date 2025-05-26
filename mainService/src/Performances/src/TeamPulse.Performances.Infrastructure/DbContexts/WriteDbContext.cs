@@ -7,11 +7,11 @@ namespace TeamPulse.Performances.Infrastructure.DbContexts;
 
 public class WriteDbContext(string connectionString) : DbContext
 {
-    public DbSet<IGradeBase> SkillGrades => Set<IGradeBase>();
+    public DbSet<BaseSkillGrade> SkillGrades => Set<BaseSkillGrade>();
     
     public DbSet<GroupOfSkills> GroupOfSkills => Set<GroupOfSkills>();
     
-    public DbSet<EmployeeSkill> EmployeeSkills => Set<EmployeeSkill>();
+    public DbSet<RecordSkill> RecordSkills => Set<RecordSkill>();
     
     public DbSet<Skill> Skills => Set<Skill>();
 

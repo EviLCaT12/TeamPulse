@@ -1,14 +1,27 @@
+using System.Text.Json;
 using CSharpFunctionalExtensions;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
+using TeamPulse.SharedKernel.SharedVO;
 
 namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
-public class SymbolsSkillGrade : IGrade<string>
+public class SymbolsSkillGrade : BaseSkillGrade, IGrade<string>
 {
-    private SymbolsSkillGrade(IEnumerable<string> grades)
+    //ef core only
+    private SymbolsSkillGrade() { }
+    
+    private SymbolsSkillGrade(
+        SkillGradeId id,
+        IEnumerable<string> grades,
+        Name name,
+        Description? description = null)
     {
+        Id = id;
         _grades = grades.ToList();
+        GradesAsString = JsonSerializer.Serialize(grades);
+        Name = name;
+        Description = description;
     }
     
     public SkillGradeId Id { get; private set; }
@@ -17,7 +30,11 @@ public class SymbolsSkillGrade : IGrade<string>
     
     public IReadOnlyList<string> Grades => _grades;
 
-    public static Result<SymbolsSkillGrade, Error> Create(IEnumerable<object> grades)
+    public static Result<SymbolsSkillGrade, Error> Create(
+        SkillGradeId id,
+        IEnumerable<object> grades,
+        Name name,
+        Description? description = null)
     {
         List<string> symbolsGrade = [];
 
@@ -29,11 +46,11 @@ public class SymbolsSkillGrade : IGrade<string>
             symbolsGrade.Add(stringGrade);
         }
         
-        return new SymbolsSkillGrade(symbolsGrade);
+        return new SymbolsSkillGrade(id, symbolsGrade, name, description);
     }
 
     
-    public IReadOnlyList<string> GetGradesAsString()
+    public override IReadOnlyList<string> GetGradesAsString()
     {
         return _grades;
     }

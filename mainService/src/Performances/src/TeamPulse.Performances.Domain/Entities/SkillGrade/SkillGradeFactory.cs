@@ -1,5 +1,7 @@
 using CSharpFunctionalExtensions;
+using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
+using TeamPulse.SharedKernel.SharedVO;
 
 namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
@@ -10,31 +12,37 @@ namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 /// </summary>
 public static class SkillGradeFactory
 {
-    public static Result<IGradeBase, Error> CreateSkillGrade(IEnumerable<object> grades)
+    public static Result<BaseSkillGrade, Error> CreateSkillGrade(
+        SkillGradeId id,
+        IEnumerable<object> grades,
+        Name name,
+        Description? description = null)
     {
         if (grades.Any() == false)
             return Errors.General.ValueIsRequired("grades cannot be empty");
         
         var sample = grades.First();
 
-        if (sample is int)
+        switch (sample)
         {
-            var intGrades = NumericSkillGrade.Create(grades);
-            if (intGrades.IsFailure)
-                return intGrades.Error;
+            case int:
+            {
+                var intGrades = NumericSkillGrade.Create(id, grades, name, description);
+                if (intGrades.IsFailure)
+                    return intGrades.Error;
             
-            return intGrades.Value;
-        }
-
-        if (sample is string)
-        {
-            var symbolGrades = SymbolsSkillGrade.Create(grades);
-            if (symbolGrades.IsFailure)
-                return symbolGrades.Error;
+                return intGrades.Value;
+            }
+            case string:
+            {
+                var symbolGrades = SymbolsSkillGrade.Create(id, grades, name, description);
+                if (symbolGrades.IsFailure)
+                    return symbolGrades.Error;
             
-            return symbolGrades.Value;
+                return symbolGrades.Value;
+            }
+            default:
+                return Errors.General.ValueIsInvalid("Unknown skill grade type");
         }
-        
-        return Errors.General.ValueIsInvalid("Unknown skill grade type");
     }
 }

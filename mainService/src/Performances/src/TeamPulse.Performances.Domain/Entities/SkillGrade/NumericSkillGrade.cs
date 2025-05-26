@@ -1,23 +1,42 @@
+using System.Text.Json;
 using CSharpFunctionalExtensions;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
+using TeamPulse.SharedKernel.SharedVO;
 
 namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
-public class NumericSkillGrade : IGrade<int>
+public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
 {
-    private NumericSkillGrade(IEnumerable<int> grades)
+    //ef core only
+    private NumericSkillGrade()
     {
-        _grades = grades.ToList();
     }
-    
+
+    private NumericSkillGrade(
+        SkillGradeId id,
+        IEnumerable<int> grades,
+        Name name,
+        Description? description = null)
+    {
+        Id = id;
+        _grades = grades.ToList();
+        GradesAsString = JsonSerializer.Serialize(grades);
+        Name = name;
+        Description = description;
+    }
+
     public SkillGradeId Id { get; private set; }
-    
+
     private List<int> _grades;
-    
+
     public IReadOnlyList<int> Grades => _grades;
 
-    public static Result<NumericSkillGrade, Error> Create(IEnumerable<object> grades)
+    public static Result<NumericSkillGrade, Error> Create(
+        SkillGradeId id,
+        IEnumerable<object> grades,
+        Name name,
+        Description? description = null)
     {
         List<int> intGrades = [];
 
@@ -25,18 +44,18 @@ public class NumericSkillGrade : IGrade<int>
         {
             if (grade is not int intGrade)
                 return Errors.General.ValueIsInvalid("Invalid Numeric Skill Grade.");
-            
+
             intGrades.Add(intGrade);
         }
 
-        return new NumericSkillGrade(intGrades);
+        return new NumericSkillGrade(id, intGrades, name, description);
     }
 
-    
-    public IReadOnlyList<string> GetGradesAsString()
+
+    public override IReadOnlyList<string> GetGradesAsString()
     {
         var grades = _grades.Select(g => g.ToString()).ToList();
-        
+
         return grades;
     }
 }
