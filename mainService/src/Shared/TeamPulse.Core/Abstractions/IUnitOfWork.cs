@@ -11,5 +11,6 @@ public interface IUnitOfWork
 
 public enum ModuleKey
 {
-    Team
+    Team,
+    Performance
 }

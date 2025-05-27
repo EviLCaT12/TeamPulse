@@ -24,8 +24,6 @@ public class SymbolsSkillGrade : BaseSkillGrade, IGrade<string>
         Description = description;
     }
     
-    public SkillGradeId Id { get; private set; }
-    
     private List<string> _grades;
     
     public IReadOnlyList<string> Grades => _grades;
@@ -40,10 +38,16 @@ public class SymbolsSkillGrade : BaseSkillGrade, IGrade<string>
 
         foreach (var grade in grades)
         {
-            if (grade is not string stringGrade)
+            try
+            {
+                var parseResult = grade.ToString();
+                symbolsGrade.Add(parseResult!);
+            }
+            catch 
+            {
                 return Errors.General.ValueIsInvalid($"Invalid string grade '{grade}'.");
+            }
             
-            symbolsGrade.Add(stringGrade);
         }
         
         return new SymbolsSkillGrade(id, symbolsGrade, name, description);

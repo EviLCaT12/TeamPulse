@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
+using TeamPulse.Performances.Application;
 using TeamPulse.Performances.Infrastructure;
 using TeamPulse.Team.Presentation;
 using TeamPulse.Teams.Application;
@@ -38,6 +39,7 @@ builder.Services
     .AddTeamInfrastructure(builder.Configuration)
     .AddTeamPresentation()
     
+    .AddPerformancesApplication()
     .AddPerformancesInfrastructure(builder.Configuration);
 
 var app = builder.Build();

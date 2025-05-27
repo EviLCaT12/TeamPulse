@@ -7,13 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Framework\TeamPulse.Framework.csproj" />
       <ProjectReference Include="..\TeamPulse.Performances.Application\TeamPulse.Performances.Application.csproj" />
-      <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+      <ProjectReference Include="..\TeamPulse.Performances.Contract\TeamPulse.Performances.Contract.csproj" />
     </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ namespace TeamPulse.Performances.Domain.Entities.SkillGrade;
 
 public abstract class BaseSkillGrade : IGradeBase
 {
-    public SkillGradeId Id { get; }
+    public SkillGradeId Id { get; protected set; }
     
     public string GradesAsString { get; protected set; }
     
@@ -14,4 +14,5 @@ public abstract class BaseSkillGrade : IGradeBase
     public Description Description { get; protected set; }
     
     public abstract IReadOnlyList<string> GetGradesAsString();
+    
 }

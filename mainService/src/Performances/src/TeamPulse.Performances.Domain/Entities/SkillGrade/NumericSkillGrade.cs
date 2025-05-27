@@ -26,8 +26,6 @@ public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
         Description = description;
     }
 
-    public SkillGradeId Id { get; private set; }
-
     private List<int> _grades;
 
     public IReadOnlyList<int> Grades => _grades;
@@ -42,7 +40,9 @@ public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
 
         foreach (var grade in grades)
         {
-            if (grade is not int intGrade)
+            var parseResult = int.TryParse(grade.ToString(), out var intGrade);
+            
+            if (parseResult == false)
                 return Errors.General.ValueIsInvalid("Invalid Numeric Skill Grade.");
 
             intGrades.Add(intGrade);
@@ -58,4 +58,5 @@ public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
 
         return grades;
     }
+    
 }
