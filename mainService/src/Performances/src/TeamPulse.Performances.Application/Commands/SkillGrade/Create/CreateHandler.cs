@@ -6,11 +6,10 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
 using TeamPulse.Performances.Application.Factories;
-using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
 
-namespace TeamPulse.Performances.Application.Commands.SkillGrade;
+namespace TeamPulse.Performances.Application.Commands.SkillGrade.Create;
 
 public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 {

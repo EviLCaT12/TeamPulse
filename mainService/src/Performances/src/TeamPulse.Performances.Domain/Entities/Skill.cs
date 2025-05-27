@@ -9,6 +9,18 @@ public class Skill : Entity<SkillId>
 {
     //For ef core
     private Skill() {}
+
+    public Skill(
+        SkillId id,
+        BaseSkillGrade skillGrade,
+        Name name,
+        Description description)
+    {
+        Id = id;
+        SkillGrade = skillGrade;
+        Name = name;
+        Description = description;
+    }
     
     public SkillId Id { get; private set; }
     

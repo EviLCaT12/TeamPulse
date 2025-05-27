@@ -17,9 +17,9 @@ public class RecordSkillConfiguration : IEntityTypeConfiguration<RecordSkill>
             .HasColumnName("record_id");
         
         builder
-            .HasOne(x => x.Skill)
+            .HasOne(x => x.GroupOfSkills)
             .WithMany()
-            .HasForeignKey("skill_id");
+            .HasForeignKey("group_id");
         
         builder.Property(x => x.SelfGrade)
             .IsRequired(false)

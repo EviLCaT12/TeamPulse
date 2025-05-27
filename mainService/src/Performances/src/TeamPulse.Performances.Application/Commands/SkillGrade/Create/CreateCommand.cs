@@ -1,7 +1,7 @@
 using System.Text.Json;
 using TeamPulse.Core.Abstractions;
 
-namespace TeamPulse.Performances.Application.Commands.SkillGrade;
+namespace TeamPulse.Performances.Application.Commands.SkillGrade.Create;
 
 public record CreateCommand(
     List<JsonElement> Grades,

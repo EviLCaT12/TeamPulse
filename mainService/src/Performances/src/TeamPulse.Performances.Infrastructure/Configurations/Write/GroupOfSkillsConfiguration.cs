@@ -31,6 +31,10 @@ public class GroupOfSkillsConfiguration : IEntityTypeConfiguration<GroupOfSkills
                 .HasColumnName("group_description")
                 .IsRequired();
         });
+        
+        builder.HasOne(x => x.SkillGrade)
+            .WithMany()
+            .HasForeignKey("grade_id");
 
         //Просто попробовать поработать с shadow_entity
         builder.HasMany(x => x.Skills)

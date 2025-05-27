@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TeamPulse.Performances.Infrastructure.DbContexts;
@@ -12,9 +13,11 @@ using TeamPulse.Performances.Infrastructure.DbContexts;
 namespace TeamPulse.Performances.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    partial class WriteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527114709_change skill on group of skills")]
+    partial class changeskillongroupofskills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,10 +32,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<Guid>("grade_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("grade_id");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "TeamPulse.Performances.Domain.Entities.GroupOfSkills.Description#Description", b1 =>
                         {
@@ -56,9 +55,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_group_of_skills");
-
-                    b.HasIndex("grade_id")
-                        .HasDatabaseName("ix_group_of_skills_grade_id");
 
                     b.ToTable("group_of_skills", "performances");
                 });
@@ -216,18 +212,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.ToTable("skill_grade", "performances");
 
                     b.HasDiscriminator().HasValue("symbol_grade");
-                });
-
-            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.GroupOfSkills", b =>
-                {
-                    b.HasOne("TeamPulse.Performances.Domain.Entities.SkillGrade.BaseSkillGrade", "SkillGrade")
-                        .WithMany()
-                        .HasForeignKey("grade_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_group_of_skills_skill_grade_grade_id");
-
-                    b.Navigation("SkillGrade");
                 });
 
             modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.RecordSkill", b =>

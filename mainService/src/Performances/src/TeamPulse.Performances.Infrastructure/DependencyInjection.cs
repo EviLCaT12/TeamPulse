@@ -40,6 +40,10 @@ public static class DependencyInjection
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<ISkillGradeRepository, SkillGradeRepository>();
+
+        services.AddScoped<ISkillRepository, SkillRepository>();
+
+        services.AddScoped<IGroupOfSkillRepository, GroupOfSkillRepository>();
         
         return services;
     }

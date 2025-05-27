@@ -15,12 +15,12 @@ public class RecordSkill
     
     public Guid Id { get; private set; }
     
-    //Либо команда, либо сотрудник - всё равно.
+    //Либо отдел, либо команда, либо сотрудник - всё равно.
     public Guid RecordId { get; private set; }
     
     public string? SelfGrade { get; private set; }
     
     public string? ManagerGrade { get; private set; }
     
-    public Skill Skill { get; private set; }
+    public GroupOfSkills GroupOfSkills { get; private set; }
  }
