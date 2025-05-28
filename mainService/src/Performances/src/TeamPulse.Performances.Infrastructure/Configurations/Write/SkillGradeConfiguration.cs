@@ -25,6 +25,8 @@ public class SkillGradeConfiguration : IEntityTypeConfiguration<BaseSkillGrade>
         builder.Property(x => x.GradesAsString)
             .HasColumnName("grades")
             .HasColumnType("jsonb");
+        
+        
 
         builder.ComplexProperty(x => x.Name, nb =>
         {

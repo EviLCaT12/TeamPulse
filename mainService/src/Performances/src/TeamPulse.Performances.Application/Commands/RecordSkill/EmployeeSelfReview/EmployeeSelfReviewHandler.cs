@@ -72,7 +72,7 @@ public class EmployeeSelfReviewHandler : ICommandHandler<EmployeeSelfReviewComma
 
         var grade = group!.SkillGrade;
 
-        var grades = grade.GetGradesAsString();
+        var grades = grade.GradesAsString;
         if (grades.Contains(command.Grade) == false)
         {
             var errorMessage =
@@ -96,6 +96,8 @@ public class EmployeeSelfReviewHandler : ICommandHandler<EmployeeSelfReviewComma
         await _recordSkillRepository.AddRecordSkillAsync(recordSkill, cancellationToken);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        transaction.Commit();
 
         return UnitResult.Success<ErrorList>();
     }

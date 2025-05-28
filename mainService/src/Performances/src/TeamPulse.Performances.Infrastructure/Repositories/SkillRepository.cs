@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
@@ -20,6 +21,8 @@ public class SkillRepository : ISkillRepository
 
     public async Task<Skill?> GetByIdAsync(SkillId id, CancellationToken cancellationToken)
     {
-        return await _writeDbContext.Skills.FindAsync([id], cancellationToken); 
+        return await _writeDbContext.Skills
+            .Include(s => s.SkillGrade)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken); 
     }
 }
