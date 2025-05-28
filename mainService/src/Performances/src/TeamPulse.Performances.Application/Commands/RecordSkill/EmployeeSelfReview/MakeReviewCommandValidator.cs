@@ -4,9 +4,9 @@ using TeamPulse.Performances.Domain.ValueObjects.Ids;
 
 namespace TeamPulse.Performances.Application.Commands.RecordSkill.EmployeeSelfReview;
 
-public class EmployeeSelfReviewCommandValidator : AbstractValidator<EmployeeSelfReviewCommand>
+public class MakeReviewCommandValidator : AbstractValidator<MakeReviewCommand>
 {
-    public EmployeeSelfReviewCommandValidator()
+    public MakeReviewCommandValidator()
     {
         RuleFor(c => c.Grade).NotEmpty().WithMessage("Grade cannot be empty.");
         RuleFor(c => c.EmployeeId).NotEmpty().WithMessage("Employee cannot be empty.");

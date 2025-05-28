@@ -33,11 +33,11 @@ public class GradeController : ApplicationController
     [HttpPost("grade/{employeeId:guid}/{groupId:guid}/{skillId:guid}")]
     public async Task<ActionResult> EmployeeSelfReview(
         [FromRoute] Guid employeeId, Guid groupId, Guid skillId, 
-        [FromBody] EmployeeSelfReviewRequest request,
-        [FromServices] ICommandHandler<EmployeeSelfReviewCommand> handler,
+        [FromBody] MakeReviewRequest request,
+        [FromServices] ICommandHandler<MakeReviewCommand> handler,
         CancellationToken cancellationToken)
     {
-        var command = new EmployeeSelfReviewCommand(employeeId, request.Grade, groupId, skillId);
+        var command = new MakeReviewCommand(request.ManagerId, employeeId, request.Grade, groupId, skillId);
         
         var result = await handler.HandleAsync(command, cancellationToken);
         if (result.IsFailure)
