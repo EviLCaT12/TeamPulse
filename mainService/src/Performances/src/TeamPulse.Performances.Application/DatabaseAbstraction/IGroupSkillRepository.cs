@@ -5,6 +5,8 @@ namespace TeamPulse.Performances.Application.DatabaseAbstraction;
 
 public interface IGroupSkillRepository
 {
+    Task AddGroupSkillAsync(GroupSkill groupSkill, CancellationToken cancellationToken);
+    
     Task<GroupSkill?> GetByIdAsync(
         GroupOfSkillsId groupId,
         SkillId skillId,
