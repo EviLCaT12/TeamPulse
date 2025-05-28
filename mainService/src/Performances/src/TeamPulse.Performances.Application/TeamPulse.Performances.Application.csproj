@@ -12,8 +12,4 @@
       <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Commands\GroupOfSkills\AddSkill\" />
-    </ItemGroup>
-
 </Project>

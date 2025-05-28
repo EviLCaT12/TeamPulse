@@ -13,6 +13,12 @@ public class GroupSkillRepository : IGroupSkillRepository
     {
         _writeDbContext = writeDbContext;
     }
+
+    public async Task AddGroupSkillAsync(GroupSkill groupSkill, CancellationToken cancellationToken)
+    {
+        await _writeDbContext.GroupSkills.AddAsync(groupSkill, cancellationToken);
+    }
+
     public async Task<GroupSkill?> GetByIdAsync(
         GroupOfSkillsId groupId,
         SkillId skillId, 

@@ -35,8 +35,4 @@ public class GroupOfSkills : Entity<GroupOfSkillsId>
     public Description Description { get; private set; }
     
     public BaseSkillGrade SkillGrade { get; private set; }
-
-    private List<Skill> _skills = [];
-    
-    public IReadOnlyList<Skill> Skills => _skills;
 }
