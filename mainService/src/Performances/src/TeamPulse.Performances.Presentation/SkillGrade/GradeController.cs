@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
 using TeamPulse.Framework.Responses;
+using TeamPulse.Performances.Application.Commands.RecordSkill.EmployeeSelfReview;
 using TeamPulse.Performances.Application.Commands.SkillGrade;
 using TeamPulse.Performances.Application.Commands.SkillGrade.Create;
 using TeamPulse.Performances.Contract.Requests.SkillGrade;
@@ -28,4 +29,21 @@ public class GradeController : ApplicationController
         
         return Ok(result.Value);
     }
+
+    [HttpPost("grade/{employeeId:guid}/{groupId:guid}/{skillId:guid}")]
+    public async Task<ActionResult> EmployeeSelfReview(
+        [FromRoute] Guid employeeId, Guid groupId, Guid skillId, 
+        [FromBody] EmployeeSelfReviewRequest request,
+        [FromServices] ICommandHandler<EmployeeSelfReviewCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new EmployeeSelfReviewCommand(employeeId, request.Grade, groupId, skillId);
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok();
+    }
+    
 }

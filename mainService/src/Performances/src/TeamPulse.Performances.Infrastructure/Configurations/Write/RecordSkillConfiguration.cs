@@ -10,16 +10,15 @@ public class RecordSkillConfiguration : IEntityTypeConfiguration<RecordSkill>
     {
         builder.ToTable("record_skills");
         
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => new {x.WhoId, x.WhatId});
+
+        builder.Property(x => x.WhoId)
+            .HasColumnName("who_id")
+            .IsRequired();
         
-        builder.Property(x => x.RecordId)
-            .IsRequired()
-            .HasColumnName("record_id");
-        
-        builder
-            .HasOne(x => x.GroupOfSkills)
-            .WithMany()
-            .HasForeignKey("group_id");
+        builder.Property(x => x.WhatId)
+            .HasColumnName("what_id")
+            .IsRequired();
         
         builder.Property(x => x.SelfGrade)
             .IsRequired(false)

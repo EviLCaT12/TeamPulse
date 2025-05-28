@@ -35,27 +35,6 @@ public class GroupOfSkillsConfiguration : IEntityTypeConfiguration<GroupOfSkills
         builder.HasOne(x => x.SkillGrade)
             .WithMany()
             .HasForeignKey("grade_id");
-
-        //Просто попробовать поработать с shadow_entity
-        builder.HasMany(x => x.Skills)
-            .WithMany()
-            .UsingEntity<Dictionary<string, object>>(
-                "group_skill",
-                j => j
-                    .HasOne<Skill>()
-                    .WithMany()
-                    .HasForeignKey("skill_id")
-                    .OnDelete(DeleteBehavior.Cascade),
-                j => j
-                    .HasOne<GroupOfSkills>()
-                    .WithMany()
-                    .HasForeignKey("group_id")
-                    .OnDelete(DeleteBehavior.Cascade),
-                j =>
-                {
-                    j.HasKey("group_id", "skill_id");
-                    j.ToTable("group_skill");
-                }
-            );
+        
     }
 }

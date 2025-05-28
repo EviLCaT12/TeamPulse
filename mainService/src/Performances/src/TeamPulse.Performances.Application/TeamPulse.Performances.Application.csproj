@@ -8,7 +8,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
+      <ProjectReference Include="..\..\..\Teams\src\TeamPulse.Teams.Contract\TeamPulse.Teams.Contract.csproj" />
       <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commands\GroupOfSkills\AddSkill\" />
     </ItemGroup>
 
 </Project>

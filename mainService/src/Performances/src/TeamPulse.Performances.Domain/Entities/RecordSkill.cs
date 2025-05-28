@@ -13,14 +13,25 @@ public class RecordSkill
     //ef core
     private RecordSkill() {}
     
-    public Guid Id { get; private set; }
-    
+    //ToDo: заменить на нормальный метод Create
+    public RecordSkill(
+        Guid whoId,
+        Guid whatId,
+        string? selfGrade,
+        string? managerGrade)
+    {
+        WhoId = whoId;
+        WhatId = whatId;
+        SelfGrade = selfGrade ?? SelfGrade;
+        ManagerGrade = managerGrade ?? ManagerGrade;
+    }
     //Либо отдел, либо команда, либо сотрудник - всё равно.
-    public Guid RecordId { get; private set; }
+    public Guid WhoId { get; private set; }
     
-    public string? SelfGrade { get; private set; }
+    //Группа скиллов или одиночный скилл
+    public Guid WhatId { get; private set; }
+
+    public string? SelfGrade { get; private set; } = null;
     
-    public string? ManagerGrade { get; private set; }
-    
-    public GroupOfSkills GroupOfSkills { get; private set; }
+    public string? ManagerGrade { get; private set; } = null;
  }

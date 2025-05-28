@@ -1,5 +1,6 @@
 using TeamPulse.Performances.Application.DatabaseAbstraction;
 using TeamPulse.Performances.Domain.Entities;
+using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 
 namespace TeamPulse.Performances.Infrastructure.Repositories;
@@ -15,5 +16,10 @@ public class GroupOfSkillRepository : IGroupOfSkillRepository
     public async Task AddAsync(GroupOfSkills groupOfSkills, CancellationToken cancellationToken)
     { 
         await _writeDbContext.GroupOfSkills.AddAsync(groupOfSkills, cancellationToken);
+    }
+
+    public async Task<GroupOfSkills?> GetByIdAsync(GroupOfSkillsId id, CancellationToken cancellationToken)
+    {
+        return await _writeDbContext.GroupOfSkills.FindAsync([id], cancellationToken);
     }
 }

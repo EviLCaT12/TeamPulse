@@ -11,6 +11,8 @@ public class WriteDbContext(string connectionString) : DbContext
     
     public DbSet<GroupOfSkills> GroupOfSkills => Set<GroupOfSkills>();
     
+    public DbSet<GroupSkill> GroupSkills => Set<GroupSkill>();
+    
     public DbSet<RecordSkill> RecordSkills => Set<RecordSkill>();
     
     public DbSet<Skill> Skills => Set<Skill>();
