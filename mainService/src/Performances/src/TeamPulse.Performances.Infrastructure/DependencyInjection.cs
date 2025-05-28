@@ -39,11 +39,12 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<ISkillGradeRepository, SkillGradeRepository>();
-
-        services.AddScoped<ISkillRepository, SkillRepository>();
-
-        services.AddScoped<IGroupOfSkillRepository, GroupOfSkillRepository>();
+        services
+            .AddScoped<ISkillGradeRepository, SkillGradeRepository>()
+            .AddScoped<ISkillRepository, SkillRepository>()
+            .AddScoped<IGroupOfSkillRepository, GroupOfSkillRepository>()
+            .AddScoped<IRecordSkillRepository, RecordSkillRepository>()
+            .AddScoped<IGroupSkillRepository, GroupSkillRepository>();
         
         return services;
     }

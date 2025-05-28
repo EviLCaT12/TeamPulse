@@ -63,34 +63,45 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.ToTable("group_of_skills", "performances");
                 });
 
+            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.GroupSkill", b =>
+                {
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("group_id");
+
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("skill_id");
+
+                    b.HasKey("GroupId", "SkillId")
+                        .HasName("pk_group_skills");
+
+                    b.HasIndex("SkillId")
+                        .HasDatabaseName("ix_group_skills_skill_id");
+
+                    b.ToTable("group_skills", "performances");
+                });
+
             modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.RecordSkill", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("WhoId")
                         .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnName("who_id");
+
+                    b.Property<Guid>("WhatId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("what_id");
 
                     b.Property<string>("ManagerGrade")
                         .HasColumnType("text")
                         .HasColumnName("manager_grade");
 
-                    b.Property<Guid>("RecordId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("record_id");
-
                     b.Property<string>("SelfGrade")
                         .HasColumnType("text")
                         .HasColumnName("self_grade");
 
-                    b.Property<Guid?>("group_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("group_id");
-
-                    b.HasKey("Id")
+                    b.HasKey("WhoId", "WhatId")
                         .HasName("pk_record_skills");
-
-                    b.HasIndex("group_id")
-                        .HasDatabaseName("ix_record_skills_group_id");
 
                     b.ToTable("record_skills", "performances");
                 });
@@ -100,6 +111,10 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<Guid?>("GroupOfSkillsId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("group_of_skills_id");
 
                     b.Property<Guid>("grade_id")
                         .HasColumnType("uuid")
@@ -127,6 +142,9 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_skills");
+
+                    b.HasIndex("GroupOfSkillsId")
+                        .HasDatabaseName("ix_skills_group_of_skills_id");
 
                     b.HasIndex("grade_id")
                         .HasDatabaseName("ix_skills_grade_id");
@@ -181,25 +199,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("group_skill", b =>
-                {
-                    b.Property<Guid>("group_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("group_id");
-
-                    b.Property<Guid>("skill_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("skill_id");
-
-                    b.HasKey("group_id", "skill_id")
-                        .HasName("pk_group_skill");
-
-                    b.HasIndex("skill_id")
-                        .HasDatabaseName("ix_group_skill_skill_id");
-
-                    b.ToTable("group_skill", "performances");
-                });
-
             modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.SkillGrade.NumericSkillGrade", b =>
                 {
                     b.HasBaseType("TeamPulse.Performances.Domain.Entities.SkillGrade.BaseSkillGrade");
@@ -230,18 +229,34 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.Navigation("SkillGrade");
                 });
 
-            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.RecordSkill", b =>
+            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.GroupSkill", b =>
                 {
                     b.HasOne("TeamPulse.Performances.Domain.Entities.GroupOfSkills", "GroupOfSkills")
                         .WithMany()
-                        .HasForeignKey("group_id")
-                        .HasConstraintName("fk_record_skills_group_of_skills_group_id");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_group_skills_group_of_skills_group_id");
+
+                    b.HasOne("TeamPulse.Performances.Domain.Entities.Skill", "Skill")
+                        .WithMany()
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_group_skills_skills_skill_id");
 
                     b.Navigation("GroupOfSkills");
+
+                    b.Navigation("Skill");
                 });
 
             modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.Skill", b =>
                 {
+                    b.HasOne("TeamPulse.Performances.Domain.Entities.GroupOfSkills", null)
+                        .WithMany("Skills")
+                        .HasForeignKey("GroupOfSkillsId")
+                        .HasConstraintName("fk_skills_group_of_skills_group_of_skills_id");
+
                     b.HasOne("TeamPulse.Performances.Domain.Entities.SkillGrade.BaseSkillGrade", "SkillGrade")
                         .WithMany()
                         .HasForeignKey("grade_id")
@@ -252,21 +267,9 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                     b.Navigation("SkillGrade");
                 });
 
-            modelBuilder.Entity("group_skill", b =>
+            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.GroupOfSkills", b =>
                 {
-                    b.HasOne("TeamPulse.Performances.Domain.Entities.GroupOfSkills", null)
-                        .WithMany()
-                        .HasForeignKey("group_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_group_skill_group_of_skills_group_id");
-
-                    b.HasOne("TeamPulse.Performances.Domain.Entities.Skill", null)
-                        .WithMany()
-                        .HasForeignKey("skill_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_group_skill_skills_skill_id");
+                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

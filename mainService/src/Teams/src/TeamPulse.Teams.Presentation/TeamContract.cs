@@ -3,7 +3,9 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Team.Create;
+using TeamPulse.Teams.Application.Queries.Employee;
 using TeamPulse.Teams.Contract;
+using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Department;
 using TeamPulse.Teams.Contract.Requests.Team;
 
@@ -13,13 +15,16 @@ public class TeamContract : ITeamContract
 {
     private readonly ICommandHandler<Guid, CreateDepartmentCommand> _createDepartmentHandler;
     private readonly ICommandHandler<Guid, CreateTeamCommand> _createTeamCommandHandler;
+    private readonly IQueryHandler<EmployeeDto, GetByIdQuery> _getEmployeeQueryHandler;
 
     public TeamContract(
         ICommandHandler<Guid, CreateDepartmentCommand> createDepartmentHandler,
-        ICommandHandler<Guid, CreateTeamCommand> createTeamCommandHandler)
+        ICommandHandler<Guid, CreateTeamCommand> createTeamCommandHandler,
+        IQueryHandler<EmployeeDto, GetByIdQuery> getEmployeeQueryHandler)
     {
         _createDepartmentHandler = createDepartmentHandler;
         _createTeamCommandHandler = createTeamCommandHandler;
+        _getEmployeeQueryHandler = getEmployeeQueryHandler;
     }
 
     public async Task<Result<Guid, ErrorList>> CreateDepartmentAsync(CreateDepartmentRequest request,
@@ -31,6 +36,17 @@ public class TeamContract : ITeamContract
         if (result.IsFailure)
             return result.Error;
 
+        return result.Value;
+    }
+
+    public async Task<Result<EmployeeDto, ErrorList>> GetEmployeeByIdAsync(Guid employeeId, CancellationToken cancellationToken)
+    {
+        var query = new GetByIdQuery(employeeId);
+        
+        var result = await _getEmployeeQueryHandler.HandleAsync(query, cancellationToken);
+        if (result.IsFailure)
+            return result.Error;
+        
         return result.Value;
     }
 
