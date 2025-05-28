@@ -8,42 +8,59 @@ namespace TeamPulse.Teams.Domain.Entities;
 public class Team : Entity<TeamId>
 {
     //ef core
-    private Team() {}
+    private Team()
+    {
+    }
 
-    private Team(
+    public Team(
         TeamId id,
-        IEnumerable<Employee> employees,
         Name name,
-        Employee headOfTeam)
+        Department department,
+        IEnumerable<Employee>? employees,
+        Employee? headOfTeam)
     {
         Id = id;
-        _employees = employees.ToList();
+        _employees = employees?.ToList() ?? [];
         Name = name;
+        Department = department;
         HeadOfTeam = headOfTeam;
     }
-    
+
     public TeamId Id { get; private set; }
 
     private List<Employee> _employees = [];
-    
-    public IReadOnlyList<Employee> Employees => _employees;
-    
-    public Department Department { get; private set; }
-    
-    
-    public Name Name { get; private set; }
-    
-    public Employee HeadOfTeam { get; private set; }
 
-    public static Result<Team, Error> Create(
-        TeamId id,
-        List<Employee> employees,
-        Name name,
-        Employee headOfTeam)
+    public IReadOnlyList<Employee> Employees => _employees; 
+
+    public Department Department { get; private set; }
+
+    public Name Name { get; private set; }
+
+    public Employee? HeadOfTeam { get; private set; }
+
+    internal void AddEmployee(IEnumerable<Employee> employee)
     {
-        if (employees.Count != 0)
-            return Errors.General.ValueIsRequired("Cannot create a team without any employees");
-        
-        return new Team(id, employees, name, headOfTeam);
+        _employees.AddRange(employee);
+    }
+
+    internal void AddHeadOfTeam(Employee employee)
+    {
+        HeadOfTeam = employee;
+    }
+    
+    internal void UpdateName(Name newName)
+    {
+        Name = newName;
+    }
+
+    internal void UpdateEmployees(IEnumerable<Employee> newEmployees)
+    {
+        _employees.Clear();
+        _employees.AddRange(newEmployees);
+    }
+
+    internal void UpdateHeadOfTeam(Employee newHeadOfTeam)
+    {
+        HeadOfTeam = newHeadOfTeam;
     }
 }

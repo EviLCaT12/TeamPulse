@@ -6,11 +6,11 @@ namespace TeamPulse.Teams.Infrastructure.DbContexts;
 
 public class WriteDbContext(string connectionString) : DbContext
 {
-    DbSet<Department> Departments => Set<Department>();
+    public DbSet<Department> Departments => Set<Department>();
     
-    DbSet<Team> Teams => Set<Team>();
+    public DbSet<Team> Teams => Set<Team>();
     
-    DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<Employee> Employees => Set<Employee>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -53,19 +53,15 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("department_id");
-
-                    b.Property<Guid>("managed_department_id")
+                    b.Property<Guid?>("managed_department_id")
                         .HasColumnType("uuid")
                         .HasColumnName("managed_department_id");
 
-                    b.Property<Guid>("managed_team_id")
+                    b.Property<Guid?>("managed_team_id")
                         .HasColumnType("uuid")
                         .HasColumnName("managed_team_id");
 
-                    b.Property<Guid>("team_id")
+                    b.Property<Guid?>("team_id")
                         .HasColumnType("uuid")
                         .HasColumnName("team_id");
 
@@ -92,7 +88,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("department_id")
+                    b.Property<Guid?>("department_id")
                         .HasColumnType("uuid")
                         .HasColumnName("department_id");
 
@@ -122,21 +118,18 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .WithOne("HeadOfDepartment")
                         .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_department_id")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_employees_departments_managed_department_id");
 
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Team", "ManagedTeam")
                         .WithOne("HeadOfTeam")
                         .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_team_id")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_employees_teams_managed_team_id");
 
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Team", "Team")
                         .WithMany("Employees")
                         .HasForeignKey("team_id")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_employees_teams_team_id");
 
                     b.Navigation("Department");
@@ -152,7 +145,6 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .WithMany("Teams")
                         .HasForeignKey("department_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_teams_departments_department_id");
 
                     b.Navigation("Department");
@@ -160,8 +152,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
 
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Department", b =>
                 {
-                    b.Navigation("HeadOfDepartment")
-                        .IsRequired();
+                    b.Navigation("HeadOfDepartment");
 
                     b.Navigation("Teams");
                 });
@@ -170,8 +161,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                 {
                     b.Navigation("Employees");
 
-                    b.Navigation("HeadOfTeam")
-                        .IsRequired();
+                    b.Navigation("HeadOfTeam");
                 });
 #pragma warning restore 612, 618
         }
