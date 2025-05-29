@@ -9,8 +9,7 @@ namespace TeamPulse.Reports.Domain.Reports;
 /// какой-либо группой скиллов
 /// </summary>
 /// <typeparam name="TGradeType">Тип оценки</typeparam> 
-/// <typeparam name="TMedianType">Тип среднего арифметического(для int) и моды (для string)</typeparam> 
-public class MedianValueReport<TGradeType, TMedianType> : BaseReport, IGradeReports<TGradeType>
+public class MedianValueReport<TGradeType> : BaseReport
 {
     private MedianValueReport(
         ReportId reportId,
@@ -19,17 +18,17 @@ public class MedianValueReport<TGradeType, TMedianType> : BaseReport, IGradeRepo
         Name name,
         Description description,
         Dictionary<Guid, TGradeType> gradesByEmployees,
-        TMedianType medianValue) : base(reportId, departmentId, teamId, name, description)
+        object medianValue) : base(reportId, departmentId, teamId, name, description)
     {
         GradeByEmployee = gradesByEmployees;
         MedianValue = medianValue;
     }
 
     public Dictionary<Guid, TGradeType> GradeByEmployee { get; private set; }
-    public TMedianType MedianValue { get; private set; }
+    public object MedianValue { get; private set; }
 
 
-    public Result<BaseReport, Error> CreateReport(BaseReport report, Dictionary<Guid, TGradeType> gradeByEmployee)
+    public static Result<BaseReport, Error> Create(BaseReport report, Dictionary<Guid, TGradeType> gradeByEmployee)
     {
         if (gradeByEmployee.Count == 0)
             return Errors.General.ValueIsRequired("Employees and grades cannot be empty.");
@@ -45,7 +44,7 @@ public class MedianValueReport<TGradeType, TMedianType> : BaseReport, IGradeRepo
                 kvp => kvp.Key,
                 kvp => (int)(object)kvp.Value!);
             
-            return new MedianValueReport<int, decimal>(
+            return new MedianValueReport<int>(
                 report.Id,
                 report.DepartmentId,
                 report.TeamId,
@@ -74,7 +73,7 @@ public class MedianValueReport<TGradeType, TMedianType> : BaseReport, IGradeRepo
                 kvp => kvp.Key,
                 kvp => (string)(object)kvp.Value!);
             
-            return new MedianValueReport<string, string>(
+            return new MedianValueReport<string>(
                 report.Id,
                 report.DepartmentId,
                 report.TeamId,

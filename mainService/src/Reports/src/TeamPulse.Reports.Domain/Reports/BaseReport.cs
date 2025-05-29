@@ -4,7 +4,7 @@ using TeamPulse.SharedKernel.SharedVO;
 
 namespace TeamPulse.Reports.Domain.Reports;
 
-public abstract class BaseReport : Entity<ReportId>
+public class BaseReport : Entity<ReportId>
 {
     //ef core
     private BaseReport() {}
