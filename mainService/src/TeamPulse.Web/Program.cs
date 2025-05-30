@@ -1,7 +1,8 @@
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
-using TeamPulse.SharedKernel.Constants;
+using TeamPulse.Performances.Application;
+using TeamPulse.Performances.Infrastructure;
 using TeamPulse.Team.Presentation;
 using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Infrastructure;
@@ -36,7 +37,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services
     .AddTeamApplication()
     .AddTeamInfrastructure(builder.Configuration)
-    .AddTeamPresentation();
+    .AddTeamPresentation()
+    
+    .AddPerformancesApplication()
+    .AddPerformancesInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 

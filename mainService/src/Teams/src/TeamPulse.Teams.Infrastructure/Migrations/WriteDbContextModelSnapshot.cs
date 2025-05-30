@@ -53,7 +53,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("managed_department_id")
+                    b.Property<Guid?>("ManagedDepartmentId")
                         .HasColumnType("uuid")
                         .HasColumnName("managed_department_id");
 
@@ -68,7 +68,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_employees");
 
-                    b.HasIndex("managed_department_id")
+                    b.HasIndex("ManagedDepartmentId")
                         .IsUnique()
                         .HasDatabaseName("ix_employees_managed_department_id");
 
@@ -114,9 +114,9 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
 
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Employee", b =>
                 {
-                    b.HasOne("TeamPulse.Teams.Domain.Entities.Department", "Department")
+                    b.HasOne("TeamPulse.Teams.Domain.Entities.Department", "ManagedDepartment")
                         .WithOne("HeadOfDepartment")
-                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_department_id")
+                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "ManagedDepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_employees_departments_managed_department_id");
 
@@ -132,7 +132,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_employees_teams_team_id");
 
-                    b.Navigation("Department");
+                    b.Navigation("ManagedDepartment");
 
                     b.Navigation("ManagedTeam");
 

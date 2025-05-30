@@ -30,6 +30,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Performances\src\TeamPulse.Performances.Infrastructure\TeamPulse.Performances.Infrastructure.csproj" />
+      <ProjectReference Include="..\Performances\src\TeamPulse.Performances.Presentation\TeamPulse.Performances.Presentation.csproj" />
       <ProjectReference Include="..\Teams\src\TeamPulse.Teams.Infrastructure\TeamPulse.Teams.Infrastructure.csproj" />
       <ProjectReference Include="..\Teams\src\TeamPulse.Teams.Presentation\TeamPulse.Teams.Presentation.csproj" />
     </ItemGroup>

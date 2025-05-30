@@ -5,6 +5,8 @@ using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Department.Delete;
 using TeamPulse.Teams.Application.Commands.Department.Update;
+using TeamPulse.Teams.Application.Queries.Department;
+using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Department;
 
 namespace TeamPulse.Team.Presentation;
@@ -63,5 +65,20 @@ public class DepartmentController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok();
+    }
+
+    [HttpGet("{departmentId:guid}")]
+    public async Task<ActionResult> GetDepartmentById(
+        [FromRoute] Guid departmentId,
+        [FromServices] IQueryHandler<DepartmentDto, GetByIdQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetByIdQuery(departmentId);
+        
+        var result = await handler.HandleAsync(query, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok(result.Value);
     }
 }

@@ -77,7 +77,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.ManagedDepartment is not null)
+                if (headOfDepartment.ManagedDepartmentId is not null)
                 {
                     _logger.LogWarning($"Employee with id {employeeId.Value} is already head of department");
                 }

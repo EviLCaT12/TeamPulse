@@ -18,6 +18,8 @@ public class Employee : Entity<EmployeeId>
     
     public Team Team { get; private set; }
     public Team? ManagedTeam { get; private set; }
+    
     public Department? ManagedDepartment { get; private set; }
+    public DepartmentId? ManagedDepartmentId { get; private set; }
     
 }
