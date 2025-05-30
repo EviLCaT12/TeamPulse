@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\TeamPulse.SharedKernel\TeamPulse.SharedKernel.csproj" />
+      <ProjectReference Include="..\TeamPulse.Reports.Contract\TeamPulse.Reports.Contract.csproj" />
     </ItemGroup>
 
 </Project>

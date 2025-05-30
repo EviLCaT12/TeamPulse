@@ -9,7 +9,8 @@ public class BaseReport : Entity<ReportId>
     //ef core
     private BaseReport() {}
 
-    protected BaseReport(
+    //ToDo: Заменить на Create
+    public BaseReport(
         ReportId id,
         Guid departmentId,
         Guid teamId,
