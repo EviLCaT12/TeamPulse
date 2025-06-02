@@ -1,4 +1,5 @@
 using TeamPulse.Performances.Application.DatabaseAbstraction;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;

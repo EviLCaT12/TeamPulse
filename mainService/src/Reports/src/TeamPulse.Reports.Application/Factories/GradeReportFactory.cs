@@ -1,9 +1,11 @@
 using CSharpFunctionalExtensions;
 using TeamPulse.Reports.Contract.Dtos;
+using TeamPulse.Reports.Domain;
+using TeamPulse.Reports.Domain.Reports;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
 
-namespace TeamPulse.Reports.Domain.Reports;
+namespace TeamPulse.Reports.Application.Factories;
 
 public abstract class GradeReportFactory<TGradeType> : IReportFactory<Dictionary<Guid, TGradeType>>
 {
@@ -14,12 +16,13 @@ public abstract class GradeReportFactory<TGradeType> : IReportFactory<Dictionary
             case "average_value":
                 var report = new BaseReport(
                     ReportId.NewId(),
+                    Name.Create(reportInfo.ReportName).Value,
+                    Description.Create(reportInfo.Description).Value,
                     reportInfo.DepartmentId,
                     reportInfo.TeamId,
-                    Name.Create(reportInfo.ReportName).Value,
-                    Description.Create(reportInfo.Description).Value);
+                    reportInfo.EmployeeId);
                 
-                    var result = MedianValueReport<TGradeType>.Create(report, source);
+                    var result = MedianValueTeamReport<TGradeType>.Create(report, source);
                     
                     if (result.IsFailure)
                         return result.Error;

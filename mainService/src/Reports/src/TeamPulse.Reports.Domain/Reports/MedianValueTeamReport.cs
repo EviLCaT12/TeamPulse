@@ -6,19 +6,23 @@ namespace TeamPulse.Reports.Domain.Reports;
 
 /// <summary>
 /// Отчёт, дающий информацию о среднем показателе владения той или иной группой(команда/отдел)
-/// какой-либо группой скиллов
+/// какой-либо группой скиллов.
+/// Если все три айди null - отчёт по сотруднику
+/// EmployeeId is null - отчет по команде
+/// TeamId is null - отчет по отделу 
 /// </summary>
 /// <typeparam name="TGradeType">Тип оценки</typeparam> 
-public class MedianValueReport<TGradeType> : BaseReport
+public class MedianValueTeamReport<TGradeType> : BaseReport
 {
-    private MedianValueReport(
+    private MedianValueTeamReport(
         ReportId reportId,
-        Guid departmentId,
-        Guid teamId,
         Name name,
         Description description,
+        Guid departmentId,
+        Guid? teamId,
+        Guid? employeeId,
         Dictionary<Guid, TGradeType> gradesByEmployees,
-        object medianValue) : base(reportId, departmentId, teamId, name, description)
+        object medianValue) : base(reportId, name, description, departmentId, teamId, employeeId)
     {
         GradeByEmployee = gradesByEmployees;
         MedianValue = medianValue;
@@ -44,12 +48,13 @@ public class MedianValueReport<TGradeType> : BaseReport
                 kvp => kvp.Key,
                 kvp => (int)(object)kvp.Value!);
             
-            return new MedianValueReport<int>(
+            return new MedianValueTeamReport<int>(
                 report.Id,
-                report.DepartmentId,
-                report.TeamId,
                 report.Name,
                 report.Description,
+                report.DepartmentId,
+                report.TeamId,
+                report.EmployeeId,
                 intGrades,
                 medianValue);
         }
@@ -72,17 +77,18 @@ public class MedianValueReport<TGradeType> : BaseReport
             var stringGradesDict = gradeByEmployee.ToDictionary(
                 kvp => kvp.Key,
                 kvp => (string)(object)kvp.Value!);
-            
-            return new MedianValueReport<string>(
+
+            return new MedianValueTeamReport<string>(
                 report.Id,
-                report.DepartmentId,
-                report.TeamId,
                 report.Name,
                 report.Description,
+                report.DepartmentId,
+                report.TeamId,
+                report.EmployeeId,
                 stringGradesDict,
                 medianValue);
         }
-        
+          
         return Errors.General.ValueIsInvalid("Unknown grade type.");
     }
 }

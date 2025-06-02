@@ -1,7 +1,7 @@
 using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 
-namespace TeamPulse.Performances.Application.DatabaseAbstraction;
+namespace TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
 
 public interface ISkillGradeRepository
 { 

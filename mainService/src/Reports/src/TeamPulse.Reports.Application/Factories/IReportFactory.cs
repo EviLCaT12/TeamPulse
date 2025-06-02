@@ -1,9 +1,9 @@
 using CSharpFunctionalExtensions;
 using TeamPulse.Reports.Contract.Dtos;
+using TeamPulse.Reports.Domain.Reports;
 using TeamPulse.SharedKernel.Errors;
-using TeamPulse.SharedKernel.SharedVO;
 
-namespace TeamPulse.Reports.Domain.Reports;
+namespace TeamPulse.Reports.Application.Factories;
 
 public interface IReportFactory<in TSource>
 {

@@ -1,4 +1,5 @@
 using TeamPulse.Performances.Application.DatabaseAbstraction;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
 using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.Performances.Infrastructure.DbContexts;

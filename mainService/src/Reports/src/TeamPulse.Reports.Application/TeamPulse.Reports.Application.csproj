@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Performances\src\TeamPulse.Performances.Contract\TeamPulse.Performances.Contract.csproj" />
       <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
       <ProjectReference Include="..\..\..\Teams\src\TeamPulse.Teams.Contract\TeamPulse.Teams.Contract.csproj" />
-      <ProjectReference Include="..\TeamPulse.Performances.Contract\TeamPulse.Performances.Contract.csproj" />
-      <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
+      <ProjectReference Include="..\TeamPulse.Reports.Domain\TeamPulse.Reports.Domain.csproj" />
     </ItemGroup>
 
 </Project>

@@ -8,24 +8,27 @@ public class BaseReport : Entity<ReportId>
 {
     //ef core
     private BaseReport() {}
-
-    //ToDo: Заменить на Create
+    
     public BaseReport(
         ReportId id,
-        Guid departmentId,
-        Guid teamId,
         Name name,
-        Description description) : base(id)
+        Description description,
+        Guid departmentId,
+        Guid? teamId,
+        Guid? employeeId) : base(id)
     {
-        DepartmentId = departmentId;
-        TeamId = teamId;
         Name = name;
         Description = description;
+        DepartmentId = departmentId;
+        TeamId = teamId;
+        EmployeeId = employeeId;
     }
     
     public Guid DepartmentId { get; protected set; }
+
+    public Guid? TeamId { get; protected set; } = null;
     
-    public Guid TeamId { get; protected set; }
+    public Guid? EmployeeId { get; protected set; } = null;
     
     public Name Name { get; protected set; } = null!;
     

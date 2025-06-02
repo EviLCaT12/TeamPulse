@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 using TeamPulse.Performances.Infrastructure.Repositories;
 using TeamPulse.SharedKernel.Constants;
@@ -26,6 +27,10 @@ public static class DependencyInjection
         services.AddScoped<WriteDbContext>(_ =>
             new WriteDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE) 
                                ?? throw new ApplicationException("Cannot connect to the database.")));
+
+        services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+            new ReadDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE)
+                              ?? throw new ApplicationException("Cannot connect to the database.")));
         
         return services;
     }
