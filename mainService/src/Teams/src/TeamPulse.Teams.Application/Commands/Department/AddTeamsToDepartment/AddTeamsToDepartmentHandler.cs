@@ -1,0 +1,83 @@
+using CSharpFunctionalExtensions;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using TeamPulse.Core.Abstractions;
+using TeamPulse.Core.Validators;
+using TeamPulse.SharedKernel.Errors;
+using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Domain.VO.Ids;
+
+namespace TeamPulse.Teams.Application.Commands.Department.AddTeamsToDepartment;
+
+public class AddTeamsToDepartmentHandler : ICommandHandler<AddTeamsToDepartmentCommand>
+{
+    private readonly ILogger<AddTeamsToDepartmentHandler> _logger;
+    private readonly IValidator<AddTeamsToDepartmentCommand> _validator;
+    private readonly IDepartmentRepository _departmentRepository;
+    private readonly ITeamRepository _teamRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AddTeamsToDepartmentHandler(
+        ILogger<AddTeamsToDepartmentHandler> logger,
+        IValidator<AddTeamsToDepartmentCommand> validator,
+        IDepartmentRepository departmentRepository,
+        ITeamRepository teamRepository,
+        [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork)
+    {
+        _logger = logger;
+        _validator = validator;
+        _departmentRepository = departmentRepository;
+        _teamRepository = teamRepository;
+        _unitOfWork = unitOfWork;
+    }
+    public async Task<UnitResult<ErrorList>> HandleAsync(AddTeamsToDepartmentCommand command, CancellationToken cancellationToken)
+    {
+        var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (validationResult.IsValid == false)
+            return validationResult.ToErrorList();
+        
+        var departmentId = DepartmentId.Create(command.DepartmentId).Value;
+        var department = await _departmentRepository.GetDepartmentByIdAsync(departmentId, cancellationToken);
+        if (department is null)
+        {
+            var errorMessage = $"Department with id {departmentId.Value} was not found.";
+            _logger.LogError(errorMessage);
+            return Errors.General.ValueNotFound(errorMessage).ToErrorList();
+        }
+
+        List<Domain.Entities.Team> teamsToAdd = [];
+        foreach (var teamId in command.TeamIds)
+        {
+            var team = await _teamRepository.GetTeamIdAsync(
+                TeamId.Create(teamId).Value,
+                cancellationToken);
+            if (team is null)
+            {
+                var errorMessage = $"Team with id {teamId} was not found.";
+                _logger.LogError(errorMessage);
+                return Errors.General.ValueNotFound(errorMessage).ToErrorList();
+            }
+
+            var isTeamInDepartment = department.IsTeamInDepartment(team);
+            if (isTeamInDepartment)
+            {
+                var errorMessage = $"Team with id {teamId} is already in department.";
+                _logger.LogError(errorMessage);
+                Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
+            }
+            
+            teamsToAdd.Add(team);
+        }
+        
+        department.AddTeams(teamsToAdd);
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        transaction.Commit();
+
+        return UnitResult.Success<ErrorList>();
+    }
+}

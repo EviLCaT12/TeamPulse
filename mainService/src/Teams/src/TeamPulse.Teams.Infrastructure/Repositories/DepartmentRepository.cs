@@ -22,7 +22,9 @@ public class DepartmentRepository : IDepartmentRepository
 
     public async Task<Department?> GetDepartmentByIdAsync(DepartmentId departmentId, CancellationToken cancellationToken)
     {
-        return await _context.Departments.FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
+        return await _context.Departments
+            .Include(d => d.Teams)
+            .FirstOrDefaultAsync(d => d.Id == departmentId, cancellationToken);
     }
 
     public void DeleteDepartment(Department department)

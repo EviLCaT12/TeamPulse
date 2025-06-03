@@ -39,6 +39,11 @@ public class Department : Entity<DepartmentId>
         _teams.AddRange(teams);
     }
 
+    public bool IsTeamInDepartment(Team team)
+    {
+        return _teams.Contains(team);
+    }
+
     public void AddHeadOfDepartment(Employee employee)
     {
         HeadOfDepartment = employee;
