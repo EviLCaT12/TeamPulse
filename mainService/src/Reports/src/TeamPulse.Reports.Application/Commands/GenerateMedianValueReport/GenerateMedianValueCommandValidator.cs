@@ -14,9 +14,6 @@ public class GenerateMedianValueCommandValidator : AbstractValidator<GenerateMed
         RuleFor(c => c.Object)
             .NotEmpty()
             .WithMessage("Context object cannot be null or empty.");
-        RuleFor(c => c.ObjectType)
-            .NotEmpty()
-            .WithMessage("Select object type.");
         RuleFor(c => c.Subject)
             .NotEmpty()
             .WithMessage("Context subject cannot be null or empty.");

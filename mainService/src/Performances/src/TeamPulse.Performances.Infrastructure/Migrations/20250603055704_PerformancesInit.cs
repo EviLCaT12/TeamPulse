@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeamPulse.Performances.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class PerformanceInitial : Migration
+    public partial class PerformancesInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,19 +74,12 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     grade_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    group_of_skills_id = table.Column<Guid>(type: "uuid", nullable: true),
                     description = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_skills", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_skills_group_of_skills_group_of_skills_id",
-                        column: x => x.group_of_skills_id,
-                        principalSchema: "performances",
-                        principalTable: "group_of_skills",
-                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_skills_skill_grade_grade_id",
                         column: x => x.grade_id,
@@ -140,12 +133,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                 schema: "performances",
                 table: "skills",
                 column: "grade_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_skills_group_of_skills_id",
-                schema: "performances",
-                table: "skills",
-                column: "group_of_skills_id");
         }
 
         /// <inheritdoc />
@@ -160,11 +147,11 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                 schema: "performances");
 
             migrationBuilder.DropTable(
-                name: "skills",
+                name: "group_of_skills",
                 schema: "performances");
 
             migrationBuilder.DropTable(
-                name: "group_of_skills",
+                name: "skills",
                 schema: "performances");
 
             migrationBuilder.DropTable(

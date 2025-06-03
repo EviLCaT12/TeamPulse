@@ -70,10 +70,10 @@ public class DepartmentController : ApplicationController
     [HttpGet("{departmentId:guid}")]
     public async Task<ActionResult> GetDepartmentById(
         [FromRoute] Guid departmentId,
-        [FromServices] IQueryHandler<DepartmentDto, GetByIdQuery> handler,
+        [FromServices] IQueryHandler<DepartmentDto, GetDepartmentByIdQuery> handler,
         CancellationToken cancellationToken)
     {
-        var query = new GetByIdQuery(departmentId);
+        var query = new GetDepartmentByIdQuery(departmentId);
         
         var result = await handler.HandleAsync(query, cancellationToken);
         if (result.IsFailure)

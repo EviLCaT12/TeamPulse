@@ -11,5 +11,7 @@ public class EmployeeDtoConfiguration : IEntityTypeConfiguration<EmployeeDto>
         builder.ToTable("employees");
 
         builder.HasKey(e => e.Id);
+        
+        
     }
 }

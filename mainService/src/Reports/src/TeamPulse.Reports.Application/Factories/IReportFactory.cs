@@ -7,5 +7,5 @@ namespace TeamPulse.Reports.Application.Factories;
 
 public interface IReportFactory<in TSource>
 {
-    Result<BaseReport, Error> GenerateReport(TSource source, InfoToGenerateReport reportInfo);
+    Result<BaseReport, Error> GenerateReport(TSource source, InfoToGenerateReportDto reportInfo);
 }

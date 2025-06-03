@@ -8,17 +8,17 @@ using TeamPulse.Teams.Contract.Dtos;
 
 namespace TeamPulse.Teams.Application.Queries.Team;
 
-public class GetByIdHandler : IQueryHandler<TeamDto, GetByIdQuery>
+public class GetTeamByIdHandler : IQueryHandler<TeamDto, GetTeamByIdQuery>
 {
     private readonly IReadDbContext _readDbContext;
-    private readonly ILogger<GetByIdHandler> _logger;
+    private readonly ILogger<GetTeamByIdHandler> _logger;
 
-    public GetByIdHandler(IReadDbContext readDbContext, ILogger<GetByIdHandler> logger)
+    public GetTeamByIdHandler(IReadDbContext readDbContext, ILogger<GetTeamByIdHandler> logger)
     {
         _readDbContext = readDbContext;
         _logger = logger;
     }
-    public async Task<Result<TeamDto, ErrorList>> HandleAsync(GetByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<TeamDto, ErrorList>> HandleAsync(GetTeamByIdQuery query, CancellationToken cancellationToken)
     {
         var team = await _readDbContext.Teams
             .Include(t => t.Employees)

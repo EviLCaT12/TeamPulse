@@ -11,8 +11,8 @@ namespace TeamPulse.Reports.Domain.Reports;
 /// EmployeeId is null - отчет по команде
 /// TeamId is null - отчет по отделу 
 /// </summary>
-/// <typeparam name="TGradeType">Тип оценки</typeparam> 
-public class MedianValueTeamReport<TGradeType> : BaseReport
+/// <typeparam name="TSourceType">Тип оценки</typeparam> 
+public class MedianValueTeamReport<TSourceType> : BaseReport
 {
     private MedianValueTeamReport(
         ReportId reportId,
@@ -21,33 +21,37 @@ public class MedianValueTeamReport<TGradeType> : BaseReport
         Guid departmentId,
         Guid? teamId,
         Guid? employeeId,
-        Dictionary<Guid, TGradeType> gradesByEmployees,
+        Guid objectId,
+        IEnumerable<TSourceType> sourceData,
         object medianValue) : base(reportId, name, description, departmentId, teamId, employeeId)
     {
-        GradeByEmployee = gradesByEmployees;
+        Object = objectId;
+        _source = sourceData.ToList();
         MedianValue = medianValue;
     }
+    
+    
+    public Guid Object { get; private set; }
 
-    public Dictionary<Guid, TGradeType> GradeByEmployee { get; private set; }
+    private List<TSourceType> _source = [];
+    public IReadOnlyList<TSourceType> Source => _source;
     public object MedianValue { get; private set; }
-
-
-    public static Result<BaseReport, Error> Create(BaseReport report, Dictionary<Guid, TGradeType> gradeByEmployee)
+    
+    public static Result<BaseReport, Error> Create(
+        BaseReport report,
+        Guid objectId,
+        IEnumerable<TSourceType> sourceData)
     {
-        if (gradeByEmployee.Count == 0)
-            return Errors.General.ValueIsRequired("Employees and grades cannot be empty.");
+        if (sourceData.Any() == false)
+            return Errors.General.ValueIsRequired("Source data cannot be empty.");
 
-        if (typeof(TGradeType) == typeof(int))
+        if (typeof(TSourceType) == typeof(int))
         {
-            decimal totalSum = gradeByEmployee.Values
-                .Aggregate(0, (current, grade) => current + (int)(object)grade!);
-            
-            var medianValue = totalSum / gradeByEmployee.Count;
+            var intSource = sourceData.Cast<int>().ToList();
 
-            var intGrades = gradeByEmployee.ToDictionary(
-                kvp => kvp.Key,
-                kvp => (int)(object)kvp.Value!);
-            
+            decimal totalSum = intSource.Sum();
+            var medianValue = totalSum / intSource.Count;
+
             return new MedianValueTeamReport<int>(
                 report.Id,
                 report.Name,
@@ -55,28 +59,24 @@ public class MedianValueTeamReport<TGradeType> : BaseReport
                 report.DepartmentId,
                 report.TeamId,
                 report.EmployeeId,
-                intGrades,
+                objectId,
+                intSource,
                 medianValue);
         }
 
-        if (typeof(TGradeType) == typeof(string))
+        if (typeof(TSourceType) == typeof(string))
         {
-            var stringGrades = gradeByEmployee.Values.Cast<string>().ToList();
+            var stringGrades = sourceData.Cast<string>().ToList();
 
             var mostFrequentString = stringGrades
                 .GroupBy(s => s)
                 .OrderByDescending(s => s.Count())
                 .Select(g => g.Key)
-                .ToList();
+                .FirstOrDefault();
             
-            if (mostFrequentString.Count > 1)
-                return Errors.General.ValueIsInvalid("More than mod frequent strings are not supported.");
-
-            var medianValue = mostFrequentString.First();
-            
-            var stringGradesDict = gradeByEmployee.ToDictionary(
-                kvp => kvp.Key,
-                kvp => (string)(object)kvp.Value!);
+            // if (mostFrequentString.Count > 1)
+            //     return Errors.General.ValueIsInvalid("More than mod frequent strings are not supported.");
+            ;
 
             return new MedianValueTeamReport<string>(
                 report.Id,
@@ -85,8 +85,9 @@ public class MedianValueTeamReport<TGradeType> : BaseReport
                 report.DepartmentId,
                 report.TeamId,
                 report.EmployeeId,
-                stringGradesDict,
-                medianValue);
+                objectId,
+                stringGrades,
+                mostFrequentString!);
         }
           
         return Errors.General.ValueIsInvalid("Unknown grade type.");

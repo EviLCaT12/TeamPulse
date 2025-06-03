@@ -5,7 +5,7 @@
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class khg : Migration
+    public partial class PerformancesInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

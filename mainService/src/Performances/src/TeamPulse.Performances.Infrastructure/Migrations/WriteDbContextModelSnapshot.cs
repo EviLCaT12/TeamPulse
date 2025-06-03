@@ -112,10 +112,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("GroupOfSkillsId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("group_of_skills_id");
-
                     b.Property<Guid>("grade_id")
                         .HasColumnType("uuid")
                         .HasColumnName("grade_id");
@@ -142,9 +138,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_skills");
-
-                    b.HasIndex("GroupOfSkillsId")
-                        .HasDatabaseName("ix_skills_group_of_skills_id");
 
                     b.HasIndex("grade_id")
                         .HasDatabaseName("ix_skills_grade_id");
@@ -252,11 +245,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
 
             modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.Skill", b =>
                 {
-                    b.HasOne("TeamPulse.Performances.Domain.Entities.GroupOfSkills", null)
-                        .WithMany("Skills")
-                        .HasForeignKey("GroupOfSkillsId")
-                        .HasConstraintName("fk_skills_group_of_skills_group_of_skills_id");
-
                     b.HasOne("TeamPulse.Performances.Domain.Entities.SkillGrade.BaseSkillGrade", "SkillGrade")
                         .WithMany()
                         .HasForeignKey("grade_id")
@@ -265,11 +253,6 @@ namespace TeamPulse.Performances.Infrastructure.Migrations
                         .HasConstraintName("fk_skills_skill_grade_grade_id");
 
                     b.Navigation("SkillGrade");
-                });
-
-            modelBuilder.Entity("TeamPulse.Performances.Domain.Entities.GroupOfSkills", b =>
-                {
-                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

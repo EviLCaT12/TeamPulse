@@ -28,10 +28,10 @@ public class EmployeeController : ApplicationController
     [HttpGet("{employeeId:guid}")]
     public async Task<ActionResult> GetEmployeeById(
         [FromRoute] Guid employeeId,
-        [FromServices] IQueryHandler<EmployeeDto, GetByIdQuery> handler,
+        [FromServices] IQueryHandler<EmployeeDto, GetEmployeeByIdQuery> handler,
         CancellationToken cancellationToken)
     {
-        var command = new GetByIdQuery(employeeId);
+        var command = new GetEmployeeByIdQuery(employeeId);
         
         var result = await handler.HandleAsync(command, cancellationToken);
         if (result.IsFailure)

@@ -8,18 +8,18 @@ using TeamPulse.Teams.Contract.Dtos;
 
 namespace TeamPulse.Teams.Application.Queries.Department;
 
-public class GetByIdHandler : IQueryHandler<DepartmentDto, GetByIdQuery>
+public class GetDepartmentByIdHandler : IQueryHandler<DepartmentDto, GetDepartmentByIdQuery>
 {
     private readonly IReadDbContext _readDbContext;
-    private readonly ILogger<GetByIdHandler> _logger;
+    private readonly ILogger<GetDepartmentByIdHandler> _logger;
 
-    public GetByIdHandler(IReadDbContext readDbContext, ILogger<GetByIdHandler> logger)
+    public GetDepartmentByIdHandler(IReadDbContext readDbContext, ILogger<GetDepartmentByIdHandler> logger)
     {
         _readDbContext = readDbContext;
         _logger = logger;
     }
     
-    public async Task<Result<DepartmentDto, ErrorList>> HandleAsync(GetByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<DepartmentDto, ErrorList>> HandleAsync(GetDepartmentByIdQuery query, CancellationToken cancellationToken)
     {
         var departments = await _readDbContext.Departments
             .Include(d => d.Teams)

@@ -8,5 +8,4 @@ public record GenerateMedianValueCommand(
     string Description,
     Guid Object, //Отдел, команда, сотрудник
     ObjectType ObjectType,
-    Guid Subject //Группа скиллов, скилл (На данный момент пока только группа скиллов)
-) : ICommand;
+    Guid Subject) : ICommand; //Группа скиллов, скилл (На данный момент пока только группа скиллов))

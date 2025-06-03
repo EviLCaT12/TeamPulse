@@ -72,10 +72,10 @@ public class TeamController : ApplicationController
     [HttpGet("{teamId:guid}")]
     public async Task<ActionResult> GetTeamById(
         [FromRoute] Guid teamId,
-        [FromServices] IQueryHandler<TeamDto, GetByIdQuery> handler,
+        [FromServices] IQueryHandler<TeamDto, GetTeamByIdQuery> handler,
         CancellationToken cancellationToken)
     {
-        var command = new GetByIdQuery(teamId);
+        var command = new GetTeamByIdQuery(teamId);
         var result = await handler.HandleAsync(command, cancellationToken);
         
         if (result.IsFailure)

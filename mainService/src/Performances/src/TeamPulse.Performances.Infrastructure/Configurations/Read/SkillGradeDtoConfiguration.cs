@@ -11,5 +11,7 @@ public class SkillGradeDtoConfiguration : IEntityTypeConfiguration<SkillGradeDto
         builder.ToTable("skill_grade");
 
         builder.HasKey(x => x.Id);
+        
+        
     }
 }

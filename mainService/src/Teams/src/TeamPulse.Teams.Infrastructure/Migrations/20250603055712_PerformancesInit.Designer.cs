@@ -13,8 +13,8 @@ using TeamPulse.Teams.Infrastructure.DbContexts;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250520132002_khg")]
-    partial class khg
+    [Migration("20250603055712_PerformancesInit")]
+    partial class PerformancesInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

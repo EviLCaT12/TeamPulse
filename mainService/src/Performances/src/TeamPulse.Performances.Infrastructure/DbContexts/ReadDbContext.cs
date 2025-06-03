@@ -10,6 +10,12 @@ public class ReadDbContext(string connectionString) : DbContext, IReadDbContext
     public IQueryable<GroupOfSkillsDto> GroupOfSkills => Set<GroupOfSkillsDto>();
     
     public IQueryable<SkillGradeDto> SkillGrades => Set<SkillGradeDto>();
+    
+    public IQueryable<GroupSkillDto> GroupSkills => Set<GroupSkillDto>();
+    
+    public IQueryable<SkillDto> Skills => Set<SkillDto>();
+    
+    public IQueryable<RecordSkillDto> RecordSkills => Set<RecordSkillDto>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
