@@ -23,8 +23,7 @@ public class Create : BaseTest
         var command = new CreateTeamCommand(
             Guid.NewGuid().ToString(),
             department.Id.Value,
-            null,
-            null);
+            Utilities.SeedEmployees(1).First().Id.Value);
 
         var sut = Scope.ServiceProvider.GetRequiredService<ICommandHandler<Guid, CreateTeamCommand>>();
 

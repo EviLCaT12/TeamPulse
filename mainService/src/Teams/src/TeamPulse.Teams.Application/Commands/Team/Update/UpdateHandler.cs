@@ -53,16 +53,16 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
         
-        //ToDO возможно стоит проверять принадлежность команды к отделу (изменять команды может руководитель отдела)
-        var department = await _departmentRepository.GetDepartmentByIdAsync(team.Department.Id, cancellationToken);
+        var department = await _departmentRepository.GetDepartmentByIdAsync(team.DepartmentId, cancellationToken);
         //По задумке такая ситуация невозможна, но на всякий случай проверю
         if (department is null)
         {
-            var errorMessage = $"Department with id {team.Department.Id.Value} not found.";
+            var errorMessage = $"Department with id {team.DepartmentId.Value} not found.";
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-
+    
+        
         if (command.NewName is not null)
         {
             var newName = Name.Create(command.NewName).Value;
@@ -93,6 +93,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 return updateResult.Error.ToErrorList();
         }
 
+        //ToDo: Вынести в отдельный метод, ибо такие манипуляции должен мочь проделывать только руководитель отдела
         if (command.NewHeadOfTeam is not null)
         {
             var employeeId = EmployeeId.Create(command.NewHeadOfTeam.Value).Value;
@@ -118,13 +119,14 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             }
         }
 
+        //ToDo: Вынести в отдельный метод, ибо такие манипуляции должен мочь проделывать только руководитель отдела
         if (command.NewDepartmentId is not null)
         {
             var newDepartmentId = DepartmentId.Create(command.NewDepartmentId.Value).Value;
             var newDepartment = await _departmentRepository.GetDepartmentByIdAsync(newDepartmentId, cancellationToken);
             if (newDepartment is null)
             {
-                var errorMessage = $"Department with id {team.Department.Id.Value} not found.";
+                var errorMessage = $"Department with id {command.NewDepartmentId} not found.";
                 _logger.LogError(errorMessage);
                 return Errors.General.ValueNotFound(errorMessage).ToErrorList();
             }

@@ -53,47 +53,49 @@ public class CreateHandler : ICommandHandler<Guid, CreateTeamCommand>
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
-        List<Domain.Entities.Employee> employees = [];
-        var employeeIds = teamCommand.EmployeeIds ?? [];
-        foreach (var employeeId in employeeIds)
-        {
-            var employee = await _employeeRepository.GetEmployeeByIdAsync(
-                EmployeeId.Create(employeeId).Value,
-                cancellationToken);
-            if (employee is null)
-            {
-                _logger.LogInformation($"Employee with id {employeeId} was not found.");
-                continue;
-            }
-            employees.Add(employee);
-        }
+        // List<Domain.Entities.Employee> employees = [];
+        // var employeeIds = teamCommand.EmployeeIds ?? [];
+        // foreach (var employeeId in employeeIds)
+        // {
+        //     var employee = await _employeeRepository.GetEmployeeByIdAsync(
+        //         EmployeeId.Create(employeeId).Value,
+        //         cancellationToken);
+        //     if (employee is null)
+        //     {
+        //         _logger.LogInformation($"Employee with id {employeeId} was not found.");
+        //         continue;
+        //     }
+        //     employees.Add(employee);
+        // }
         
-        Domain.Entities.Employee? headOfTeam = null;
-        if (teamCommand.HeadOfTeamId is not null)
+        Domain.Entities.Employee headOfTeam;
+        
+        var employeeId = EmployeeId.Create(teamCommand.HeadOfTeamId).Value;
+        var possibleHeadOfTeam = await _employeeRepository
+            .GetEmployeeByIdAsync(employeeId, cancellationToken);
+        if (possibleHeadOfTeam is not null)
         {
-            var employeeId = EmployeeId.Create(teamCommand.HeadOfTeamId!.Value).Value;
-            var possibleHeadOfTeam = await _employeeRepository
-                .GetEmployeeByIdAsync(employeeId, cancellationToken);
-            if (possibleHeadOfTeam is not null)
+            if (possibleHeadOfTeam.ManagedTeam is not null)
             {
-                if (possibleHeadOfTeam.ManagedTeam is not null)
-                {
-                    _logger.LogWarning($"Employee with id {employeeId.Value} is already head of team");
-                }
+                var errorMessage = $"Employee with id {employeeId.Value} is already head of team";
+                _logger.LogWarning(errorMessage);
+                return Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
+            }
 
-                headOfTeam = possibleHeadOfTeam;
-            }
-            else
-            {
-                _logger.LogWarning($"Employee with id {employeeId.Value} was not found");
-            }
+            headOfTeam = possibleHeadOfTeam;
+        }
+        else
+        {
+            var errorMessage = $"Employee with id {employeeId.Value} was not found.";
+            _logger.LogWarning(errorMessage);
+            return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
         var teamId = TeamId.CreateNewId();
         
         var name = Name.Create(teamCommand.Name).Value;
         
-        var team = new Domain.Entities.Team(teamId, name, department, employees, headOfTeam);
+        var team = new Domain.Entities.Team(teamId, name, departmentId, headOfTeam);
         
         await _teamRepository.AddTeamAsync(team, cancellationToken);
         

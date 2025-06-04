@@ -17,7 +17,7 @@ public class TeamRepository: ITeamRepository
     public async Task<Team?> GetTeamIdAsync(TeamId teamId, CancellationToken cancellationToken)
     {
         return await _writeDbContext.Teams
-            .Include(t => t.Department)
+            .Include(t => t.DepartmentId.Value)
             .FirstOrDefaultAsync(t => t.Id == teamId, cancellationToken);
     }
 

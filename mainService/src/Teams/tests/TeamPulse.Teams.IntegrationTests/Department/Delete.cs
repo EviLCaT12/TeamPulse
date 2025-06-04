@@ -19,7 +19,9 @@ public class Delete : BaseTest
         var department = Utilities.SeedDepartment();
         WriteDbContext.Departments.Add(department);
 
-        var team = Utilities.SeedTeams(1, department);
+        var headOfTeam = Utilities.SeedEmployees(1).First();
+        
+        var team = Utilities.SeedTeams(1, department, headOfTeam);
         WriteDbContext.Teams.AddRange(team);
         
         WriteDbContext.SaveChanges();

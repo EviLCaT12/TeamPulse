@@ -18,16 +18,28 @@ public class Update : BaseTest
     {
         //Arrange
         var department = Utilities.SeedDepartment();
-        var teams = Utilities.SeedTeams(3, department);
+        var headOfTeams = Utilities.SeedEmployees(3);
+        List<Domain.Entities.Team> oldTeams = [];
+        foreach (var employee in headOfTeams)
+        {
+            var team = Utilities.SeedTeams(1, department, employee).First();
+            oldTeams.Add(team);
+        }
         var headOfDepartment = Utilities.SeedEmployees(1).First();
         
-        department.AddTeams(teams);
+        department.AddTeams(oldTeams);
         department.AddHeadOfDepartment(headOfDepartment);
         WriteDbContext.Departments.Add(department);
         
         
         var newName = "new name";
-        var newTeams = Utilities.SeedTeams(3, department);
+        var newHeadOfTeams = Utilities.SeedEmployees(3);
+        List<Domain.Entities.Team> newTeams = [];
+        foreach (var employee in newHeadOfTeams)
+        {
+            var team = Utilities.SeedTeams(1, department, employee).First();
+            newTeams.Add(team);
+        }
         WriteDbContext.Teams.AddRange(newTeams);
         var newHeadOfDepartment = Utilities.SeedEmployees(1).First();
         WriteDbContext.Employees.AddRange(newHeadOfDepartment);

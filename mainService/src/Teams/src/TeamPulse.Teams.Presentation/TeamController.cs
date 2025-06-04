@@ -24,7 +24,6 @@ public class TeamController : ApplicationController
         var command = new CreateTeamCommand(
             request.Name,
             request.DepartmentId,
-            request.Employees,
             request.HeadOfTeam);
         
         var result = await handler.HandleAsync(command, cancellationToken);

@@ -32,7 +32,7 @@ public class Department : Entity<DepartmentId>
 
     public IReadOnlyList<Team> Teams => _teams;
 
-    public Employee? HeadOfDepartment { get; private set; }
+    public Employee HeadOfDepartment { get; private set; }
     
     private List<Employee> _employees = [];
 

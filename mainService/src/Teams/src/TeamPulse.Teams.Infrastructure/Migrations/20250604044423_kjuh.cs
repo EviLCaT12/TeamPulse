@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class TeamInitial : Migration
+    public partial class kjuh : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +33,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    department_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    department_id = table.Column<Guid>(type: "uuid", nullable: true),
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
@@ -44,8 +44,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         column: x => x.department_id,
                         principalSchema: "departments",
                         principalTable: "departments",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -54,21 +53,26 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    team_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    managed_team_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    managed_department_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    department_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    team_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    managed_team_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    department_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    managed_department_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_employees", x => x.id);
                     table.ForeignKey(
+                        name: "fk_employees_departments_department_id",
+                        column: x => x.department_id,
+                        principalSchema: "departments",
+                        principalTable: "departments",
+                        principalColumn: "id");
+                    table.ForeignKey(
                         name: "fk_employees_departments_managed_department_id",
                         column: x => x.managed_department_id,
                         principalSchema: "departments",
                         principalTable: "departments",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_employees_teams_managed_team_id",
                         column: x => x.managed_team_id,
@@ -84,6 +88,12 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_employees_department_id",
+                schema: "departments",
+                table: "employees",
+                column: "department_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_employees_managed_department_id",

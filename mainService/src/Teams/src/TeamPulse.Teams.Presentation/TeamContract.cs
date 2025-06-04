@@ -112,20 +112,4 @@ public class TeamContract : ITeamContract
         
         return result.Value;
     }
-
-    public async Task<Result<Guid, ErrorList>> CreateTeamAsync(CreateTeamRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new CreateTeamCommand(
-            request.Name,
-            request.DepartmentId,
-            request.Employees,
-            request.HeadOfTeam);
-        
-        var result = await _createTeamCommandHandler.HandleAsync(command, cancellationToken);
-        if (result.IsFailure)
-            return result.Error;
-        
-        return result.Value;
-    }
 }

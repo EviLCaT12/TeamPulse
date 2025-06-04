@@ -29,20 +29,20 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         });
         
         builder.HasMany(d => d.Teams)
-            .WithOne(t => t.Department)
-            .HasForeignKey("department_id")
-            .OnDelete(DeleteBehavior.Cascade)
+            .WithOne()
+            .HasForeignKey(t => t.DepartmentId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired(false);
 
         builder.HasOne(d => d.HeadOfDepartment)
             .WithOne(e => e.ManagedDepartment)
-            .HasForeignKey("managed_department_id")
+            .HasForeignKey<Employee>("managed_department_id")
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
         
         builder.HasMany(d => d.Employees)
-            .WithOne(e => e.Department)
-            .HasForeignKey("department_id")
+            .WithOne()
+            .HasForeignKey(e => e.DepartmentId)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
     }

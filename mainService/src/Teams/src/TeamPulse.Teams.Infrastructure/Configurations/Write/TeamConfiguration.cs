@@ -21,8 +21,8 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
                 idFromDb => TeamId.Create(idFromDb).Value);
         
         builder.HasMany(t => t.Employees)
-            .WithOne(e => e.Team)
-            .HasForeignKey("team_id")
+            .WithOne()
+            .HasForeignKey(e => e.TeamId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false);
 
