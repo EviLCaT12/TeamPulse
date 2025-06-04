@@ -7,6 +7,7 @@ using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Commands.Team.Delete;
 using TeamPulse.Teams.Application.Commands.Team.Update;
 using TeamPulse.Teams.Application.Queries.Team;
+using TeamPulse.Teams.Application.Queries.Team.GetTeamById;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Team;
 

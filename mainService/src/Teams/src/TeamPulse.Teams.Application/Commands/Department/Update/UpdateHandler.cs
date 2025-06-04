@@ -98,7 +98,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.ManagedDepartmentId is not null)
+                if (headOfDepartment.ManagedDepartment is not null)
                 {
                     var errorMessage = $"Employee with id {employeeId.Value} is already head of department";
                     _logger.LogError(errorMessage);

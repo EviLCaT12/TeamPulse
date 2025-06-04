@@ -3,7 +3,7 @@ using TeamPulse.Performances.Domain.ValueObjects.Ids;
 namespace TeamPulse.Performances.Domain.Entities;
 
 /// <summary>
-/// Таблица сопоставляет группу и ей приналдлежащий скилл
+/// Таблица сопоставляет группу и ей принадлежащий скилл
 /// </summary>
 public class GroupSkill
 {

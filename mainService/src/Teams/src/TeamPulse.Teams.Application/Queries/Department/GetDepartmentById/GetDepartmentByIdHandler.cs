@@ -6,7 +6,7 @@ using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
 using TeamPulse.Teams.Contract.Dtos;
 
-namespace TeamPulse.Teams.Application.Queries.Department;
+namespace TeamPulse.Teams.Application.Queries.Department.GetDepartmentById;
 
 public class GetDepartmentByIdHandler : IQueryHandler<DepartmentDto, GetDepartmentByIdQuery>
 {

@@ -28,8 +28,9 @@ public class GroupOfSkillController : ApplicationController
         return Ok(result.Value);
     }
     
-    [HttpPost]
+    [HttpPost("{departmentId:guid}/{headOfDepartmentId:guid}/create")]
     public async Task<ActionResult<Guid>> CreateGroupOfSkill(
+        [FromRoute] Guid departmentId, Guid headOfDepartmentId,
         [FromBody] CreateGroupOfSkillRequest request,
         [FromServices] ICommandHandler<Guid, CreateCommand> handler,
         CancellationToken cancellationToken)
@@ -37,7 +38,9 @@ public class GroupOfSkillController : ApplicationController
         var command = new CreateCommand(
             request.Name,
             request.Description,
-            request.GradeId);
+            request.GradeId,
+            departmentId,
+            headOfDepartmentId);
         
         var result = await handler.HandleAsync(command, cancellationToken);
         if (result.IsFailure)

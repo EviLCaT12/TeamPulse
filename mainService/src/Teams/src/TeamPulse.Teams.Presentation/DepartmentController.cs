@@ -7,6 +7,7 @@ using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Department.Delete;
 using TeamPulse.Teams.Application.Commands.Department.Update;
 using TeamPulse.Teams.Application.Queries.Department;
+using TeamPulse.Teams.Application.Queries.Department.GetDepartmentById;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Department;
 

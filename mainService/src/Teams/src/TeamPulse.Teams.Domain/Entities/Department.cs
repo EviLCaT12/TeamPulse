@@ -33,6 +33,10 @@ public class Department : Entity<DepartmentId>
     public IReadOnlyList<Team> Teams => _teams;
 
     public Employee? HeadOfDepartment { get; private set; }
+    
+    private List<Employee> _employees = [];
+
+    public IReadOnlyList<Employee> Employees => _employees; 
 
     public void AddTeams(IEnumerable<Team> teams)
     {
