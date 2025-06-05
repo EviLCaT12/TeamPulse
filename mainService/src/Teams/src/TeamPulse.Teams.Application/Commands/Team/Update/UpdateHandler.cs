@@ -35,10 +35,11 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         _teamRepository = teamRepository;
         _employeeRepository = employeeRepository;
     }
+
     public async Task<Result<Guid, ErrorList>> HandleAsync(UpdateCommand command, CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
-        
+
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
         if (validationResult.IsValid == false)
             return validationResult.ToErrorList();
@@ -52,7 +53,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-        
+
         var department = await _departmentRepository.GetDepartmentByIdAsync(team.DepartmentId, cancellationToken);
         //По задумке такая ситуация невозможна, но на всякий случай проверю
         if (department is null)
@@ -61,8 +62,8 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-    
-        
+
+
         if (command.NewName is not null)
         {
             var newName = Name.Create(command.NewName).Value;
@@ -84,10 +85,10 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                     _logger.LogError(errorMessage);
                     return Errors.General.ValueNotFound(errorMessage).ToErrorList();
                 }
-                
+
                 employees.Add(newEmployee);
             }
-            
+
             var updateResult = department.UpdateTeamEmployees(teamId, employees);
             if (updateResult.IsFailure)
                 return updateResult.Error.ToErrorList();
@@ -100,16 +101,15 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (employee is not null)
             {
-                if (employee.ManagedTeam is not null)
+                if (employee.IsTeamManager)
                 {
-                    var errorMessage = $"Employee with id {employeeId.Value} has already managed team with id {employee.ManagedTeam.Id.Value}.";
+                    var errorMessage =
+                        $"Employee with id {employeeId.Value} has already managed team with id {employee.TeamId}.";
                     _logger.LogError(errorMessage);
                     return Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
                 }
 
-                var updateResult = department.UpdateHeadOfTeam(teamId, employee);
-                if (updateResult.IsFailure)
-                    return updateResult.Error.ToErrorList();
+                department.UpdateHeadOfTeam(team, employee);
             }
             else
             {
@@ -130,13 +130,13 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 _logger.LogError(errorMessage);
                 return Errors.General.ValueNotFound(errorMessage).ToErrorList();
             }
-            
+
             department.RemoveTeam(team);
             newDepartment.AddTeams([team]);
         }
-        
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         transaction.Commit();
 
         return teamId.Value;

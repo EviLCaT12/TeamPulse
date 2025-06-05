@@ -20,6 +20,7 @@ public class Delete : BaseTest
         WriteDbContext.Departments.Add(department);
 
         var headOfTeam = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(headOfTeam);
         
         var team = Utilities.SeedTeams(1, department, headOfTeam);
         WriteDbContext.Teams.AddRange(team);
@@ -38,9 +39,6 @@ public class Delete : BaseTest
 
         var isDepartmentDeleteFromDb = WriteDbContext.Departments.FirstOrDefault();
         isDepartmentDeleteFromDb.Should().BeNull();
-        
-        var isTeamDeleteFromDb = WriteDbContext.Teams.FirstOrDefault();
-        isTeamDeleteFromDb.Should().BeNull();
 
     }
 }

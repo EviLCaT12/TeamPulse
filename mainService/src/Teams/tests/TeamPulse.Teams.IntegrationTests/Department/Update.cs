@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.SharedVO;
@@ -25,10 +26,8 @@ public class Update : BaseTest
             var team = Utilities.SeedTeams(1, department, employee).First();
             oldTeams.Add(team);
         }
-        var headOfDepartment = Utilities.SeedEmployees(1).First();
         
         department.AddTeams(oldTeams);
-        department.AddHeadOfDepartment(headOfDepartment);
         WriteDbContext.Departments.Add(department);
         
         
@@ -59,7 +58,7 @@ public class Update : BaseTest
         //Assert
         result.IsSuccess.Should().BeTrue();
         
-        var newDepartment = WriteDbContext.Departments.SingleOrDefault(d => d.Id == department.Id);
+        var newDepartment = WriteDbContext.Departments.FirstOrDefault(dep => dep.Id == department.Id);
         newDepartment.Should().NotBeNull();
         newDepartment.Name.Value.Should().Be(newName);
         newDepartment.Teams.Should().BeEquivalentTo(newTeams);

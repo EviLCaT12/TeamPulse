@@ -34,10 +34,5 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
                 .HasMaxLength(NameConstant.MAX_LENGTH);
         });
         
-        builder.HasOne(t => t.HeadOfTeam)
-            .WithOne(e => e.ManagedTeam)
-            .HasForeignKey<Employee>("managed_team_id")
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired(false);
     }
 }

@@ -7,7 +7,6 @@ using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
-using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Department.Update;
@@ -98,7 +97,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.ManagedDepartment is not null)
+                if (headOfDepartment.IsDepartmentManager)
                 {
                     var errorMessage = $"Employee with id {employeeId.Value} is already head of department";
                     _logger.LogError(errorMessage);
@@ -117,7 +116,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
 
         if (department.HeadOfDepartment != employee && employee is not null)
         {
-            department.UpdateHeadOfDepartment(employee);
+            department.UpdateDepartmentManager(employee);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

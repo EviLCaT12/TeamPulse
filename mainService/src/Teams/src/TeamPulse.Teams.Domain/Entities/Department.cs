@@ -16,12 +16,14 @@ public class Department : Entity<DepartmentId>
         DepartmentId id,
         Name name,
         IEnumerable<Team>? teams,
-        Employee? headOfDepartment)
+        Employee headOfDepartment)
     {
         Id = id;
         Name = name;
         _teams = teams?.ToList() ?? [];
         HeadOfDepartment = headOfDepartment;
+        
+        SetEmployeeDepartmentManager(headOfDepartment);
     }
 
     public DepartmentId Id { get; private set; }
@@ -35,6 +37,7 @@ public class Department : Entity<DepartmentId>
     public Employee HeadOfDepartment { get; private set; }
     
     private List<Employee> _employees = [];
+    
 
     public IReadOnlyList<Employee> Employees => _employees; 
 
@@ -42,15 +45,29 @@ public class Department : Entity<DepartmentId>
     {
         _teams.AddRange(teams);
     }
+    
+    private void SetEmployeeDepartmentManager(Employee employee)
+    {
+        employee.SetDepartmentManager();
+    }
+
+    public void UpdateDepartmentManager(Employee employee)
+    {
+        HeadOfDepartment.RemoveFromDepartmentManager();
+        
+        HeadOfDepartment = employee;
+        
+        SetEmployeeDepartmentManager(employee);
+    }
+
+    public void UpdateHeadOfTeam(Team team, Employee employee)
+    {
+        team.UpdateHeadOfTeam(employee);
+    }
 
     public bool IsTeamInDepartment(Team team)
     {
         return _teams.Contains(team);
-    }
-
-    public void AddHeadOfDepartment(Employee employee)
-    {
-        HeadOfDepartment = employee;
     }
 
     public void RemoveTeam(Team team)
@@ -79,22 +96,6 @@ public class Department : Entity<DepartmentId>
         team.AddEmployee(employee);
         return UnitResult.Success<Error>();
     }
-    
-    public UnitResult<Error> AddHeadOfTeam(TeamId teamId, Employee employee)
-    {
-        var team = _teams.FirstOrDefault(t => t.Id == teamId);
-        if (team is null)
-            return Errors.General
-                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
-        
-        team.AddHeadOfTeam(employee);
-        return UnitResult.Success<Error>();
-    }
-    
-    public void UpdateHeadOfDepartment(Employee newHeadOfDepartment)
-    {
-        HeadOfDepartment = newHeadOfDepartment;
-    }
 
     public UnitResult<Error> UpdateTeamName(TeamId teamId, Name newName)
     {
@@ -117,16 +118,4 @@ public class Department : Entity<DepartmentId>
         team.UpdateEmployees(newEmployees);
         return UnitResult.Success<Error>();
     }
-
-    public UnitResult<Error> UpdateHeadOfTeam(TeamId teamId, Employee employee)
-    {
-        var team = _teams.FirstOrDefault(t => t.Id == teamId);
-        if (team is null)
-            return Errors.General
-                .ValueNotFound($"There is no team with id {teamId.Value} for department {Name.Value}.");
-
-        team.UpdateHeadOfTeam(employee);
-        return UnitResult.Success<Error>();
-    }
-    
 }

@@ -53,7 +53,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uuid")
                         .HasColumnName("department_id");
 
@@ -125,7 +125,6 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
                         .HasConstraintName("fk_employees_departments_department_id");
 
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Team", null)

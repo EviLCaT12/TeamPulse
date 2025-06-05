@@ -44,13 +44,12 @@ public class DepartmentTests
     {
         //Arrange
         var department = Utilities.SeedDepartment();
-        var headOfDepartment = Utilities.SeedEmployees(1).First();
-        
-        //Act
-        department.AddHeadOfDepartment(headOfDepartment);
+        //Act;
         
         //Assert
-        department.HeadOfDepartment.Should().Be(headOfDepartment);
+        department.HeadOfDepartment.Should().NotBeNull();
+        
+        department.HeadOfDepartment.IsDepartmentManager.Should().BeTrue();
     }
 
     [Fact]
@@ -157,13 +156,11 @@ public class DepartmentTests
         var newHeadOfTeam = Utilities.SeedEmployees(1).First();
         
         department.AddTeams([team]);
-        department.AddHeadOfTeam(team.Id, newHeadOfTeam);
         
         //Act
-        var result = department.UpdateHeadOfTeam(team.Id, newHeadOfTeam);
+        department.UpdateHeadOfTeam(team, newHeadOfTeam);
 
         //Assert
-        result.IsSuccess.Should().BeTrue();
         team.HeadOfTeam.Should().Be(newHeadOfTeam);
     }
 }

@@ -6,12 +6,14 @@ namespace TeamPulse.Teams.UnitTests;
 
 public static class Utilities
 {
-    public static Department SeedDepartment()
+    public static Department SeedDepartment(Employee? employee = null)
     {
         var departmentId = DepartmentId.CreateNewId();
         var name = Name.Create(Guid.NewGuid().ToString()).Value;
 
-        var department = new Department(departmentId, name, null, null);
+        var headOfDepartment = employee ?? SeedEmployees(1).First();
+        
+        var department = new Department(departmentId, name, null, headOfDepartment);
 
         return department;
     }

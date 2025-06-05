@@ -22,6 +22,8 @@ public class Team : Entity<TeamId>
         Name = name;
         DepartmentId = departmentId;
         HeadOfTeam = headOfTeam;
+        
+        SetEmployeeTeamManager(headOfTeam);
     }
 
     public TeamId Id { get; private set; }
@@ -34,14 +36,14 @@ public class Team : Entity<TeamId>
     public Name Name { get; private set; }
     public Employee HeadOfTeam { get; private set; }
 
+    private void SetEmployeeTeamManager(Employee employees)
+    {
+        employees.SetTeamManager();
+    }
+    
     internal void AddEmployee(IEnumerable<Employee> employee)
     {
         _employees.AddRange(employee);
-    }
-
-    internal void AddHeadOfTeam(Employee employee)
-    {
-        HeadOfTeam = employee;
     }
     
     internal void UpdateName(Name newName)
@@ -57,6 +59,8 @@ public class Team : Entity<TeamId>
 
     internal void UpdateHeadOfTeam(Employee newHeadOfTeam)
     {
+        HeadOfTeam.RemoveFromTeamManager();
         HeadOfTeam = newHeadOfTeam;
+        HeadOfTeam.SetTeamManager();
     }
 }

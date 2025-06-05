@@ -13,8 +13,8 @@ using TeamPulse.Teams.Infrastructure.DbContexts;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250604044423_kjuh")]
-    partial class kjuh
+    [Migration("20250604050027_PerformancesInit")]
+    partial class PerformancesInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uuid")
                         .HasColumnName("department_id");
 
@@ -128,7 +128,6 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
                         .HasConstraintName("fk_employees_departments_department_id");
 
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Team", null)

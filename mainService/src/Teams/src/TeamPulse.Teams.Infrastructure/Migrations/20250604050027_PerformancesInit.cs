@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class kjuh : Migration
+    public partial class PerformancesInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,7 +55,7 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     team_id = table.Column<Guid>(type: "uuid", nullable: true),
                     managed_team_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    department_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    department_id = table.Column<Guid>(type: "uuid", nullable: true),
                     managed_department_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

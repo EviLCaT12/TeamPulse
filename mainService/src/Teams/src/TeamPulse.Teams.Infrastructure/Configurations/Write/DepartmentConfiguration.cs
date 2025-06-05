@@ -33,17 +33,11 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasForeignKey(t => t.DepartmentId)
             .OnDelete(DeleteBehavior.NoAction)
             .IsRequired(false);
-
-        builder.HasOne(d => d.HeadOfDepartment)
-            .WithOne(e => e.ManagedDepartment)
-            .HasForeignKey<Employee>("managed_department_id")
-            .OnDelete(DeleteBehavior.NoAction)
-            .IsRequired();
         
         builder.HasMany(d => d.Employees)
             .WithOne()
             .HasForeignKey(e => e.DepartmentId)
             .OnDelete(DeleteBehavior.NoAction)
-            .IsRequired();
+            .IsRequired(false);
     }
 }

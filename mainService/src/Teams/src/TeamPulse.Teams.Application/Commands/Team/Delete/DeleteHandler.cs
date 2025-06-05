@@ -44,11 +44,6 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-
-        if (team.HeadOfTeam is not null)
-        {
-            _logger.LogInformation($"Deleting team with id {teamId.Value} has head of team {team.HeadOfTeam.Id}.");
-        }
         
         _teamRepository.DeleteTeam(team);
 

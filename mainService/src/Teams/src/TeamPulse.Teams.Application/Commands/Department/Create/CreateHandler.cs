@@ -69,25 +69,26 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             }
         }
 
-        Domain.Entities.Employee? employee = null;
-        if (departmentCommand.HeadOfDepartment is not null)
+        Domain.Entities.Employee? employee;
+        var employeeId = EmployeeId.Create(departmentCommand.HeadOfDepartment).Value;
+        var headOfDepartment = await _employeeRepository
+            .GetEmployeeByIdAsync(employeeId, cancellationToken);
+        if (headOfDepartment is not null)
         {
-            var employeeId = EmployeeId.Create(departmentCommand.HeadOfDepartment!.Value).Value;
-            var headOfDepartment = await _employeeRepository
-                .GetEmployeeByIdAsync(employeeId, cancellationToken);
-            if (headOfDepartment is not null)
+            if (headOfDepartment.IsDepartmentManager)
             {
-                if (headOfDepartment.ManagedDepartment is not null)
-                {
-                    _logger.LogWarning($"Employee with id {employeeId.Value} is already head of department");
-                }
+                var errorMessage = $"Employee with id {employeeId.Value} is already head of department";
+                _logger.LogWarning(errorMessage);
+                return Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
+            }
 
-                employee = headOfDepartment;
-            }
-            else
-            {
-                _logger.LogWarning($"Employee with id {employeeId.Value} was not found");
-            }
+            employee = headOfDepartment;
+        }
+        else
+        {
+            var errorMessage = $"Employee with id {employeeId.Value} was not found";
+            _logger.LogWarning(errorMessage);
+            return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
         var department = new Domain.Entities.Department(

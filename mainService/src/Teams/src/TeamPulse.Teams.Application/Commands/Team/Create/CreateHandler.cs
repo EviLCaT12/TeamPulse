@@ -7,7 +7,6 @@ using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
-using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Team.Create;
@@ -52,21 +51,6 @@ public class CreateHandler : ICommandHandler<Guid, CreateTeamCommand>
             _logger.LogError(errorMessage);
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
-
-        // List<Domain.Entities.Employee> employees = [];
-        // var employeeIds = teamCommand.EmployeeIds ?? [];
-        // foreach (var employeeId in employeeIds)
-        // {
-        //     var employee = await _employeeRepository.GetEmployeeByIdAsync(
-        //         EmployeeId.Create(employeeId).Value,
-        //         cancellationToken);
-        //     if (employee is null)
-        //     {
-        //         _logger.LogInformation($"Employee with id {employeeId} was not found.");
-        //         continue;
-        //     }
-        //     employees.Add(employee);
-        // }
         
         Domain.Entities.Employee headOfTeam;
         
@@ -75,7 +59,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateTeamCommand>
             .GetEmployeeByIdAsync(employeeId, cancellationToken);
         if (possibleHeadOfTeam is not null)
         {
-            if (possibleHeadOfTeam.ManagedTeam is not null)
+            if (possibleHeadOfTeam.IsTeamManager)
             {
                 var errorMessage = $"Employee with id {employeeId.Value} is already head of team";
                 _logger.LogWarning(errorMessage);

@@ -18,5 +18,11 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .HasConversion(
                 idToDb => idToDb.Value,
                 idFromDb => EmployeeId.Create(idFromDb).Value);
+
+        builder.Property(e => e.IsTeamManager)
+            .HasColumnName("is_team_manager");
+        
+        builder.Property(e => e.IsDepartmentManager)
+            .HasColumnName("is_department_manager");
     }
 }

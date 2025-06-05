@@ -13,7 +13,7 @@ using TeamPulse.Performances.Infrastructure.DbContexts;
 namespace TeamPulse.Performances.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250604043009_PerformancesInit")]
+    [Migration("20250604050020_PerformancesInit")]
     partial class PerformancesInit
     {
         /// <inheritdoc />

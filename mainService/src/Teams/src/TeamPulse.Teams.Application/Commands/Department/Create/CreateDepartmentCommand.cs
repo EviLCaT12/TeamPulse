@@ -5,4 +5,4 @@ namespace TeamPulse.Teams.Application.Commands.Department.Create;
 public record CreateDepartmentCommand(
     string Name,
     IEnumerable<Guid>? Teams,
-    Guid? HeadOfDepartment) : ICommand;
+    Guid HeadOfDepartment) : ICommand;
