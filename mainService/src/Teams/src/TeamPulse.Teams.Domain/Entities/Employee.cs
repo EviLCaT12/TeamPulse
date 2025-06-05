@@ -17,11 +17,14 @@ public class Employee : Entity<EmployeeId>
     }
 
     public EmployeeId Id { get; private set; }
-    public TeamId? TeamId { get; private set; }
-    public DepartmentId? DepartmentId { get; private set; }
-
+    
+    
+    public TeamId? WorkingTeamId { get; private set; }
+    
+    public DepartmentId? WorkingDepartmentId { get; private set; }
+    
+    
     public bool IsTeamManager { get; private set; } = false;
-
     public bool IsDepartmentManager { get; private set; } = false;
 
     internal void SetTeamManager()

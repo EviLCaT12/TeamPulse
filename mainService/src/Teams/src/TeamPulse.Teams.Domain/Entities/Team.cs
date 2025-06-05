@@ -25,15 +25,19 @@ public class Team : Entity<TeamId>
         
         SetEmployeeTeamManager(headOfTeam);
     }
-
-    public TeamId Id { get; private set; }
-
+    
     private List<Employee> _employees = [];
-
-    public IReadOnlyList<Employee> Employees => _employees; 
-
+    
+    
+    public IReadOnlyList<Employee> Employees => _employees;
+    
+    
+    
+    public TeamId Id { get; private set; }
     public DepartmentId DepartmentId { get; private set; }
     public Name Name { get; private set; }
+    
+    
     public Employee HeadOfTeam { get; private set; }
 
     private void SetEmployeeTeamManager(Employee employees)

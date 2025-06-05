@@ -13,7 +13,7 @@ using TeamPulse.Teams.Infrastructure.DbContexts;
 namespace TeamPulse.Teams.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContext))]
-    [Migration("20250604050027_PerformancesInit")]
+    [Migration("20250605030459_PerformancesInit")]
     partial class PerformancesInit
     {
         /// <inheritdoc />
@@ -33,6 +33,10 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("HeadOfDepartmentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("head_of_department_id");
+
                     b.ComplexProperty<Dictionary<string, object>>("Name", "TeamPulse.Teams.Domain.Entities.Department.Name#Name", b1 =>
                         {
                             b1.IsRequired();
@@ -47,6 +51,9 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_departments");
 
+                    b.HasIndex("HeadOfDepartmentId")
+                        .HasDatabaseName("ix_departments_head_of_department_id");
+
                     b.ToTable("departments", "departments");
                 });
 
@@ -56,38 +63,30 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("DepartmentId")
+                    b.Property<bool>("IsDepartmentManager")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_department_manager");
+
+                    b.Property<bool>("IsTeamManager")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_team_manager");
+
+                    b.Property<Guid?>("WorkingDepartmentId")
                         .HasColumnType("uuid")
                         .HasColumnName("department_id");
 
-                    b.Property<Guid?>("TeamId")
+                    b.Property<Guid?>("WorkingTeamId")
                         .HasColumnType("uuid")
                         .HasColumnName("team_id");
-
-                    b.Property<Guid>("managed_department_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("managed_department_id");
-
-                    b.Property<Guid?>("managed_team_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("managed_team_id");
 
                     b.HasKey("Id")
                         .HasName("pk_employees");
 
-                    b.HasIndex("DepartmentId")
-                        .HasDatabaseName("ix_employees_department_id");
+                    b.HasIndex("WorkingDepartmentId")
+                        .HasDatabaseName("ix_employees_working_department_id");
 
-                    b.HasIndex("TeamId")
+                    b.HasIndex("WorkingTeamId")
                         .HasDatabaseName("ix_employees_team_id");
-
-                    b.HasIndex("managed_department_id")
-                        .IsUnique()
-                        .HasDatabaseName("ix_employees_managed_department_id");
-
-                    b.HasIndex("managed_team_id")
-                        .IsUnique()
-                        .HasDatabaseName("ix_employees_managed_team_id");
 
                     b.ToTable("employees", "departments");
                 });
@@ -101,6 +100,10 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.Property<Guid?>("DepartmentId")
                         .HasColumnType("uuid")
                         .HasColumnName("department_id");
+
+                    b.Property<Guid>("HeadOfTeamId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("head_of_team_id");
 
                     b.ComplexProperty<Dictionary<string, object>>("Name", "TeamPulse.Teams.Domain.Entities.Team.Name#Name", b1 =>
                         {
@@ -119,39 +122,37 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.HasIndex("DepartmentId")
                         .HasDatabaseName("ix_teams_department_id");
 
+                    b.HasIndex("HeadOfTeamId")
+                        .HasDatabaseName("ix_teams_head_of_team_id");
+
                     b.ToTable("teams", "departments");
+                });
+
+            modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Department", b =>
+                {
+                    b.HasOne("TeamPulse.Teams.Domain.Entities.Employee", "HeadOfDepartment")
+                        .WithMany()
+                        .HasForeignKey("HeadOfDepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_departments_employees_head_of_department_id");
+
+                    b.Navigation("HeadOfDepartment");
                 });
 
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Employee", b =>
                 {
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Department", null)
                         .WithMany("Employees")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .HasConstraintName("fk_employees_departments_department_id");
+                        .HasForeignKey("WorkingDepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_employees_departments_working_department_id");
 
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Team", null)
                         .WithMany("Employees")
-                        .HasForeignKey("TeamId")
+                        .HasForeignKey("WorkingTeamId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_employees_teams_team_id");
-
-                    b.HasOne("TeamPulse.Teams.Domain.Entities.Department", "ManagedDepartment")
-                        .WithOne("HeadOfDepartment")
-                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_department_id")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("fk_employees_departments_managed_department_id");
-
-                    b.HasOne("TeamPulse.Teams.Domain.Entities.Team", "ManagedTeam")
-                        .WithOne("HeadOfTeam")
-                        .HasForeignKey("TeamPulse.Teams.Domain.Entities.Employee", "managed_team_id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_employees_teams_managed_team_id");
-
-                    b.Navigation("ManagedDepartment");
-
-                    b.Navigation("ManagedTeam");
                 });
 
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Team", b =>
@@ -159,16 +160,22 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
                     b.HasOne("TeamPulse.Teams.Domain.Entities.Department", null)
                         .WithMany("Teams")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_teams_departments_department_id");
+
+                    b.HasOne("TeamPulse.Teams.Domain.Entities.Employee", "HeadOfTeam")
+                        .WithMany()
+                        .HasForeignKey("HeadOfTeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_teams_employees_head_of_team_id");
+
+                    b.Navigation("HeadOfTeam");
                 });
 
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Department", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("HeadOfDepartment")
-                        .IsRequired();
 
                     b.Navigation("Teams");
                 });
@@ -176,9 +183,6 @@ namespace TeamPulse.Teams.Infrastructure.Migrations
             modelBuilder.Entity("TeamPulse.Teams.Domain.Entities.Team", b =>
                 {
                     b.Navigation("Employees");
-
-                    b.Navigation("HeadOfTeam")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

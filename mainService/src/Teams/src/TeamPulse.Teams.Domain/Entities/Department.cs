@@ -26,30 +26,34 @@ public class Department : Entity<DepartmentId>
         SetEmployeeDepartmentManager(headOfDepartment);
     }
 
-    public DepartmentId Id { get; private set; }
-
-    public Name Name { get; private set; }
-
     private List<Team> _teams = [];
-
-    public IReadOnlyList<Team> Teams => _teams;
-
-    public Employee HeadOfDepartment { get; private set; }
     
     private List<Employee> _employees = [];
     
-
+    
+    public IReadOnlyList<Team> Teams => _teams;
     public IReadOnlyList<Employee> Employees => _employees; 
+    
+    public DepartmentId Id { get; private set; }
+    public Name Name { get; private set; }
+    
+    public Employee HeadOfDepartment { get; private set; }
+
+    
+    
+    
+    private void SetEmployeeDepartmentManager(Employee employee)
+    {
+        employee.SetDepartmentManager();
+    }
+    
+    
 
     public void AddTeams(IEnumerable<Team> teams)
     {
         _teams.AddRange(teams);
     }
     
-    private void SetEmployeeDepartmentManager(Employee employee)
-    {
-        employee.SetDepartmentManager();
-    }
 
     public void UpdateDepartmentManager(Employee employee)
     {

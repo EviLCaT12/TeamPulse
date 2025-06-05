@@ -31,13 +31,11 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         builder.HasMany(d => d.Teams)
             .WithOne()
             .HasForeignKey(t => t.DepartmentId)
-            .OnDelete(DeleteBehavior.NoAction)
-            .IsRequired(false);
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany(d => d.Employees)
             .WithOne()
-            .HasForeignKey(e => e.DepartmentId)
-            .OnDelete(DeleteBehavior.NoAction)
-            .IsRequired(false);
+            .HasForeignKey(e => e.WorkingDepartmentId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

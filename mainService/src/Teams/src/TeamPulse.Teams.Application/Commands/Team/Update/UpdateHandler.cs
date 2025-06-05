@@ -104,7 +104,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
                 if (employee.IsTeamManager)
                 {
                     var errorMessage =
-                        $"Employee with id {employeeId.Value} has already managed team with id {employee.TeamId}.";
+                        $"Employee with id {employeeId.Value} has already managed team with id {employee.WorkingTeamId.Value}.";
                     _logger.LogError(errorMessage);
                     return Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
                 }
