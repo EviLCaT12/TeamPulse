@@ -15,7 +15,7 @@ public class TeamDtoConfiguration : IEntityTypeConfiguration<TeamDto>
         
         builder.HasMany(t => t.Employees)
             .WithOne()
-            .HasForeignKey(e => e.TeamId)
+            .HasForeignKey(e => e.Id)
             .IsRequired(false);
 
         builder.HasOne(t => t.HeadOfTeam)

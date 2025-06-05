@@ -15,12 +15,12 @@ public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
 
     private NumericSkillGrade(
         SkillGradeId id,
-        IEnumerable<int> grades,
+        List<int> grades,
         Name name,
-        Description? description = null)
+        Description description)
     {
         Id = id;
-        _grades = grades.ToList();
+        _grades = grades;
         GradesAsString = JsonSerializer.Serialize(grades);
         Name = name;
         Description = description;
@@ -34,7 +34,7 @@ public class NumericSkillGrade : BaseSkillGrade, IGrade<int>
         SkillGradeId id,
         IEnumerable<object> grades,
         Name name,
-        Description? description = null)
+        Description description)
     {
         List<int> intGrades = [];
 

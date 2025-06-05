@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
       <ProjectReference Include="..\TeamPulse.Performances.Application\TeamPulse.Performances.Application.csproj" />
+      <ProjectReference Include="..\TeamPulse.Performances.Contract\TeamPulse.Performances.Contract.csproj" />
       <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
     </ItemGroup>
 

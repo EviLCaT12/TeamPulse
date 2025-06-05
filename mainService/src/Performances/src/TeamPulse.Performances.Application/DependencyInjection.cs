@@ -11,8 +11,9 @@ public static class DependencyInjection
     {
         services
             .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly)
-            .AddCommand();
-        
+            .AddCommand()
+            .AddQueries();
+
         return services;
     }
 
@@ -23,6 +24,18 @@ public static class DependencyInjection
         services.Scan(scan => scan.FromAssemblies(assembly)
             .AddClasses(classes =>
                 classes.AssignableToAny(typeof(ICommandHandler<,>), typeof(ICommandHandler<>)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime());
+
+        return services;
+    }
+
+    private static IServiceCollection AddQueries(this IServiceCollection services)
+    {
+        var assembly = typeof(DependencyInjection).Assembly;
+
+        services.Scan(scan => scan.FromAssemblies(assembly)
+            .AddClasses(classes => classes.AssignableToAny(typeof(IQueryHandler<,>)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
         

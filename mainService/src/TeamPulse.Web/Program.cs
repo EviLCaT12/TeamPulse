@@ -3,6 +3,8 @@ using Serilog;
 using Serilog.Events;
 using TeamPulse.Performances.Application;
 using TeamPulse.Performances.Infrastructure;
+using TeamPulse.Performances.Presentation;
+using TeamPulse.Reports.Application;
 using TeamPulse.Team.Presentation;
 using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Infrastructure;
@@ -40,7 +42,10 @@ builder.Services
     .AddTeamPresentation()
     
     .AddPerformancesApplication()
-    .AddPerformancesInfrastructure(builder.Configuration);
+    .AddPerformancesInfrastructure(builder.Configuration)
+    .AddPerformancesPresentation()
+
+    .AddReportsApplication();
 
 var app = builder.Build();
 

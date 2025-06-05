@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Framework\TeamPulse.Framework.csproj" />
+      <ProjectReference Include="..\TeamPulse.Reports.Application\TeamPulse.Reports.Application.csproj" />
+      <ProjectReference Include="..\TeamPulse.Reports.Contract\TeamPulse.Reports.Contract.csproj" />
+      <ProjectReference Include="..\TeamPulse.Reports.Domain\TeamPulse.Reports.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
