@@ -58,7 +58,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             foreach (var team in teams)
             {
                 var teamId = TeamId.Create(team).Value;
-                var departmentTeam = await _teamRepository.GetTeamIdAsync(teamId, cancellationToken);
+                var departmentTeam = await _teamRepository.GetTeamByIdAsync(teamId, cancellationToken);
                 if (departmentTeam is null)
                 {
                     _logger.LogWarning($"Team with id {teamId.Value} was not found");

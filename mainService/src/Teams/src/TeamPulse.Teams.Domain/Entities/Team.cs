@@ -23,7 +23,7 @@ public class Team : Entity<TeamId>
         DepartmentId = departmentId;
         HeadOfTeam = headOfTeam;
         
-        SetEmployeeTeamManager(headOfTeam);
+        SetEmployeeTeamManager(headOfTeam, Id);
     }
     
     private List<Employee> _employees = [];
@@ -40,9 +40,9 @@ public class Team : Entity<TeamId>
     
     public Employee HeadOfTeam { get; private set; }
 
-    private void SetEmployeeTeamManager(Employee employees)
+    private void SetEmployeeTeamManager(Employee employees, TeamId teamId)
     {
-        employees.SetTeamManager();
+        employees.SetTeamManager(teamId);
     }
     
     internal void AddEmployee(IEnumerable<Employee> employee)
@@ -65,6 +65,6 @@ public class Team : Entity<TeamId>
     {
         HeadOfTeam.RemoveFromTeamManager();
         HeadOfTeam = newHeadOfTeam;
-        HeadOfTeam.SetTeamManager();
+        HeadOfTeam.SetTeamManager(Id);
     }
 }

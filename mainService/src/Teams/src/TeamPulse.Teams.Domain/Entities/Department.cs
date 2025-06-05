@@ -23,7 +23,7 @@ public class Department : Entity<DepartmentId>
         _teams = teams?.ToList() ?? [];
         HeadOfDepartment = headOfDepartment;
         
-        SetEmployeeDepartmentManager(headOfDepartment);
+        SetEmployeeDepartmentManager(headOfDepartment, id);
     }
 
     private List<Team> _teams = [];
@@ -42,18 +42,15 @@ public class Department : Entity<DepartmentId>
     
     
     
-    private void SetEmployeeDepartmentManager(Employee employee)
+    private void SetEmployeeDepartmentManager(Employee employee, DepartmentId departmentId)
     {
-        employee.SetDepartmentManager();
+        employee.SetDepartmentManager(departmentId);
     }
-    
-    
 
-    public void AddTeams(IEnumerable<Team> teams)
+    public void AddEmployees(IEnumerable<Employee> employees)
     {
-        _teams.AddRange(teams);
+        _employees.AddRange(employees);
     }
-    
 
     public void UpdateDepartmentManager(Employee employee)
     {
@@ -61,7 +58,12 @@ public class Department : Entity<DepartmentId>
         
         HeadOfDepartment = employee;
         
-        SetEmployeeDepartmentManager(employee);
+        SetEmployeeDepartmentManager(employee, Id);
+    }
+    
+    public void AddTeams(IEnumerable<Team> teams)
+    {
+        _teams.AddRange(teams);
     }
 
     public void UpdateHeadOfTeam(Team team, Employee employee)

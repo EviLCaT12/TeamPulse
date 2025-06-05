@@ -14,12 +14,12 @@ public class TeamRepository: ITeamRepository
     {
         _writeDbContext = writeDbContext;
     }
-    public async Task<Team?> GetTeamIdAsync(TeamId teamId, CancellationToken cancellationToken)
+    public async Task<Team?> GetTeamByIdAsync(TeamId teamId, CancellationToken cancellationToken)
     {
         return await _writeDbContext.Teams
             .FirstOrDefaultAsync(t => t.Id == teamId, cancellationToken);
     }
-
+    
     public async Task AddTeamAsync(Team team, CancellationToken cancellationToken)
     {
         await _writeDbContext.Teams.AddAsync(team, cancellationToken);

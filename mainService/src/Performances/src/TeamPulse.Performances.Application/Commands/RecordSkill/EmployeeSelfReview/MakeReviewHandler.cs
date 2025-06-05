@@ -98,7 +98,7 @@ public class MakeReviewHandler : ICommandHandler<MakeReviewCommand>
             if (getManagerResult.IsFailure)
                 return getManagerResult.Error;
 
-            if (getManagerResult.Value.ManagedTeamId is null)
+            if (getManagerResult.Value.IsTeamManager == false)
             {
                 var errorMessage = $"Employee with id {command.ManagerId.Value} is not a manager.";
                 _logger.LogError(errorMessage);

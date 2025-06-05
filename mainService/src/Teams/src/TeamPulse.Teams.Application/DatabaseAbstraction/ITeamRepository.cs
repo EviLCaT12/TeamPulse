@@ -5,7 +5,7 @@ namespace TeamPulse.Teams.Application.DatabaseAbstraction;
 
 public interface ITeamRepository
 {
-    Task<Team?> GetTeamIdAsync(TeamId teamId, CancellationToken cancellationToken);
+    Task<Team?> GetTeamByIdAsync(TeamId teamId, CancellationToken cancellationToken);
     
     Task AddTeamAsync(Team team, CancellationToken cancellationToken);
     

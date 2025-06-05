@@ -23,4 +23,13 @@ public class EmployeeRepository : IEmployeeRepository
     {
         await _writeDbContext.Employees.AddAsync(employee, cancellationToken);
     }
+
+    public async Task<List<Employee>> GetAllEmployeesFromTeamAsync(TeamId id, CancellationToken cancellationToken)
+    {
+        var employees = await _writeDbContext.Employees
+            .Where(e => e.WorkingTeamId == id)
+            .ToListAsync(cancellationToken);
+        
+        return employees;
+    }
 }

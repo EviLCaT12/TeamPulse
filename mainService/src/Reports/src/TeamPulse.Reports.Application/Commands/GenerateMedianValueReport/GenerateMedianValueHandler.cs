@@ -106,11 +106,11 @@ public class GenerateMedianValueHandler : ICommandHandler<BaseReport, GenerateMe
         if (baseInfoResult.IsFailure)
             return baseInfoResult.Error;
 
-        var getTeaminDepartmentResult = await _teamContract.GetAllTeamsFromDepartmentAsync(command.Object, cancellationToken);
-        if (getTeaminDepartmentResult.IsFailure)
-            return getTeaminDepartmentResult.Error;
+        var getTeamInDepartmentResult = await _teamContract.GetAllTeamsFromDepartmentAsync(command.Object, cancellationToken);
+        if (getTeamInDepartmentResult.IsFailure)
+            return getTeamInDepartmentResult.Error;
         
-        var teamIds = getTeaminDepartmentResult.Value;
+        var teamIds = getTeamInDepartmentResult.Value;
         
         var sourceResult = await _performanceContract.GetDepartmentManagerGradeForGroupAsync(
             new GetDepartmentManagerGradeForGroupRequest(teamIds, group.Id), cancellationToken);
@@ -147,7 +147,7 @@ public class GenerateMedianValueHandler : ICommandHandler<BaseReport, GenerateMe
             return result.Error;
 
         var e = result.Value;
-        return new InfoToGenerateReportDto(e.DepartmentId, e.TeamId, e.Id, description, name, ReportType.MedianValue);
+        return new InfoToGenerateReportDto(e.DepartmentId!.Value, e.TeamId, e.Id, description, name, ReportType.MedianValue);
     }
 
     private async Task<Result<InfoToGenerateReportDto, ErrorList>> GetTeamBaseReport(Guid id, string name,

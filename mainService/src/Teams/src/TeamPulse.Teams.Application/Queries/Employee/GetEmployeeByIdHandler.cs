@@ -21,16 +21,7 @@ public class GetEmployeeByIdHandler : IQueryHandler<EmployeeDto, GetEmployeeById
     public async Task<Result<EmployeeDto, ErrorList>> HandleAsync(GetEmployeeByIdQuery query, CancellationToken cancellationToken)
     {
         var employee = await _readDbContext.Employees
-            .Include(e => e.Team)
-            .Select(e => new EmployeeDto
-            {
-                Id = e.Id,
-                ManagedDepartmentId = e.ManagedDepartmentId,
-                DepartmentId = e.Team.DepartmentId,
-                ManagedTeamId = e.ManagedTeamId,
-                TeamId = e.TeamId
-            })
-            .FirstOrDefaultAsync(e => e.Id == query.EmployeeId, cancellationToken);;
+            .FirstOrDefaultAsync(e => e.Id == query.EmployeeId, cancellationToken);
         
         if (employee is null)
         {

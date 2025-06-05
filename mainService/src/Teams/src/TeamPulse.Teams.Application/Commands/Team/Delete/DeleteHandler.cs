@@ -37,7 +37,7 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             return validationResult.ToErrorList();
         
         var teamId = TeamId.Create(command.TeamId).Value;
-        var team = await _teamRepository.GetTeamIdAsync(teamId, cancellationToken);
+        var team = await _teamRepository.GetTeamByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             var errorMessage = $"Team {command.TeamId} was not found.";

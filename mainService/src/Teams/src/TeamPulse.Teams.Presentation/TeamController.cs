@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
 using TeamPulse.Framework.Responses;
+using TeamPulse.Teams.Application.Commands.Team.AddEmployees;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Commands.Team.Delete;
 using TeamPulse.Teams.Application.Commands.Team.Update;
@@ -82,5 +83,21 @@ public class TeamController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(result.Value);
+    }
+
+    [HttpPost("{teamId:guid}/employees")]
+    public async Task<ActionResult> AddEmployees(
+        [FromRoute] Guid teamId,
+        [FromBody] AddEmployeeRequest request,
+        [FromServices] ICommandHandler<AddEmployeesCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new AddEmployeesCommand(teamId, request.EmployeeIds);
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok();
     }
 }

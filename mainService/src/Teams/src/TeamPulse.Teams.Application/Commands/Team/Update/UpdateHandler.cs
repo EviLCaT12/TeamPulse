@@ -46,7 +46,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
 
         var teamId = TeamId.Create(command.TeamId).Value;
         var team = await _teamRepository
-            .GetTeamIdAsync(teamId, cancellationToken);
+            .GetTeamByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             var errorMessage = $"Team with id {teamId.Value} not found.";

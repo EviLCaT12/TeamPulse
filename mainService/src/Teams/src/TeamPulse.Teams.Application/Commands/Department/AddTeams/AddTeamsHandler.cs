@@ -8,30 +8,33 @@ using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
 using TeamPulse.Teams.Domain.VO.Ids;
 
-namespace TeamPulse.Teams.Application.Commands.Department.AddTeamsToDepartment;
+namespace TeamPulse.Teams.Application.Commands.Department.AddTeams;
 
-public class AddTeamsToDepartmentHandler : ICommandHandler<AddTeamsToDepartmentCommand>
+public class AddTeamsHandler : ICommandHandler<AddTeamsCommand>
 {
-    private readonly ILogger<AddTeamsToDepartmentHandler> _logger;
-    private readonly IValidator<AddTeamsToDepartmentCommand> _validator;
+    private readonly ILogger<AddTeamsHandler> _logger;
+    private readonly IValidator<AddTeamsCommand> _validator;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ITeamRepository _teamRepository;
+    private readonly IEmployeeRepository _employeeRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AddTeamsToDepartmentHandler(
-        ILogger<AddTeamsToDepartmentHandler> logger,
-        IValidator<AddTeamsToDepartmentCommand> validator,
+    public AddTeamsHandler(
+        ILogger<AddTeamsHandler> logger,
+        IValidator<AddTeamsCommand> validator,
         IDepartmentRepository departmentRepository,
         ITeamRepository teamRepository,
+        IEmployeeRepository employeeRepository,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
         _departmentRepository = departmentRepository;
         _teamRepository = teamRepository;
+        _employeeRepository = employeeRepository;
         _unitOfWork = unitOfWork;
     }
-    public async Task<UnitResult<ErrorList>> HandleAsync(AddTeamsToDepartmentCommand command, CancellationToken cancellationToken)
+    public async Task<UnitResult<ErrorList>> HandleAsync(AddTeamsCommand command, CancellationToken cancellationToken)
     {
         var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
         
@@ -48,12 +51,14 @@ public class AddTeamsToDepartmentHandler : ICommandHandler<AddTeamsToDepartmentC
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
+        //Добавляем команды к отделу
         List<Domain.Entities.Team> teamsToAdd = [];
         foreach (var teamId in command.TeamIds)
         {
-            var team = await _teamRepository.GetTeamIdAsync(
+            var team = await _teamRepository.GetTeamByIdAsync(
                 TeamId.Create(teamId).Value,
                 cancellationToken);
+            
             if (team is null)
             {
                 var errorMessage = $"Team with id {teamId} was not found.";
@@ -74,6 +79,14 @@ public class AddTeamsToDepartmentHandler : ICommandHandler<AddTeamsToDepartmentC
         
         department.AddTeams(teamsToAdd);
         
+        
+        //Добавляем каждого сотрудника команды к отделу
+        foreach (var team in teamsToAdd)
+        {
+            var employees = await _employeeRepository.GetAllEmployeesFromTeamAsync(team.Id, cancellationToken);
+            
+            department.AddEmployees(employees);
+        }
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         transaction.Commit();

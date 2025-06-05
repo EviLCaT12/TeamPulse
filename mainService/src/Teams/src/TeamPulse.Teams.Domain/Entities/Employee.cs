@@ -27,7 +27,7 @@ public class Employee : Entity<EmployeeId>
     public bool IsTeamManager { get; private set; } = false;
     public bool IsDepartmentManager { get; private set; } = false;
 
-    internal void SetTeamManager()
+    internal void SetTeamManager(TeamId teamId)
     {
         IsTeamManager = true;
     }
@@ -37,8 +37,9 @@ public class Employee : Entity<EmployeeId>
         IsTeamManager = false;
     }
 
-    internal void SetDepartmentManager()
+    internal void SetDepartmentManager(DepartmentId departmentId)
     {
+        WorkingDepartmentId = departmentId;
         IsDepartmentManager = true;
     }
     
