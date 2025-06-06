@@ -1,16 +1,15 @@
-using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 
-namespace TeamPulse.Performances.Infrastructure.Repositories;
+namespace TeamPulse.Performances.Infrastructure.Repositories.Write;
 
-public class GroupSkillRepository : IGroupSkillRepository
+public class GroupSkillWriteRepository : IGroupSkillWriteRepository
 {
     private readonly WriteDbContext _writeDbContext;
 
-    public GroupSkillRepository(WriteDbContext writeDbContext)
+    public GroupSkillWriteRepository(WriteDbContext writeDbContext)
     {
         _writeDbContext = writeDbContext;
     }

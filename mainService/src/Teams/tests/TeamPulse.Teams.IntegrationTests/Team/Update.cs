@@ -16,7 +16,11 @@ public class Update : BaseTest
     public async Task Full_Update_Team_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
+        var employeeForOldDep = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(employeeForOldDep);
+        WriteDbContext.SaveChanges();
+        
+        var department = Utilities.SeedDepartment(employeeForOldDep);
         var oldHeadOfTeam = Utilities.SeedEmployees(1).First();
         var team = Utilities.SeedTeams(1, department, oldHeadOfTeam).First();
         var employees = Utilities.SeedEmployees(5);
@@ -26,7 +30,12 @@ public class Update : BaseTest
         WriteDbContext.Departments.Add(department);
 
         var newName = "new Name";
-        var newDepartment = Utilities.SeedDepartment();
+        
+        var employeeForNewDep = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(employeeForNewDep);
+        WriteDbContext.SaveChanges();
+        
+        var newDepartment = Utilities.SeedDepartment(employeeForNewDep);
         var newEmployees = Utilities.SeedEmployees(7);
         var newHeadOfTeam = Utilities.SeedEmployees(1).First();
 

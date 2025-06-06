@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
@@ -17,27 +17,27 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 {
     private readonly ILogger<CreateHandler> _logger;
     private readonly IValidator<CreateCommand> _validator;
-    private readonly ISkillGradeRepository _gradesRepository;
-    private readonly IGroupOfSkillRepository _groupsOfSkillRepository;
-    private readonly IRecordSkillRepository _recordSkillRepository;
+    private readonly ISkillGradeWriteRepository _gradesWriteRepository;
+    private readonly IGroupOfSkillWriteRepository _groupsOfSkillWriteRepository;
+    private readonly IRecordSkillWriteRepository _recordSkillWriteRepository;
     private readonly ITeamContract _teamContract;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateHandler(
         ILogger<CreateHandler> logger,
         IValidator<CreateCommand> validator,
-        ISkillGradeRepository gradesRepository,
-        IGroupOfSkillRepository groupsOfSkillRepository,
-        IRecordSkillRepository recordSkillRepository,
+        ISkillGradeWriteRepository gradesWriteRepository,
+        IGroupOfSkillWriteRepository groupsOfSkillWriteRepository,
+        IRecordSkillWriteRepository recordSkillWriteRepository,
         ITeamContract teamContract,
         [FromKeyedServices(ModuleKey.Performance)]
         IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
-        _gradesRepository = gradesRepository;
-        _groupsOfSkillRepository = groupsOfSkillRepository;
-        _recordSkillRepository = recordSkillRepository;
+        _gradesWriteRepository = gradesWriteRepository;
+        _groupsOfSkillWriteRepository = groupsOfSkillWriteRepository;
+        _recordSkillWriteRepository = recordSkillWriteRepository;
         _teamContract = teamContract;
         _unitOfWork = unitOfWork;
     }
@@ -66,7 +66,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 
         var gradeId = SkillGradeId.Create(command.GradeId).Value;
 
-        var grade = await _gradesRepository.GetByIdAsync(gradeId, cancellationToken);
+        var grade = await _gradesWriteRepository.GetByIdAsync(gradeId, cancellationToken);
         if (grade is null)
         {
             var errorMessage = $"Grade with id {command.GradeId} does not exist.";
@@ -82,9 +82,9 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 
         var group = new Domain.Entities.GroupOfSkills(groupId, name, description, grade);
 
-        await _groupsOfSkillRepository.AddAsync(group, cancellationToken);
+        await _groupsOfSkillWriteRepository.AddAsync(group, cancellationToken);
 
-        await _recordSkillRepository.AddRecordSkillAsync(
+        await _recordSkillWriteRepository.AddRecordSkillAsync(
             new Domain.Entities.RecordSkill(department.Id, groupId.Value, null, null),
             cancellationToken);
 
@@ -114,7 +114,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
                     groupId.Value,
                     null,
                     null);
-                await _recordSkillRepository.AddRecordSkillAsync(employeeRecordSkill, cancellationToken);
+                await _recordSkillWriteRepository.AddRecordSkillAsync(employeeRecordSkill, cancellationToken);
             }
 
             var teamRecordSkill = new Domain.Entities.RecordSkill(
@@ -122,7 +122,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
                 groupId.Value,
                 null,
                 null);
-            await _recordSkillRepository.AddRecordSkillAsync(teamRecordSkill, cancellationToken);
+            await _recordSkillWriteRepository.AddRecordSkillAsync(teamRecordSkill, cancellationToken);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

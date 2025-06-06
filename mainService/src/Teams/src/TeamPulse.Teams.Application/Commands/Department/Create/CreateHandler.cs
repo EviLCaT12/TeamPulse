@@ -17,24 +17,24 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
     private readonly ILogger<CreateHandler> _logger;
     private readonly IValidator<CreateDepartmentCommand> _validator;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDepartmentRepository _departmentRepository;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IDepartmentWriteRepository _departmentWriteRepository;
+    private readonly ITeamWriteRepository _teamWriteRepository;
+    private readonly IEmployeeWriteRepository _employeeWriteRepository;
 
     public CreateHandler(
         ILogger<CreateHandler> logger,
         IValidator<CreateDepartmentCommand> validator,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork,
-        IDepartmentRepository departmentRepository,
-        ITeamRepository teamRepository,
-        IEmployeeRepository employeeRepository)
+        IDepartmentWriteRepository departmentWriteRepository,
+        ITeamWriteRepository teamWriteRepository,
+        IEmployeeWriteRepository employeeWriteRepository)
     {
         _logger = logger;
         _validator = validator;
         _unitOfWork = unitOfWork;
-        _departmentRepository = departmentRepository;
-        _teamRepository = teamRepository;
-        _employeeRepository = employeeRepository;
+        _departmentWriteRepository = departmentWriteRepository;
+        _teamWriteRepository = teamWriteRepository;
+        _employeeWriteRepository = employeeWriteRepository;
     }
 
     public async Task<Result<Guid, ErrorList>> HandleAsync(CreateDepartmentCommand departmentCommand,
@@ -58,7 +58,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             foreach (var team in teams)
             {
                 var teamId = TeamId.Create(team).Value;
-                var departmentTeam = await _teamRepository.GetTeamByIdAsync(teamId, cancellationToken);
+                var departmentTeam = await _teamWriteRepository.GetTeamByIdAsync(teamId, cancellationToken);
                 if (departmentTeam is null)
                 {
                     _logger.LogWarning($"Team with id {teamId.Value} was not found");
@@ -71,7 +71,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
 
         Domain.Entities.Employee? employee;
         var employeeId = EmployeeId.Create(departmentCommand.HeadOfDepartment).Value;
-        var headOfDepartment = await _employeeRepository
+        var headOfDepartment = await _employeeWriteRepository
             .GetEmployeeByIdAsync(employeeId, cancellationToken);
         if (headOfDepartment is not null)
         {
@@ -97,7 +97,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateDepartmentCommand>
             departmentTeams,
             employee);
 
-        await _departmentRepository.AddDepartmentAsync(department, cancellationToken);
+        await _departmentWriteRepository.AddDepartmentAsync(department, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

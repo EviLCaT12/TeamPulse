@@ -16,24 +16,24 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
     private readonly ILogger<UpdateHandler> _logger;
     private readonly IValidator<UpdateCommand> _validator;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDepartmentRepository _departmentRepository;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IDepartmentWriteRepository _departmentWriteRepository;
+    private readonly ITeamWriteRepository _teamWriteRepository;
+    private readonly IEmployeeWriteRepository _employeeWriteRepository;
 
     public UpdateHandler(
         ILogger<UpdateHandler> logger,
         IValidator<UpdateCommand> validator,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork,
-        IDepartmentRepository departmentRepository,
-        ITeamRepository teamRepository,
-        IEmployeeRepository employeeRepository)
+        IDepartmentWriteRepository departmentWriteRepository,
+        ITeamWriteRepository teamWriteRepository,
+        IEmployeeWriteRepository employeeWriteRepository)
     {
         _logger = logger;
         _validator = validator;
         _unitOfWork = unitOfWork;
-        _departmentRepository = departmentRepository;
-        _teamRepository = teamRepository;
-        _employeeRepository = employeeRepository;
+        _departmentWriteRepository = departmentWriteRepository;
+        _teamWriteRepository = teamWriteRepository;
+        _employeeWriteRepository = employeeWriteRepository;
     }
 
     public async Task<Result<Guid, ErrorList>> HandleAsync(UpdateCommand command, CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             return validationResult.ToErrorList();
 
         var teamId = TeamId.Create(command.TeamId).Value;
-        var team = await _teamRepository
+        var team = await _teamWriteRepository
             .GetTeamByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
@@ -54,7 +54,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
 
-        var department = await _departmentRepository.GetDepartmentByIdAsync(team.DepartmentId, cancellationToken);
+        var department = await _departmentWriteRepository.GetDepartmentByIdAsync(team.DepartmentId, cancellationToken);
         //По задумке такая ситуация невозможна, но на всякий случай проверю
         if (department is null)
         {
@@ -78,7 +78,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             foreach (var employee in command.NewEmployees)
             {
                 var employeeId = EmployeeId.Create(employee).Value;
-                var newEmployee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
+                var newEmployee = await _employeeWriteRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
                 if (newEmployee is null)
                 {
                     var errorMessage = $"Employee with id {employeeId.Value} not found.";
@@ -98,7 +98,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         if (command.NewHeadOfTeam is not null)
         {
             var employeeId = EmployeeId.Create(command.NewHeadOfTeam.Value).Value;
-            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
+            var employee = await _employeeWriteRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (employee is not null)
             {
                 if (employee.IsTeamManager)
@@ -123,7 +123,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         if (command.NewDepartmentId is not null)
         {
             var newDepartmentId = DepartmentId.Create(command.NewDepartmentId.Value).Value;
-            var newDepartment = await _departmentRepository.GetDepartmentByIdAsync(newDepartmentId, cancellationToken);
+            var newDepartment = await _departmentWriteRepository.GetDepartmentByIdAsync(newDepartmentId, cancellationToken);
             if (newDepartment is null)
             {
                 var errorMessage = $"Department with id {command.NewDepartmentId} not found.";

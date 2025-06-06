@@ -6,11 +6,11 @@ using TeamPulse.Teams.Infrastructure.DbContexts;
 
 namespace TeamPulse.Teams.Infrastructure.Repositories;
 
-public class TeamRepository: ITeamRepository
+public class TeamWriteRepository: ITeamWriteRepository
 {
     private readonly WriteDbContext _writeDbContext;
 
-    public TeamRepository(WriteDbContext writeDbContext)
+    public TeamWriteRepository(WriteDbContext writeDbContext)
     {
         _writeDbContext = writeDbContext;
     }

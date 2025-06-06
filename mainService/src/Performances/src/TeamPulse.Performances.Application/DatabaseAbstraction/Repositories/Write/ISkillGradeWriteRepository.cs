@@ -1,9 +1,9 @@
 using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 
-namespace TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+namespace TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 
-public interface ISkillGradeRepository
+public interface ISkillGradeWriteRepository
 { 
     Task AddAsync(BaseSkillGrade skillGrade, CancellationToken cancellationToken);
     

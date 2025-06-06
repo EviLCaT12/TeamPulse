@@ -1,16 +1,15 @@
-using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Domain.Entities.SkillGrade;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 
-namespace TeamPulse.Performances.Infrastructure.Repositories;
+namespace TeamPulse.Performances.Infrastructure.Repositories.Write;
 
-public class SkillGradeRepository : ISkillGradeRepository
+public class SkillGradeWriteRepository : ISkillGradeWriteRepository
 {
     private readonly WriteDbContext _writeDbContext;
 
-    public SkillGradeRepository(WriteDbContext writeDbContext)
+    public SkillGradeWriteRepository(WriteDbContext writeDbContext)
     {
         _writeDbContext = writeDbContext;
     }

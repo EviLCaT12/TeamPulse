@@ -1,8 +1,8 @@
 using TeamPulse.Performances.Domain.Entities;
 
-namespace TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+namespace TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 
-public interface IRecordSkillRepository
+public interface IRecordSkillWriteRepository
 {
     Task AddRecordSkillAsync(RecordSkill skill, CancellationToken cancellationToken);
 }

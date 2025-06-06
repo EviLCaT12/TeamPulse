@@ -18,7 +18,11 @@ public class Update : BaseTest
     public async Task Full_Update_Department_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
+        var headOfDepartment = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(headOfDepartment);
+        WriteDbContext.SaveChanges();
+        
+        var department = Utilities.SeedDepartment(headOfDepartment);
         var headOfTeams = Utilities.SeedEmployees(3);
         List<Domain.Entities.Team> oldTeams = [];
         foreach (var employee in headOfTeams)

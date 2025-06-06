@@ -14,24 +14,24 @@ public class AddEmployeesHandler : ICommandHandler<AddEmployeesCommand>
 {
     private readonly ILogger<AddEmployeesHandler> _logger;
     private readonly IValidator<AddEmployeesCommand> _validator;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IEmployeeRepository _employeeRepository;
-    private readonly IDepartmentRepository _departmentRepository;
+    private readonly ITeamWriteRepository _teamWriteRepository;
+    private readonly IEmployeeWriteRepository _employeeWriteRepository;
+    private readonly IDepartmentWriteRepository _departmentWriteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public AddEmployeesHandler(
         ILogger<AddEmployeesHandler> logger,
         IValidator<AddEmployeesCommand> validator,
-        ITeamRepository teamRepository,
-        IEmployeeRepository employeeRepository,
-        IDepartmentRepository departmentRepository,
+        ITeamWriteRepository teamWriteRepository,
+        IEmployeeWriteRepository employeeWriteRepository,
+        IDepartmentWriteRepository departmentWriteRepository,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
-        _teamRepository = teamRepository;
-        _employeeRepository = employeeRepository;
-        _departmentRepository = departmentRepository;
+        _teamWriteRepository = teamWriteRepository;
+        _employeeWriteRepository = employeeWriteRepository;
+        _departmentWriteRepository = departmentWriteRepository;
         _unitOfWork = unitOfWork;
     }
     public async Task<UnitResult<ErrorList>> HandleAsync(AddEmployeesCommand command, CancellationToken cancellationToken)
@@ -43,7 +43,7 @@ public class AddEmployeesHandler : ICommandHandler<AddEmployeesCommand>
             return validationResult.ToErrorList();
 
         var teamId = TeamId.Create(command.TeamId).Value;
-        var team = await _teamRepository.GetTeamByIdAsync(teamId, cancellationToken);
+        var team = await _teamWriteRepository.GetTeamByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             var errorMessage = $"Team with id {teamId} does not exist.";
@@ -53,13 +53,13 @@ public class AddEmployeesHandler : ICommandHandler<AddEmployeesCommand>
 
         //Точно не нул по ограничениям бд
         var departmentId = DepartmentId.Create(team.DepartmentId.Value).Value;
-        var department = await _departmentRepository.GetDepartmentByIdAsync(departmentId, cancellationToken: cancellationToken);
+        var department = await _departmentWriteRepository.GetDepartmentByIdAsync(departmentId, cancellationToken: cancellationToken);
 
         List<Domain.Entities.Employee> employees = [];
         foreach (var id in command.EmployeeIds)
         {
             var employeeId = EmployeeId.Create(id).Value;
-            var employee = await _employeeRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
+            var employee = await _employeeWriteRepository.GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (employee is null)
             {
                 var errorMessage = $"Employee with id {employeeId} does not exist.";

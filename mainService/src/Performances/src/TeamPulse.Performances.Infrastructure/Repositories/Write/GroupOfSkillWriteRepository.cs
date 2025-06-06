@@ -1,17 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 
-namespace TeamPulse.Performances.Infrastructure.Repositories;
+namespace TeamPulse.Performances.Infrastructure.Repositories.Write;
 
-public class GroupOfSkillRepository : IGroupOfSkillRepository
+public class GroupOfSkillWriteRepository : IGroupOfSkillWriteRepository
 {
     private readonly WriteDbContext _writeDbContext;
 
-    public GroupOfSkillRepository(WriteDbContext writeDbContext)
+    public GroupOfSkillWriteRepository(WriteDbContext writeDbContext)
     {
         _writeDbContext = writeDbContext;
     }

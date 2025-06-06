@@ -18,6 +18,8 @@ public class Create : BaseTest
         //Arrange
         var employee = Utilities.SeedEmployees(1).First();
         WriteDbContext.Employees.Add(employee);
+        WriteDbContext.SaveChanges();
+        
         var department = Utilities.SeedDepartment(employee);
         WriteDbContext.Departments.Add(department);
         WriteDbContext.SaveChanges();

@@ -3,7 +3,7 @@ using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.DatabaseAbstraction;
 
-public interface IDepartmentRepository
+public interface IDepartmentWriteRepository
 {
     Task AddDepartmentAsync(Department department, CancellationToken cancellationToken);
 

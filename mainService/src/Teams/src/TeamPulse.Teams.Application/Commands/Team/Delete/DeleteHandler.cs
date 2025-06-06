@@ -14,18 +14,18 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
 {
     private readonly ILogger<DeleteHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ITeamRepository _teamRepository;
+    private readonly ITeamWriteRepository _teamWriteRepository;
     private readonly IValidator<DeleteCommand> _validator;
 
     public DeleteHandler(
         ILogger<DeleteHandler> logger,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork,
-        ITeamRepository teamRepository,
+        ITeamWriteRepository teamWriteRepository,
         IValidator<DeleteCommand> validator)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _teamRepository = teamRepository;
+        _teamWriteRepository = teamWriteRepository;
         _validator = validator;
     }
     public async Task<UnitResult<ErrorList>> HandleAsync(DeleteCommand command, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             return validationResult.ToErrorList();
         
         var teamId = TeamId.Create(command.TeamId).Value;
-        var team = await _teamRepository.GetTeamByIdAsync(teamId, cancellationToken);
+        var team = await _teamWriteRepository.GetTeamByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             var errorMessage = $"Team {command.TeamId} was not found.";
@@ -45,7 +45,7 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             return Errors.General.ValueNotFound(errorMessage).ToErrorList();
         }
         
-        _teamRepository.DeleteTeam(team);
+        _teamWriteRepository.DeleteTeam(team);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

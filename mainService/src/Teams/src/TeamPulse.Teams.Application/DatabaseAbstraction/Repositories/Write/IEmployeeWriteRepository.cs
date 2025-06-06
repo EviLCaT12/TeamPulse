@@ -3,7 +3,7 @@ using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.DatabaseAbstraction;
 
-public interface IEmployeeRepository
+public interface IEmployeeWriteRepository
 {
     Task<Employee?> GetEmployeeByIdAsync(EmployeeId? id, CancellationToken cancellationToken);
     

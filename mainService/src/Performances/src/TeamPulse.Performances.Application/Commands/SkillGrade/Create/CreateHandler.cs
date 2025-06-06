@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Application.Factories;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
@@ -16,18 +16,18 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 {
     private readonly ILogger<CreateHandler> _logger;
     private readonly IValidator<CreateCommand> _validator;
-    private readonly ISkillGradeRepository _skillGradeRepository;
+    private readonly ISkillGradeWriteRepository _skillGradeWriteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateHandler(
         ILogger<CreateHandler> logger,
         IValidator<CreateCommand> validator,
-        ISkillGradeRepository skillGradeRepository,
+        ISkillGradeWriteRepository skillGradeWriteRepository,
         [FromKeyedServices(ModuleKey.Performance)] IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
-        _skillGradeRepository = skillGradeRepository;
+        _skillGradeWriteRepository = skillGradeWriteRepository;
         _unitOfWork = unitOfWork;
     }
     public async Task<Result<Guid, ErrorList>> HandleAsync(CreateCommand command, CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
         if (skillGrade.IsFailure)
             return skillGrade.Error.ToErrorList();
         
-        await _skillGradeRepository.AddAsync(skillGrade.Value, cancellationToken);
+        await _skillGradeWriteRepository.AddAsync(skillGrade.Value, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

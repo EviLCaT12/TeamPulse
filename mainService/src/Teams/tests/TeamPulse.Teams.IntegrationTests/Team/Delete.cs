@@ -16,7 +16,12 @@ public class Delete : BaseTest
     public async Task Delete_Team_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
+        var employee = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(employee);
+        WriteDbContext.SaveChanges();
+        
+        var department = Utilities.SeedDepartment(employee);
+        
         var headOfTeam = Utilities.SeedEmployees(1).First();
         var team = Utilities.SeedTeams(1, department, headOfTeam).First();
         department.AddTeams([team]);
