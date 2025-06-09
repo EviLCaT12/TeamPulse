@@ -1,17 +1,26 @@
 using AuthService.Database;
 using AuthService.Domain;
+using AuthService.EmailSender;
+using AuthService.Features;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<AuthDbContext>(_ => 
     new AuthDbContext(builder.Configuration.GetConnectionString("Database")!));
+builder.Services.AddScoped<RegisterUserHandler>();
+builder.Services.AddScoped<VerifyEmailHandler>();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+    
 
 builder.Services
     .AddIdentity<User, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<AuthDbContext>();
+    .AddEntityFrameworkStores<AuthDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -20,6 +29,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 }); 
 
+builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.SECTION_NAME));
+builder.Services.AddScoped<IMailSender, EmailSender>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -27,6 +39,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "AuthService"));
 }
+
+app.MapControllers();
 
 app.Run();
 
