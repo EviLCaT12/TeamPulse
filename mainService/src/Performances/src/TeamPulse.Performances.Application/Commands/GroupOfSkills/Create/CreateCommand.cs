@@ -5,4 +5,6 @@ namespace TeamPulse.Performances.Application.Commands.GroupOfSkills.Create;
 public record CreateCommand(
     string Name, 
     string Description,
-    Guid GradeId) : ICommand;
+    Guid GradeId,
+    Guid DepartmentId,
+    Guid HeadOfDepartmentId) : ICommand;

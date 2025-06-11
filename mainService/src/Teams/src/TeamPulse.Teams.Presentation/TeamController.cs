@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
 using TeamPulse.Framework.Responses;
+using TeamPulse.Teams.Application.Commands.Team.AddEmployees;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Commands.Team.Delete;
 using TeamPulse.Teams.Application.Commands.Team.Update;
 using TeamPulse.Teams.Application.Queries.Team;
+using TeamPulse.Teams.Application.Queries.Team.GetTeamById;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Team;
 
@@ -23,7 +25,6 @@ public class TeamController : ApplicationController
         var command = new CreateTeamCommand(
             request.Name,
             request.DepartmentId,
-            request.Employees,
             request.HeadOfTeam);
         
         var result = await handler.HandleAsync(command, cancellationToken);
@@ -82,5 +83,21 @@ public class TeamController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(result.Value);
+    }
+
+    [HttpPost("{teamId:guid}/employees")]
+    public async Task<ActionResult> AddEmployees(
+        [FromRoute] Guid teamId,
+        [FromBody] AddEmployeeRequest request,
+        [FromServices] ICommandHandler<AddEmployeesCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new AddEmployeesCommand(teamId, request.EmployeeIds);
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok();
     }
 }

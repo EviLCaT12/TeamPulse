@@ -4,33 +4,25 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Read;
 using TeamPulse.Teams.Contract.Dtos;
 
 namespace TeamPulse.Teams.Application.Queries.Employee;
 
 public class GetEmployeeByIdHandler : IQueryHandler<EmployeeDto, GetEmployeeByIdQuery>
 {
-    private readonly IReadDbContext _readDbContext;
+    private readonly IEmployeeReadRepository _employeeReadRepository;
     private readonly ILogger<GetEmployeeByIdHandler> _logger;
 
-    public GetEmployeeByIdHandler(IReadDbContext readDbContext, ILogger<GetEmployeeByIdHandler> logger)
+    public GetEmployeeByIdHandler(IEmployeeReadRepository employeeReadRepository, ILogger<GetEmployeeByIdHandler> logger)
     {
-        _readDbContext = readDbContext;
+        _employeeReadRepository = employeeReadRepository;
         _logger = logger;
     }
     public async Task<Result<EmployeeDto, ErrorList>> HandleAsync(GetEmployeeByIdQuery query, CancellationToken cancellationToken)
     {
-        var employee = await _readDbContext.Employees
-            .Include(e => e.Team)
-            .Select(e => new EmployeeDto
-            {
-                Id = e.Id,
-                ManagedDepartmentId = e.ManagedDepartmentId,
-                DepartmentId = e.Team.DepartmentId,
-                ManagedTeamId = e.ManagedTeamId,
-                TeamId = e.TeamId
-            })
-            .FirstOrDefaultAsync(e => e.Id == query.EmployeeId, cancellationToken);;
+        var employee = await _employeeReadRepository.GetEmployees()
+            .FirstOrDefaultAsync(e => e.Id == query.EmployeeId, cancellationToken);
         
         if (employee is null)
         {

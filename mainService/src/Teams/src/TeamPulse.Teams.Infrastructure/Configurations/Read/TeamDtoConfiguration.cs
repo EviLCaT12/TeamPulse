@@ -17,10 +17,7 @@ public class TeamDtoConfiguration : IEntityTypeConfiguration<TeamDto>
             .WithOne()
             .HasForeignKey(e => e.Id)
             .IsRequired(false);
-
-        builder.HasOne(t => t.HeadOfTeam)
-            .WithOne()
-            .HasForeignKey<EmployeeDto>(e => e.ManagedTeamId)
-            .IsRequired(false);
+        
+        
     }
 }

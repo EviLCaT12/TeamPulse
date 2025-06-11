@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Teams.Application.Commands.Department.Create;
+using TeamPulse.Teams.UnitTests;
 
 namespace TeamPulse.Teams.IntegrationTests.Department;
 
@@ -15,7 +16,13 @@ public class Create : BaseTest
     public async Task Create_Department_Should_Be_Successful()
     {
         //Arrange
-        var command = new CreateDepartmentCommand(Guid.NewGuid().ToString(), null, null);
+        var employee = Utilities.SeedEmployees(1).First();
+        
+        WriteDbContext.Employees.Add(employee);
+        
+        WriteDbContext.SaveChanges();
+        
+        var command = new CreateDepartmentCommand(Guid.NewGuid().ToString(), null, employee.Id.Value);
 
         var sut = Scope.ServiceProvider.GetRequiredService<ICommandHandler<Guid, CreateDepartmentCommand>>();
 

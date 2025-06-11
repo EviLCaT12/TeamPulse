@@ -5,7 +5,7 @@ using TeamPulse.Teams.Contract.Dtos;
 
 namespace TeamPulse.Teams.Infrastructure.DbContexts;
 
-public class ReadDbContext(string connectionString) : DbContext, IReadDbContext
+public class ReadDbContext(string connectionString) : DbContext
 {
     public IQueryable<DepartmentDto> Departments => Set<DepartmentDto>();
     

@@ -16,15 +16,18 @@ public class Create : BaseTest
     public async Task Create_Team_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
+        var employee = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(employee);
+        WriteDbContext.SaveChanges();
+        
+        var department = Utilities.SeedDepartment(employee);
         WriteDbContext.Departments.Add(department);
         WriteDbContext.SaveChanges();
 
         var command = new CreateTeamCommand(
             Guid.NewGuid().ToString(),
             department.Id.Value,
-            null,
-            null);
+            employee.Id.Value);
 
         var sut = Scope.ServiceProvider.GetRequiredService<ICommandHandler<Guid, CreateTeamCommand>>();
 

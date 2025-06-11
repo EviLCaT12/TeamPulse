@@ -11,16 +11,16 @@ namespace TeamPulse.Teams.Application.Commands.Employee.Create;
 public class CreateHandler : ICommandHandler<Guid, CreateCommand>
 {
     private readonly ILogger<CreateHandler> _logger;
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IEmployeeWriteRepository _employeeWriteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateHandler(
         ILogger<CreateHandler> logger,
-        IEmployeeRepository employeeRepository,
+        IEmployeeWriteRepository employeeWriteRepository,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork)
     {
         _logger = logger;
-        _employeeRepository = employeeRepository;
+        _employeeWriteRepository = employeeWriteRepository;
         _unitOfWork = unitOfWork;
     }
     public async Task<Result<Guid, ErrorList>> HandleAsync(CreateCommand command, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public class CreateHandler : ICommandHandler<Guid, CreateCommand>
         
         var employee = new Domain.Entities.Employee(employeeId);
         
-        await _employeeRepository.AddEmployeeAsync(employee, cancellationToken);
+        await _employeeWriteRepository.AddEmployeeAsync(employee, cancellationToken);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

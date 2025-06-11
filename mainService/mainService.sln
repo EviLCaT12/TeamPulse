@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamPulse.Reports.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamPulse.Reports.Presentation", "src\Reports\src\TeamPulse.Reports.Presentation\TeamPulse.Reports.Presentation.csproj", "{76BBE33B-3B44-442C-93F0-1B2B76749000}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamPulse.Reports.Infrastructure", "src\Reports\src\TeamPulse.Reports.Infrastructure\TeamPulse.Reports.Infrastructure.csproj", "{58547BB0-E42F-43A2-840D-5688FC552D22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,10 @@ Global
 		{76BBE33B-3B44-442C-93F0-1B2B76749000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76BBE33B-3B44-442C-93F0-1B2B76749000}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76BBE33B-3B44-442C-93F0-1B2B76749000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58547BB0-E42F-43A2-840D-5688FC552D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58547BB0-E42F-43A2-840D-5688FC552D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58547BB0-E42F-43A2-840D-5688FC552D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58547BB0-E42F-43A2-840D-5688FC552D22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{633EA5FC-AC74-4734-87B9-1C3BCBB03B41} = {00F83C9F-BD30-480A-8C25-E637D5350555}
@@ -185,5 +191,6 @@ Global
 		{DC4F4267-E467-40F1-82D9-4539BB4D25F6} = {B7839246-F167-4CAE-9A0F-62E9D6679738}
 		{1E4721EA-4433-4540-8AFA-52C09614D0BC} = {B7839246-F167-4CAE-9A0F-62E9D6679738}
 		{76BBE33B-3B44-442C-93F0-1B2B76749000} = {B7839246-F167-4CAE-9A0F-62E9D6679738}
+		{58547BB0-E42F-43A2-840D-5688FC552D22} = {B7839246-F167-4CAE-9A0F-62E9D6679738}
 	EndGlobalSection
 EndGlobal

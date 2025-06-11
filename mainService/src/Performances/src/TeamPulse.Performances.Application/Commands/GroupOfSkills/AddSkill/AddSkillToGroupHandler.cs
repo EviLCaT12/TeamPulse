@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Domain.Entities;
 using TeamPulse.Performances.Domain.ValueObjects.Ids;
 using TeamPulse.SharedKernel.Errors;
@@ -16,25 +16,25 @@ public class AddSkillToGroupHandler : ICommandHandler<AddSkillToGroupCommand>
 {
     private readonly ILogger<AddSkillToGroupHandler> _logger;
     private readonly IValidator<AddSkillToGroupCommand> _validator;
-    private readonly IGroupSkillRepository _groupSkillRepository;
-    private readonly IGroupOfSkillRepository _groupOfSkillRepository;
-    private readonly ISkillRepository _skillRepository;
+    private readonly IGroupSkillWriteRepository _groupSkillWriteRepository;
+    private readonly IGroupOfSkillWriteRepository _groupOfSkillRepository;
+    private readonly ISkillWriteRepository _skillWriteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public AddSkillToGroupHandler(
         ILogger<AddSkillToGroupHandler> logger,
         IValidator<AddSkillToGroupCommand> validator,
-        IGroupSkillRepository groupSkillRepository,
-        IGroupOfSkillRepository groupOfSkillRepository,
-        ISkillRepository skillRepository,
+        IGroupSkillWriteRepository groupSkillWriteRepository,
+        IGroupOfSkillWriteRepository groupOfSkillRepository,
+        ISkillWriteRepository skillWriteRepository,
         [FromKeyedServices(ModuleKey.Performance)]
         IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
-        _groupSkillRepository = groupSkillRepository;
+        _groupSkillWriteRepository = groupSkillWriteRepository;
         _groupOfSkillRepository = groupOfSkillRepository;
-        _skillRepository = skillRepository;
+        _skillWriteRepository = skillWriteRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -57,7 +57,7 @@ public class AddSkillToGroupHandler : ICommandHandler<AddSkillToGroupCommand>
         }
 
         var skillId = SkillId.Create(command.SkillId).Value;
-        var skill = await _skillRepository.GetByIdAsync(skillId, cancellationToken);
+        var skill = await _skillWriteRepository.GetByIdAsync(skillId, cancellationToken);
         if (skill is null)
         {
             var errorMessage = $"Skill {command.SkillId} does not exist.";
@@ -72,7 +72,7 @@ public class AddSkillToGroupHandler : ICommandHandler<AddSkillToGroupCommand>
             return Errors.General.ValueIsInvalid(errorMessage).ToErrorList();
         }
 
-        var skillInGroup = await _groupSkillRepository.GetByIdAsync(groupId, skillId, cancellationToken);
+        var skillInGroup = await _groupSkillWriteRepository.GetByIdAsync(groupId, skillId, cancellationToken);
         if (skillInGroup is not null)
         {
             var errorMessage = $"Skill {command.SkillId} already added to group {command.GroupId}.";
@@ -82,7 +82,7 @@ public class AddSkillToGroupHandler : ICommandHandler<AddSkillToGroupCommand>
 
         var skillGroupPair = new GroupSkill(groupId, group, skillId, skill);
 
-        await _groupSkillRepository.AddGroupSkillAsync(skillGroupPair, cancellationToken);
+        await _groupSkillWriteRepository.AddGroupSkillAsync(skillGroupPair, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

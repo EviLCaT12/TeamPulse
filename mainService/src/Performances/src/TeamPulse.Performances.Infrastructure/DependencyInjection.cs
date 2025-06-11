@@ -2,9 +2,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Performances.Application.DatabaseAbstraction;
-using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Read;
+using TeamPulse.Performances.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Performances.Infrastructure.DbContexts;
 using TeamPulse.Performances.Infrastructure.Repositories;
+using TeamPulse.Performances.Infrastructure.Repositories.Read;
+using TeamPulse.Performances.Infrastructure.Repositories.Write;
 using TeamPulse.SharedKernel.Constants;
 
 namespace TeamPulse.Performances.Infrastructure;
@@ -28,7 +31,7 @@ public static class DependencyInjection
             new WriteDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE) 
                                ?? throw new ApplicationException("Cannot connect to the database.")));
 
-        services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+        services.AddScoped<ReadDbContext>(_ =>
             new ReadDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE)
                               ?? throw new ApplicationException("Cannot connect to the database.")));
         
@@ -44,13 +47,19 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        //write
         services
-            .AddScoped<ISkillGradeRepository, SkillGradeRepository>()
-            .AddScoped<ISkillRepository, SkillRepository>()
-            .AddScoped<IGroupOfSkillRepository, GroupOfSkillRepository>()
-            .AddScoped<IRecordSkillRepository, RecordSkillRepository>()
-            .AddScoped<IGroupSkillRepository, GroupSkillRepository>();
+            .AddScoped<ISkillGradeWriteRepository, SkillGradeWriteRepository>()
+            .AddScoped<ISkillWriteRepository, SkillWriteRepository>()
+            .AddScoped<IGroupOfSkillWriteRepository, GroupOfSkillWriteRepository>()
+            .AddScoped<IRecordSkillWriteRepository, RecordSkillWriteRepository>()
+            .AddScoped<IGroupSkillWriteRepository, GroupSkillWriteRepository>();
         
+        //Read
+        services
+            .AddScoped<IGroupOfSkillReadRepository, GroupOfSkillReadRepository>()
+            .AddScoped<IGroupSkillReadRepository, GroupSkillReadRepository>()
+            .AddScoped<IRecordSkillReadRepository, RecordSkillReadRepository>();
         return services;
     }
 }

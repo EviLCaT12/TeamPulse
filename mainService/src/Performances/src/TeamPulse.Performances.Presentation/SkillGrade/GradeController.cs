@@ -30,7 +30,7 @@ public class GradeController : ApplicationController
         return Ok(result.Value);
     }
 
-    [HttpPost("grade/{employeeId:guid}/{groupId:guid}/{skillId:guid}")]
+    [HttpPost("{employeeId:guid}/{groupId:guid}/{skillId:guid}")]
     public async Task<ActionResult> EmployeeSelfReview(
         [FromRoute] Guid employeeId, Guid groupId, Guid skillId, 
         [FromBody] MakeReviewRequest request,

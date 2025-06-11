@@ -1,0 +1,42 @@
+﻿services:
+  main_service_db:
+    container_name: main_service_postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: main_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - main-service-data:/var/lib/postgres/data
+
+
+  auth_service_db:
+    container_name: auth_service_postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: auth_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - auth-service-data:/var/lib/postgres/data
+        
+  seq:
+    container_name: seq
+    image: datalust/seq:latest
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "80:80"
+      - "5341:5341"
+  
+
+volumes:
+  main-service-data:
+  auth-service-data:
