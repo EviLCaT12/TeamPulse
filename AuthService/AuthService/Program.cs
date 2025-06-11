@@ -2,6 +2,7 @@ using AuthService.Database;
 using AuthService.Domain;
 using AuthService.EmailSender;
 using AuthService.Features;
+using AuthService.Jwt;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,8 +13,14 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<AuthDbContext>(_ => 
     new AuthDbContext(builder.Configuration.GetConnectionString("Database")!));
+
 builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<VerifyEmailHandler>();
+builder.Services.AddScoped<LoginHandler>();
+builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IMailSender, EmailSender>();
+
+
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
     
 
@@ -30,7 +37,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 }); 
 
 builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.SECTION_NAME));
-builder.Services.AddScoped<IMailSender, EmailSender>();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SECTION_NAME));
+
 
 var app = builder.Build();
 
