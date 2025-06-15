@@ -1,7 +1,7 @@
 using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
 
-namespace TeamPulse.Teams.Application.DatabaseAbstraction;
+namespace TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Write;
 
 public interface IDepartmentWriteRepository
 {

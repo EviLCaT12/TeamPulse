@@ -11,4 +11,4 @@ public class AddTeamsCommandValidator : AbstractValidator<AddTeamsCommand>
         RuleFor(x => x.DepartmentId).MustBeValueObject(DepartmentId.Create);
         RuleForEach(x => x.TeamIds).MustBeValueObject(TeamId.Create);
     }
-}
+}   

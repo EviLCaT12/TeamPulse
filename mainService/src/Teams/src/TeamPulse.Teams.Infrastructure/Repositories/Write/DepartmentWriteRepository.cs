@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using TeamPulse.Teams.Application;
-using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Teams.Domain.Entities;
 using TeamPulse.Teams.Domain.VO.Ids;
 using TeamPulse.Teams.Infrastructure.DbContexts;
 
-namespace TeamPulse.Teams.Infrastructure.Repositories;
+namespace TeamPulse.Teams.Infrastructure.Repositories.Write;
 
 public class DepartmentWriteRepository : IDepartmentWriteRepository
 {

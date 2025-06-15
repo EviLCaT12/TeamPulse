@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
           <PrivateAssets>all</PrivateAssets>
@@ -30,6 +31,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Accounts\src\TeamPulse.Accounts.Application\TeamPulse.Accounts.Application.csproj" />
+      <ProjectReference Include="..\Accounts\src\TeamPulse.Accounts.Infrastructure\TeamPulse.Accounts.Infrastructure.csproj" />
+      <ProjectReference Include="..\Accounts\src\TeamPulse.Accounts.Presentation\TeamPulse.Accounts.Presentation.csproj" />
       <ProjectReference Include="..\Performances\src\TeamPulse.Performances.Infrastructure\TeamPulse.Performances.Infrastructure.csproj" />
       <ProjectReference Include="..\Performances\src\TeamPulse.Performances.Presentation\TeamPulse.Performances.Presentation.csproj" />
       <ProjectReference Include="..\Reports\src\TeamPulse.Reports.Application\TeamPulse.Reports.Application.csproj" />

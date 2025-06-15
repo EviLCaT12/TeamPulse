@@ -1,6 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
+using TeamPulse.Accounts.Application;
+using TeamPulse.Accounts.Infrastructure;
+using TeamPulse.Accounts.Infrastructure.Jwt;
+using TeamPulse.Accounts.Infrastructure.Options;
 using TeamPulse.Performances.Application;
 using TeamPulse.Performances.Infrastructure;
 using TeamPulse.Performances.Presentation;
@@ -29,12 +35,36 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
+{
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
         Title = "TeamPulse api",
         Description = "Application for management it teams",
-    }));
+    });
+    
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+        In = ParameterLocation.Header, 
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey 
+    });
+    
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        { 
+            new OpenApiSecurityScheme 
+            { 
+                Reference = new OpenApiReference 
+                { 
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer" 
+                } 
+            },
+            new string[] { } 
+        } 
+    });
+});
+
 
 builder.Services
     .AddTeamApplication()
@@ -45,7 +75,31 @@ builder.Services
     .AddPerformancesInfrastructure(builder.Configuration)
     .AddPerformancesPresentation()
 
-    .AddReportsApplication();
+    .AddReportsApplication()
+    
+    .AddAccountsApplication()
+    .AddAccountsInfrastructure(builder.Configuration);
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        var jwtOptions = builder.Configuration.GetSection(JwtOptions.SECTION_NAME).Get<JwtOptions>()
+                         ?? throw new ApplicationException("Missing JWT configuration");
+
+        options.TokenValidationParameters = TokenValidationParametersFactory.CreateWithLifeTime(jwtOptions);
+    });
+
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -61,6 +115,10 @@ app.UseExceptionMiddleware();
 
 app.UseSerilogRequestLogging();
 app.MapControllers();
+
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

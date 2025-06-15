@@ -13,5 +13,7 @@ public static class Errors
         public static Error ValueNotFound(string errorMessage) =>
             Error.NotFound(errorMessage, "value.not.found");
         
+        public static Error AlreadyExists(string errorMessage) =>
+            Error.Validation(errorMessage, "value.already.exists");
     }
 }
