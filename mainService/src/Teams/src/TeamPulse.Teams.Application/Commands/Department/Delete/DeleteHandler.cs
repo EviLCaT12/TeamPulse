@@ -6,6 +6,7 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Department.Delete;
@@ -14,18 +15,18 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
 {
     private readonly ILogger<DeleteHandler> _logger;
     private readonly IValidator<DeleteCommand> _validator;
-    private readonly IDepartmentRepository _departmentRepository;
+    private readonly IDepartmentWriteRepository _departmentWriteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public DeleteHandler(
         ILogger<DeleteHandler> logger, 
         IValidator<DeleteCommand> validator,
-        IDepartmentRepository departmentRepository,
+        IDepartmentWriteRepository departmentWriteRepository,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _validator = validator;
-        _departmentRepository = departmentRepository;
+        _departmentWriteRepository = departmentWriteRepository;
         _unitOfWork = unitOfWork;
     }
     
@@ -38,7 +39,7 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             return validationResult.ToErrorList();
         
         var departmentId = DepartmentId.Create(command.DepartmentId).Value;
-        var department = await _departmentRepository.GetDepartmentByIdAsync(departmentId, cancellationToken);
+        var department = await _departmentWriteRepository.GetDepartmentByIdAsync(departmentId, cancellationToken);
         if (department is null)
         {
             var errorMessage = $"Department with id {departmentId} was not found.";
@@ -56,7 +57,7 @@ public class DeleteHandler : ICommandHandler<DeleteCommand>
             _logger.LogInformation($"Deleting department {departmentId} has head.");
         }
         
-        _departmentRepository.DeleteDepartment(department);
+        _departmentWriteRepository.DeleteDepartment(department);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

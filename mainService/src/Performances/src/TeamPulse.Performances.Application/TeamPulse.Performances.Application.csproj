@@ -13,4 +13,8 @@
       <ProjectReference Include="..\TeamPulse.Performances.Domain\TeamPulse.Performances.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DatabaseAbstraction\Repositories\" />
+    </ItemGroup>
+
 </Project>

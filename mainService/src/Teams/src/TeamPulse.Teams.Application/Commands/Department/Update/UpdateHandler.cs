@@ -7,7 +7,7 @@ using TeamPulse.Core.Validators;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.SharedKernel.SharedVO;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
-using TeamPulse.Teams.Domain.Entities;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Teams.Domain.VO.Ids;
 
 namespace TeamPulse.Teams.Application.Commands.Department.Update;
@@ -17,24 +17,24 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
     private readonly ILogger<UpdateHandler> _logger;
     private readonly IValidator<UpdateCommand> _validator;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDepartmentRepository _departmentRepository;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IDepartmentWriteRepository _departmentWriteRepository;
+    private readonly ITeamWriteRepository _teamWriteRepository;
+    private readonly IEmployeeWriteRepository _employeeWriteRepository;
 
     public UpdateHandler(
         ILogger<UpdateHandler> logger,
         IValidator<UpdateCommand> validator,
         [FromKeyedServices(ModuleKey.Team)] IUnitOfWork unitOfWork,
-        IDepartmentRepository departmentRepository,
-        ITeamRepository teamRepository,
-        IEmployeeRepository employeeRepository)
+        IDepartmentWriteRepository departmentWriteRepository,
+        ITeamWriteRepository teamWriteRepository,
+        IEmployeeWriteRepository employeeWriteRepository)
     {
         _logger = logger;
         _validator = validator;
         _unitOfWork = unitOfWork;
-        _departmentRepository = departmentRepository;
-        _teamRepository = teamRepository;
-        _employeeRepository = employeeRepository;
+        _departmentWriteRepository = departmentWriteRepository;
+        _teamWriteRepository = teamWriteRepository;
+        _employeeWriteRepository = employeeWriteRepository;
     }
 
     public async Task<Result<Guid, ErrorList>> HandleAsync(UpdateCommand command, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             return validationResult.ToErrorList();
 
         var departmentId = DepartmentId.Create(command.DepartmentId).Value;
-        var department = await _departmentRepository.GetDepartmentByIdAsync(departmentId, cancellationToken);
+        var department = await _departmentWriteRepository.GetDepartmentByIdAsync(departmentId, cancellationToken);
         if (department is null)
         {
             var errorMessage = $"Department with id {departmentId.Value} was not found";
@@ -72,7 +72,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
             foreach (var team in teams)
             {
                 var teamId = TeamId.Create(team).Value;
-                var departmentTeam = await _teamRepository.GetTeamIdAsync(teamId, cancellationToken);
+                var departmentTeam = await _teamWriteRepository.GetTeamByIdAsync(teamId, cancellationToken);
                 if (departmentTeam is null)
                 {
                     var errorMessage = $"Team with id {teamId.Value} was not found";
@@ -94,11 +94,11 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
         if (command.NewHeadOfDepartment is not null)
         {
             var employeeId = EmployeeId.Create(command.NewHeadOfDepartment!.Value).Value;
-            var headOfDepartment = await _employeeRepository
+            var headOfDepartment = await _employeeWriteRepository
                 .GetEmployeeByIdAsync(employeeId, cancellationToken);
             if (headOfDepartment is not null)
             {
-                if (headOfDepartment.ManagedDepartmentId is not null)
+                if (headOfDepartment.IsDepartmentManager)
                 {
                     var errorMessage = $"Employee with id {employeeId.Value} is already head of department";
                     _logger.LogError(errorMessage);
@@ -117,7 +117,7 @@ public class UpdateHandler : ICommandHandler<Guid, UpdateCommand>
 
         if (department.HeadOfDepartment != employee && employee is not null)
         {
-            department.UpdateHeadOfDepartment(employee);
+            department.UpdateDepartmentManager(employee);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

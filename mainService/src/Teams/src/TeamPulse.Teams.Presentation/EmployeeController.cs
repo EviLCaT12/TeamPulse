@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
@@ -11,6 +12,7 @@ namespace TeamPulse.Team.Presentation;
 
 public class EmployeeController : ApplicationController
 {
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult> CreateEmployee(
         [FromServices] ICommandHandler<Guid, CreateCommand> handler,

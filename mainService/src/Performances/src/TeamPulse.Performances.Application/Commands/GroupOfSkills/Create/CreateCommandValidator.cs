@@ -12,5 +12,11 @@ public class CreateCommandValidator : AbstractValidator<CreateCommand>
         RuleFor(x => x.Name).MustBeValueObject(Name.Create);
         RuleFor(x => x.Description).MustBeValueObject(Description.Create);
         RuleFor(c => c.GradeId).MustBeValueObject(SkillGradeId.Create);
+        RuleFor(c => c.DepartmentId)
+            .NotEmpty()
+            .WithMessage("A department must be specified");
+        RuleFor(c => c.HeadOfDepartmentId)
+            .NotEmpty()
+            .WithMessage("Head of department must be specified");
     }
 }

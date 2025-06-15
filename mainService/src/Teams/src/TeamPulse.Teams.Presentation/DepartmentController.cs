@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
 using TeamPulse.Framework.Responses;
+using TeamPulse.Teams.Application.Commands.Department.AddTeams;
 using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Department.Delete;
 using TeamPulse.Teams.Application.Commands.Department.Update;
 using TeamPulse.Teams.Application.Queries.Department;
+using TeamPulse.Teams.Application.Queries.Department.GetDepartmentById;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Department;
 
@@ -80,5 +82,21 @@ public class DepartmentController : ApplicationController
             return result.Error.ToResponse();
         
         return Ok(result.Value);
+    }
+
+    [HttpPost("{departmentId:guid}/add-teams")]
+    public async Task<ActionResult> AddTeamsToDepartment(
+        [FromRoute] Guid departmentId,
+        [FromBody] AddTeamsToDepartmentRequest request,
+        [FromServices] ICommandHandler<AddTeamsCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new AddTeamsCommand(departmentId, request.TeamIds.ToList());
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok();
     }
 }

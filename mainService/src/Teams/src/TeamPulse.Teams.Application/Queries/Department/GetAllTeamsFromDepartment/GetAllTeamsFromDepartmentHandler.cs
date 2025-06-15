@@ -4,25 +4,27 @@ using Microsoft.Extensions.Logging;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Read;
 
 namespace TeamPulse.Teams.Application.Queries.Department.GetAllTeamsFromDepartment;
 
 public class GetAllTeamsFromDepartmentHandler : IQueryHandler<List<Guid>, GetAllTeamsFromDepartmentQuery>
 {
     private readonly ILogger<GetAllTeamsFromDepartmentHandler> _logger;
-    private readonly IReadDbContext _readDbContext;
+    private readonly ITeamReadRepository _teamReadRepository;
+
 
     public GetAllTeamsFromDepartmentHandler(ILogger<GetAllTeamsFromDepartmentHandler> logger,
-        IReadDbContext readDbContext)
+        ITeamReadRepository teamReadRepository)
     {
         _logger = logger;
-        _readDbContext = readDbContext;
+        _teamReadRepository = teamReadRepository;
     }
 
     public async Task<Result<List<Guid>, ErrorList>> HandleAsync(GetAllTeamsFromDepartmentQuery query,
         CancellationToken cancellationToken)
     {
-        var teamsId = await _readDbContext.Teams
+        var teamsId = await _teamReadRepository.GetTeams()
             .Where(t => t.DepartmentId == query.DepartmentId)
             .Select(t => t.Id)
             .ToListAsync(cancellationToken);

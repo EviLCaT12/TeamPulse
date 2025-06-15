@@ -15,37 +15,39 @@ public class Team : Entity<TeamId>
     public Team(
         TeamId id,
         Name name,
-        Department department,
-        IEnumerable<Employee>? employees,
-        Employee? headOfTeam)
+        DepartmentId departmentId,
+        Employee headOfTeam)
     {
         Id = id;
-        _employees = employees?.ToList() ?? [];
         Name = name;
-        Department = department;
+        DepartmentId = departmentId;
         HeadOfTeam = headOfTeam;
+        
+        SetEmployeeTeamManager(headOfTeam, Id);
     }
-
-    public TeamId Id { get; private set; }
-
+    
     private List<Employee> _employees = [];
-
-    public IReadOnlyList<Employee> Employees => _employees; 
-
-    public Department Department { get; private set; }
-
+    
+    
+    public IReadOnlyList<Employee> Employees => _employees;
+    
+    
+    
+    public TeamId Id { get; private set; }
+    public DepartmentId DepartmentId { get; private set; }
     public Name Name { get; private set; }
+    
+    
+    public Employee HeadOfTeam { get; private set; }
 
-    public Employee? HeadOfTeam { get; private set; }
-
+    private void SetEmployeeTeamManager(Employee employees, TeamId teamId)
+    {
+        employees.SetTeamManager(teamId);
+    }
+    
     internal void AddEmployee(IEnumerable<Employee> employee)
     {
         _employees.AddRange(employee);
-    }
-
-    internal void AddHeadOfTeam(Employee employee)
-    {
-        HeadOfTeam = employee;
     }
     
     internal void UpdateName(Name newName)
@@ -61,6 +63,8 @@ public class Team : Entity<TeamId>
 
     internal void UpdateHeadOfTeam(Employee newHeadOfTeam)
     {
+        HeadOfTeam.RemoveFromTeamManager();
         HeadOfTeam = newHeadOfTeam;
+        HeadOfTeam.SetTeamManager(Id);
     }
 }

@@ -5,9 +5,11 @@ using TeamPulse.Teams.Application.Commands.Department.Create;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Queries.Department;
 using TeamPulse.Teams.Application.Queries.Department.GetAllTeamsFromDepartment;
+using TeamPulse.Teams.Application.Queries.Department.GetDepartmentById;
 using TeamPulse.Teams.Application.Queries.Employee;
 using TeamPulse.Teams.Application.Queries.Team;
 using TeamPulse.Teams.Application.Queries.Team.GetAllEmployeesFromTeam;
+using TeamPulse.Teams.Application.Queries.Team.GetTeamById;
 using TeamPulse.Teams.Contract;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Department;
@@ -105,22 +107,6 @@ public class TeamContract : ITeamContract
         var query = new GetTeamByIdQuery(id);
 
         var result = await _getTeamByIdQueryHandler.HandleAsync(query, cancellationToken);
-        if (result.IsFailure)
-            return result.Error;
-        
-        return result.Value;
-    }
-
-    public async Task<Result<Guid, ErrorList>> CreateTeamAsync(CreateTeamRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new CreateTeamCommand(
-            request.Name,
-            request.DepartmentId,
-            request.Employees,
-            request.HeadOfTeam);
-        
-        var result = await _createTeamCommandHandler.HandleAsync(command, cancellationToken);
         if (result.IsFailure)
             return result.Error;
         

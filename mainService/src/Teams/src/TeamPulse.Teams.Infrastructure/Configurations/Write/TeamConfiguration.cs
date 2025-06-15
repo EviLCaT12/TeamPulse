@@ -20,11 +20,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
                 idToDb => idToDb.Value,
                 idFromDb => TeamId.Create(idFromDb).Value);
         
-        builder.HasMany(t => t.Employees)
-            .WithOne(e => e.Team)
-            .HasForeignKey("team_id")
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired(false);
 
         builder.ComplexProperty(t => t.Name, nb =>
         {
@@ -34,10 +29,19 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
                 .HasMaxLength(NameConstant.MAX_LENGTH);
         });
         
-        builder.HasOne(t => t.HeadOfTeam)
-            .WithOne(e => e.ManagedTeam)
-            .HasForeignKey<Employee>("managed_team_id")
-            .OnDelete(DeleteBehavior.Restrict)
-            .IsRequired(false);
+        builder.Property(t => t.DepartmentId)
+            .HasColumnName("department_id")
+            .IsRequired(false)
+            .HasConversion(
+                toDb => toDb.Value,
+                fromDb => DepartmentId.Create(fromDb).Value
+            );
+        
+        builder.HasMany(t => t.Employees)
+            .WithOne()
+            .HasForeignKey(e => e.WorkingTeamId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+                
     }
 }

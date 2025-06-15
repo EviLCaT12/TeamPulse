@@ -11,9 +11,6 @@ public class CreateCommandValidator : AbstractValidator<CreateTeamCommand>
     {
         RuleFor(c => c.Name).MustBeValueObject(Name.Create);
         RuleFor(c => c.DepartmentId).MustBeValueObject(DepartmentId.Create);
-        RuleForEach(c => c.EmployeeIds).MustBeValueObject(EmployeeId.Create);
-        RuleFor(c => c.HeadOfTeamId)
-            .NotEqual(Guid.Empty)
-            .When(c => c.HeadOfTeamId is not null);
+        RuleFor(c => c.HeadOfTeamId).MustBeValueObject(EmployeeId.Create);
     }
 }

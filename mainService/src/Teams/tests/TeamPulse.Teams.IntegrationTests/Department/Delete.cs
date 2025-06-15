@@ -16,10 +16,17 @@ public class Delete : BaseTest
     public async Task Delete_Department_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
+        var headOfDepartment = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(headOfDepartment);
+        WriteDbContext.SaveChanges();
+        
+        var department = Utilities.SeedDepartment(headOfDepartment);
         WriteDbContext.Departments.Add(department);
 
-        var team = Utilities.SeedTeams(1, department);
+        var headOfTeam = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(headOfTeam);
+        
+        var team = Utilities.SeedTeams(1, department, headOfTeam);
         WriteDbContext.Teams.AddRange(team);
         
         WriteDbContext.SaveChanges();
@@ -36,9 +43,6 @@ public class Delete : BaseTest
 
         var isDepartmentDeleteFromDb = WriteDbContext.Departments.FirstOrDefault();
         isDepartmentDeleteFromDb.Should().BeNull();
-        
-        var isTeamDeleteFromDb = WriteDbContext.Teams.FirstOrDefault();
-        isTeamDeleteFromDb.Should().BeNull();
 
     }
 }

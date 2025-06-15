@@ -16,10 +16,10 @@ public class DepartmentDtoConfiguration : IEntityTypeConfiguration<DepartmentDto
             .WithOne()
             .HasForeignKey(t => t.DepartmentId)
             .IsRequired(false);
-        
-        builder.HasOne(d => d.HeadOfDepartment)
+
+        builder.HasMany(d => d.Employees)
             .WithOne()
-            .HasForeignKey<EmployeeDto>(e => e.ManagedDepartmentId)
+            .HasForeignKey(e => e.DepartmentId)
             .IsRequired(false);
     }
 }

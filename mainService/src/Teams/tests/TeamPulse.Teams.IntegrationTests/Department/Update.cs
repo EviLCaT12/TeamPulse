@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.SharedVO;
@@ -17,17 +18,31 @@ public class Update : BaseTest
     public async Task Full_Update_Department_Should_Be_Successful()
     {
         //Arrange
-        var department = Utilities.SeedDepartment();
-        var teams = Utilities.SeedTeams(3, department);
         var headOfDepartment = Utilities.SeedEmployees(1).First();
+        WriteDbContext.Employees.Add(headOfDepartment);
+        WriteDbContext.SaveChanges();
         
-        department.AddTeams(teams);
-        department.AddHeadOfDepartment(headOfDepartment);
+        var department = Utilities.SeedDepartment(headOfDepartment);
+        var headOfTeams = Utilities.SeedEmployees(3);
+        List<Domain.Entities.Team> oldTeams = [];
+        foreach (var employee in headOfTeams)
+        {
+            var team = Utilities.SeedTeams(1, department, employee).First();
+            oldTeams.Add(team);
+        }
+        
+        department.AddTeams(oldTeams);
         WriteDbContext.Departments.Add(department);
         
         
         var newName = "new name";
-        var newTeams = Utilities.SeedTeams(3, department);
+        var newHeadOfTeams = Utilities.SeedEmployees(3);
+        List<Domain.Entities.Team> newTeams = [];
+        foreach (var employee in newHeadOfTeams)
+        {
+            var team = Utilities.SeedTeams(1, department, employee).First();
+            newTeams.Add(team);
+        }
         WriteDbContext.Teams.AddRange(newTeams);
         var newHeadOfDepartment = Utilities.SeedEmployees(1).First();
         WriteDbContext.Employees.AddRange(newHeadOfDepartment);
@@ -47,7 +62,7 @@ public class Update : BaseTest
         //Assert
         result.IsSuccess.Should().BeTrue();
         
-        var newDepartment = WriteDbContext.Departments.SingleOrDefault(d => d.Id == department.Id);
+        var newDepartment = WriteDbContext.Departments.FirstOrDefault(dep => dep.Id == department.Id);
         newDepartment.Should().NotBeNull();
         newDepartment.Name.Value.Should().Be(newName);
         newDepartment.Teams.Should().BeEquivalentTo(newTeams);

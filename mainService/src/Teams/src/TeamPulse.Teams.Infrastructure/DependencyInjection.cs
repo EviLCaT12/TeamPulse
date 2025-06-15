@@ -4,8 +4,12 @@ using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Constants;
 using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Application.DatabaseAbstraction;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Read;
+using TeamPulse.Teams.Application.DatabaseAbstraction.Repositories.Write;
 using TeamPulse.Teams.Infrastructure.DbContexts;
 using TeamPulse.Teams.Infrastructure.Repositories;
+using TeamPulse.Teams.Infrastructure.Repositories.Read;
+using TeamPulse.Teams.Infrastructure.Repositories.Write;
 
 namespace TeamPulse.Teams.Infrastructure;
 
@@ -28,7 +32,7 @@ public static class DependencyInjection
             new WriteDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE) 
                                ?? throw new ApplicationException("Cannot connect to the database.")));
 
-        services.AddScoped<IReadDbContext, ReadDbContext>(_ =>
+        services.AddScoped<ReadDbContext>(_ =>
             new ReadDbContext(configuration.GetConnectionString(DatabaseConstant.DATABASE)
                               ?? throw new ApplicationException("Cannot connect to the database.")));
         
@@ -43,10 +47,17 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        //Write
         services
-            .AddScoped<IEmployeeRepository, EmployeeRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<IDepartmentRepository, DepartmentRepository>();
+            .AddScoped<IEmployeeWriteRepository, EmployeeWriteRepository>()
+            .AddScoped<ITeamWriteRepository, TeamWriteRepository>()
+            .AddScoped<IDepartmentWriteRepository, DepartmentWriteRepository>();
+        
+        //Read
+        services
+            .AddScoped<IDepartmentReadRepository, DepartmentReadRepository>()
+            .AddScoped<ITeamReadRepository, TeamReadRepository>()
+            .AddScoped<IEmployeeReadRepository, EmployeeReadRepository>();
         
         return services;
     }
