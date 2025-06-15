@@ -7,6 +7,7 @@ using TeamPulse.Accounts.Domain.Models;
 using TeamPulse.Accounts.Domain.Models.AccountModels;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
+using TeamPulse.Teams.Contract;
 
 namespace TeamPulse.Accounts.Application.Commands.RegisterUser;
 
@@ -17,19 +18,22 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
     private readonly RoleManager<Role> _roleManager;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RegisterUserHandler> _logger;
+    private readonly ITeamContract _teamContract;
 
     public RegisterUserHandler(
         IAccountManager accountManager,
         UserManager<User> userManager,
         RoleManager<Role> roleManager,
         [FromKeyedServices(ModuleKey.Account)] IUnitOfWork unitOfWork,
-        ILogger<RegisterUserHandler> logger)
+        ILogger<RegisterUserHandler> logger,
+        ITeamContract teamContract)
     {
         _accountManager = accountManager;
         _userManager = userManager;
         _roleManager = roleManager;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _teamContract = teamContract;
     }
     public async Task<UnitResult<ErrorList>> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
@@ -60,8 +64,12 @@ public class RegisterUserHandler : ICommandHandler<RegisterUserCommand>
         
             return new ErrorList(errors);
         }
+
+        var employee = await _teamContract.CreateEmployeeAsync(cancellationToken);
+        if (employee.IsFailure)
+            return employee.Error;
         
-        var employeeAccount = new EmployeeAccount(employeeUser);
+        var employeeAccount = new EmployeeAccount(employeeUser, employee.Value);
         
         await _accountManager.CreateEmployeeAccountAsync(employeeAccount, cancellationToken);
     

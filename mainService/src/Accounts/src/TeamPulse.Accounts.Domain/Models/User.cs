@@ -19,7 +19,6 @@ public class User : IdentityUser<Guid>
     
     public AdminAccount? AdminAccount { get; set; }
     
-    
     public static Result<User, ErrorList> CreateEmployee(
         string userName,
         string email,

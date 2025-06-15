@@ -11,5 +11,9 @@ public class EmployeeAccountConfiguration : IEntityTypeConfiguration<EmployeeAcc
         builder.ToTable("employee_accounts");
         
         builder.HasKey(ea => ea.Id);
+        
+        builder.Property(ea => ea.EmployeeId)
+            .IsRequired()
+            .HasColumnName("employee_id");
     }
 }

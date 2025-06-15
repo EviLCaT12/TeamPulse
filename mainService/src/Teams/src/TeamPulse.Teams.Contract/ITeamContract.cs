@@ -20,4 +20,6 @@ public interface ITeamContract
     Task<Result<List<Guid>, ErrorList>> GetAllTeamsFromDepartmentAsync(Guid departmentId, CancellationToken cancellationToken);
     
     Task<Result<TeamDto, ErrorList>> GetTeamByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    Task<Result<Guid, ErrorList>> CreateEmployeeAsync(CancellationToken cancellationToken);
 }
