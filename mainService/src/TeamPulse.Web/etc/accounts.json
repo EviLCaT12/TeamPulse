@@ -1,0 +1,95 @@
+{
+  "Permissions": {
+    "Team": [
+      "department.create",
+      "department.update",
+      "department.delete",
+      "department.get",
+      "department.add.teams",
+      "employee.create",
+      "employee.get",
+      "team.create",
+      "team.delete",
+      "team.update",
+      "team.get",
+      "team.add.employees"
+    ],
+    
+    "Performances": [
+      "group.get",
+      "group.create",
+      "group.add.skills",
+      "skill.create",
+      "grade.create",
+      "employee.self.review"
+    ],
+    
+    "Reports": [
+      "median.value.get"
+    ]
+  },
+  "Roles": {
+    "Employee" : [
+      "department.get",
+      "employee.get",
+      "team.get",
+      "group.get",
+      "employee.self.review",
+      "median.value.get"
+    ],
+    "HeadOfTeam" : [
+      "department.get",
+      "employee.create",
+      "employee.get",
+      "team.update",
+      "team.get",
+      "team.add.employees",
+      "group.get",
+      "group.add.skills",
+      "skill.create",
+      "employee.self.review",
+      "median.value.get"
+    ],
+    
+    "HeadOfDepartment" : [
+      "department.update",
+      "department.get",
+      "department.add.teams",
+      "employee.create",
+      "employee.get",
+      "team.create",
+      "team.update",
+      "team.delete",
+      "team.get",
+      "team.add.employees",
+      "group.get",
+      "group.create",
+      "group.add.skills",
+      "skill.create",
+      "grade.create",
+      "employee.self.review",
+      "median.value.get"
+    ],
+    "Admin": [
+      "department.create",
+      "department.update",
+      "department.delete",
+      "department.get",
+      "department.add.teams",
+      "employee.create",
+      "employee.get",
+      "team.create",
+      "team.update",
+      "team.delete",
+      "team.get",
+      "team.add.employees",
+      "group.get",
+      "group.create",
+      "group.add.skills",
+      "skill.create",
+      "grade.create",
+      "employee.self.review",
+      "median.value.get"
+    ]
+  }
+}

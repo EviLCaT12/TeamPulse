@@ -36,7 +36,7 @@ public class LoginHandler : ICommandHandler<string, LoginCommand>
         if (checkPasswordResult == false)
             return Errors.General.ValueIsInvalid("Invalid credentials.").ToErrorList();
 
-        var token =  _tokenProvider.GenerateTokenAsync(user, cancellationToken);
+        var token =  await _tokenProvider.GenerateTokenAsync(user, cancellationToken);
 
         return token;
     }

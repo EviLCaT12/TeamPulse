@@ -2,12 +2,12 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Team.AddEmployees;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Commands.Team.Delete;
 using TeamPulse.Teams.Application.Commands.Team.Update;
-using TeamPulse.Teams.Application.Queries.Team;
 using TeamPulse.Teams.Application.Queries.Team.GetTeamById;
 using TeamPulse.Teams.Contract.Dtos;
 using TeamPulse.Teams.Contract.Requests.Team;
@@ -16,6 +16,7 @@ namespace TeamPulse.Team.Presentation;
 
 public class TeamController : ApplicationController
 {
+    [Permission(Permissions.Team.CreateTeam)]
     [HttpPost]
     public async Task<ActionResult<Guid>> CreateTeam(
         [FromBody] CreateTeamRequest request,
@@ -34,6 +35,7 @@ public class TeamController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.UpdateTeam)]
     [HttpPut("{teamId:guid}")]
     public async Task<ActionResult<Guid>> UpdateTeam(
         [FromRoute] Guid teamId,
@@ -55,6 +57,7 @@ public class TeamController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.DeleteTeam)]
     [HttpDelete("{teamId:guid}")]
     public async Task<ActionResult> DeleteTeam(
         [FromRoute] Guid teamId,
@@ -70,6 +73,7 @@ public class TeamController : ApplicationController
         return Ok();
     }
 
+    [Permission(Permissions.Team.GetTeams)]
     [HttpGet("{teamId:guid}")]
     public async Task<ActionResult> GetTeamById(
         [FromRoute] Guid teamId,
@@ -85,6 +89,7 @@ public class TeamController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.AddEmployeesToTeam)]
     [HttpPost("{teamId:guid}/employees")]
     public async Task<ActionResult> AddEmployees(
         [FromRoute] Guid teamId,

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Department.AddTeams;
 using TeamPulse.Teams.Application.Commands.Department.Create;
@@ -15,6 +16,7 @@ namespace TeamPulse.Team.Presentation;
 
 public class DepartmentController : ApplicationController
 {
+    [Permission(Permissions.Team.CreateDepartment)]
     [HttpPost]
     public async Task<ActionResult<Guid>> CreateDepartment(
         [FromBody] CreateDepartmentRequest request,
@@ -34,6 +36,7 @@ public class DepartmentController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.UpdateDepartment)]
     [HttpPut("{departmentId:guid}")]
     public async Task<ActionResult<Guid>> UpdateDepartment(
         [FromRoute] Guid departmentId,
@@ -54,6 +57,7 @@ public class DepartmentController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.DeleteDepartment)]
     [HttpDelete("{departmentId:guid}")]
     public async Task<ActionResult> DeleteDepartment(
         [FromRoute] Guid departmentId,
@@ -69,6 +73,7 @@ public class DepartmentController : ApplicationController
         return Ok();
     }
 
+    [Permission(Permissions.Team.GetDepartment)]
     [HttpGet("{departmentId:guid}")]
     public async Task<ActionResult> GetDepartmentById(
         [FromRoute] Guid departmentId,
@@ -84,6 +89,7 @@ public class DepartmentController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.AddTeamsToDepartment)]
     [HttpPost("{departmentId:guid}/add-teams")]
     public async Task<ActionResult> AddTeamsToDepartment(
         [FromRoute] Guid departmentId,

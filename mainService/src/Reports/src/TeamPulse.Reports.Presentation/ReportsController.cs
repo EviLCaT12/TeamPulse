@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Reports.Application.Commands.GenerateMedianValueReport;
 using TeamPulse.Reports.Contract.Requests;
@@ -11,6 +12,7 @@ namespace TeamPulse.Reports.Presentation;
 
 public class ReportsController : ApplicationController
 {
+    [Permission(Permissions.Reports.GetMedianValueReports)]
     [HttpPost("{objectId:guid}/{subjectId:guid}")]
     public async Task<ActionResult<BaseReport>> GetMedianValueReports(
         [FromRoute] Guid objectId, Guid subjectId,

@@ -4,5 +4,5 @@ namespace TeamPulse.Accounts.Application;
 
 public interface ITokenProvider
 {
-    string GenerateTokenAsync(User user, CancellationToken cancellationToken);
+    Task<string> GenerateTokenAsync(User user, CancellationToken cancellationToken);
 }

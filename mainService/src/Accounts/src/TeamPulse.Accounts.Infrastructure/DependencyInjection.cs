@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TeamPulse.Accounts.Application;
+using TeamPulse.Accounts.Application.AccountManagers;
 using TeamPulse.Accounts.Domain.Models;
 using TeamPulse.Accounts.Infrastructure.Contexts;
 using TeamPulse.Accounts.Infrastructure.Jwt;
+using TeamPulse.Accounts.Infrastructure.Managers;
 using TeamPulse.Accounts.Infrastructure.Options;
+using TeamPulse.Accounts.Infrastructure.Seeding;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Constants;
 
@@ -21,11 +24,19 @@ public static  class DependencyInjection
             .AddUnitOfWork()
             .ConfigureCustomOptions(configuration)
             .AddIdentity()
+            .AddSeeding()
             .AddTokenProviders();
         
         return services;
     }
     
+    
+    private static IServiceCollection AddSeeding(this IServiceCollection services)
+    {
+        services.AddSingleton<AccountsSeeder>();
+        services.AddScoped<AccountsSeederService>();
+        return services;
+    }
     
     private static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
@@ -45,6 +56,7 @@ public static  class DependencyInjection
     private static IServiceCollection ConfigureCustomOptions(this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<AdminOptions>(configuration.GetSection(AdminOptions.SECTION_NAME));
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SECTION_NAME));
         return services;
     }
@@ -60,7 +72,10 @@ public static  class DependencyInjection
             })
             .AddEntityFrameworkStores<WriteDbContext>()
             .AddDefaultTokenProviders();
-    
+        
+        services.AddScoped<PermissionManager>();
+        services.AddScoped<RolePermissionManager>();
+        services.AddScoped<IAccountManager, AccountManager>();
         return services;
     }
 

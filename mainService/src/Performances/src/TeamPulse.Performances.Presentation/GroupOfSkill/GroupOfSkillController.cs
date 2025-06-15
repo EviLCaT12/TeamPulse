@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Performances.Application.Commands.GroupOfSkills.AddSkill;
 using TeamPulse.Performances.Application.Commands.GroupOfSkills.Create;
@@ -12,6 +13,7 @@ namespace TeamPulse.Performances.Presentation.GroupOfSkill;
 
 public class GroupOfSkillController : ApplicationController
 {
+    [Permission(Permissions.Performances.GetGroupOfSkills)]
     [HttpGet("{groupId:guid}")]
     public async Task<ActionResult> GetGroupOfSkillsWithSkillGradeById(
         [FromRoute] Guid groupId,
@@ -28,6 +30,7 @@ public class GroupOfSkillController : ApplicationController
         return Ok(result.Value);
     }
     
+    [Permission(Permissions.Performances.CreateGroupOfSkills)]
     [HttpPost("{departmentId:guid}/{headOfDepartmentId:guid}/create")]
     public async Task<ActionResult<Guid>> CreateGroupOfSkill(
         [FromRoute] Guid departmentId, Guid headOfDepartmentId,
@@ -49,6 +52,7 @@ public class GroupOfSkillController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Performances.AddSkillToGroup)]
     [HttpPost("{groupId:guid}/{skillId:guid}")]
     public async Task<ActionResult> AddSkillToGroup(
         [FromRoute] Guid groupId, Guid skillId,

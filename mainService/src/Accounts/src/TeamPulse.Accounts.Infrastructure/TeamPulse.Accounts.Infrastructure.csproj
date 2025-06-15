@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Performances\src\TeamPulse.Performances.Infrastructure\TeamPulse.Performances.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Framework\TeamPulse.Framework.csproj" />
       <ProjectReference Include="..\TeamPulse.Accounts.Application\TeamPulse.Accounts.Application.csproj" />
       <ProjectReference Include="..\TeamPulse.Accounts.Domain\TeamPulse.Accounts.Domain.csproj" />
     </ItemGroup>
