@@ -4,7 +4,7 @@ using TeamPulse.Framework.Responses;
 namespace TeamPulse.Framework;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/[controller]")]
 public class ApplicationController : ControllerBase
 {
     public override OkObjectResult Ok(object? value)

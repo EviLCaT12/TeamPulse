@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
@@ -7,6 +7,9 @@ using TeamPulse.Accounts.Application;
 using TeamPulse.Accounts.Infrastructure;
 using TeamPulse.Accounts.Infrastructure.Jwt;
 using TeamPulse.Accounts.Infrastructure.Options;
+using TeamPulse.Accounts.Infrastructure.Seeding;
+using TeamPulse.Accounts.Presentation;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Performances.Application;
 using TeamPulse.Performances.Infrastructure;
 using TeamPulse.Performances.Presentation;
@@ -16,7 +19,11 @@ using TeamPulse.Teams.Application;
 using TeamPulse.Teams.Infrastructure;
 using TeamPulse.Web.Middlewares;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -78,7 +85,8 @@ builder.Services
     .AddReportsApplication()
     
     .AddAccountsApplication()
-    .AddAccountsInfrastructure(builder.Configuration);
+    .AddAccountsInfrastructure(builder.Configuration)
+    .AddAccountPresentation();
 
 builder.Services
     .AddAuthentication(options =>
@@ -99,9 +107,16 @@ builder.Services
     });
 
 
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+var accountSeeder = app.Services.GetRequiredService<AccountsSeeder>();
+
+await accountSeeder.SeedAsync(CancellationToken.None);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -113,12 +128,28 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionMiddleware();
 
+app.UseCors(options =>
+{
+    options
+        .WithOrigins("http://localhost:5173")
+        .AllowCredentials()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
+
 app.UseSerilogRequestLogging();
 app.MapControllers();
 
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("/api/users", () =>
+{
+    List<string> users = ["user1", "user2", "user3", "user4", "user5"];
+
+    return Results.BadRequest();
+});
 
 app.Run();
 

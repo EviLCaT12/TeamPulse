@@ -11,4 +11,6 @@ public class JwtOptions
     public string Key { get; init; } = string.Empty;
     
     public int ExpiredMinutesTime { get; init; } 
+    
+    public int ExpiredDaysTime { get; init; }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TeamPulse.Accounts.Domain.Models;
+using TeamPulse.Accounts.Domain.Models.AccountModels;
 
 namespace TeamPulse.Accounts.Infrastructure.Contexts;
 
@@ -11,6 +12,15 @@ public class WriteDbContext(string connectionString)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    
+    public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+    
+    public DbSet<EmployeeAccount> EmployeeAccounts => Set<EmployeeAccount>();
+    
+    public DbSet<AdminAccount> AdminAccounts => Set<AdminAccount>();
+    
 
     
     

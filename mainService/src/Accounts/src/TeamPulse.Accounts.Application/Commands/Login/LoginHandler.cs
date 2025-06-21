@@ -1,13 +1,14 @@
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using TeamPulse.Accounts.Contracts.Responses;
 using TeamPulse.Accounts.Domain.Models;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
 
 namespace TeamPulse.Accounts.Application.Commands.Login;
 
-public class LoginHandler : ICommandHandler<string, LoginCommand>
+public class LoginHandler : ICommandHandler<LoginResponse, LoginCommand>
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenProvider _tokenProvider;
@@ -22,7 +23,7 @@ public class LoginHandler : ICommandHandler<string, LoginCommand>
         _tokenProvider = tokenProvider;
         _logger = logger;
     }
-    public async Task<Result<string, ErrorList>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse, ErrorList>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(command.Email);
         if (user is null)
@@ -36,8 +37,10 @@ public class LoginHandler : ICommandHandler<string, LoginCommand>
         if (checkPasswordResult == false)
             return Errors.General.ValueIsInvalid("Invalid credentials.").ToErrorList();
 
-        var token =  _tokenProvider.GenerateTokenAsync(user, cancellationToken);
-
-        return token;
+        var accessToken =  await _tokenProvider.GenerateAccessTokenAsync(user, cancellationToken);
+        var refreshToken = await _tokenProvider.GenerateRefreshTokenAsync(user, accessToken.Jti, cancellationToken);
+        
+            
+        return new LoginResponse(accessToken.AccessToken, refreshToken);
     }
 }

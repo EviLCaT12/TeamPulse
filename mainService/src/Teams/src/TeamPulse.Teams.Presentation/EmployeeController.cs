@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Teams.Application.Commands.Employee.Create;
 using TeamPulse.Teams.Application.Queries.Employee;
@@ -12,7 +13,7 @@ namespace TeamPulse.Team.Presentation;
 
 public class EmployeeController : ApplicationController
 {
-    [Authorize]
+    [Permission(Permissions.Team.CreateEmployee)]
     [HttpPost]
     public async Task<ActionResult> CreateEmployee(
         [FromServices] ICommandHandler<Guid, CreateCommand> handler,
@@ -27,6 +28,7 @@ public class EmployeeController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Team.GetEmployee)]
     [HttpGet("{employeeId:guid}")]
     public async Task<ActionResult> GetEmployeeById(
         [FromRoute] Guid employeeId,

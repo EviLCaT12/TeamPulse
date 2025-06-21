@@ -8,11 +8,18 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\TeamPulse.Core\TeamPulse.Core.csproj" />
+      <ProjectReference Include="..\..\..\Shared\TeamPulse.Framework\TeamPulse.Framework.csproj" />
+      <ProjectReference Include="..\..\..\Teams\src\TeamPulse.Teams.Contract\TeamPulse.Teams.Contract.csproj" />
+      <ProjectReference Include="..\TeamPulse.Accounts.Contracts\TeamPulse.Accounts.Contracts.csproj" />
       <ProjectReference Include="..\TeamPulse.Accounts.Domain\TeamPulse.Accounts.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commands\EnrollHeadOfDepartment\" />
     </ItemGroup>
 
 </Project>

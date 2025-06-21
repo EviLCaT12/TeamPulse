@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.SharedKernel.Errors;
 using TeamPulse.Teams.Application.Commands.Department.Create;
+using TeamPulse.Teams.Application.Commands.Employee.Create;
 using TeamPulse.Teams.Application.Commands.Team.Create;
 using TeamPulse.Teams.Application.Queries.Department;
 using TeamPulse.Teams.Application.Queries.Department.GetAllTeamsFromDepartment;
@@ -26,6 +27,7 @@ public class TeamContract : ITeamContract
     private readonly IQueryHandler<DepartmentDto, GetDepartmentByIdQuery> _getDepartmentByIdQueryHandler;
     private readonly IQueryHandler<List<Guid>, GetAllEmployeesFromTeamQuery> _getAllEmployeesFromTeamQueryHandler;
     private readonly IQueryHandler<List<Guid>, GetAllTeamsFromDepartmentQuery> _getAllTeamsFromDepartmentQueryHandler;
+    private readonly ICommandHandler<Guid, CreateCommand> _createEmployeeCommandHandler;
 
     public TeamContract(
         ICommandHandler<Guid, CreateDepartmentCommand> createDepartmentHandler,
@@ -34,7 +36,8 @@ public class TeamContract : ITeamContract
         IQueryHandler<EmployeeDto, GetEmployeeByIdQuery> getEmployeeQueryHandler,
         IQueryHandler<DepartmentDto, GetDepartmentByIdQuery> getDepartmentByIdQueryHandler,
         IQueryHandler<List<Guid>, GetAllEmployeesFromTeamQuery> getAllEmployeesFromTeamQueryHandler,
-        IQueryHandler<List<Guid>, GetAllTeamsFromDepartmentQuery> getAllTeamsFromDepartmentQueryHandler)
+        IQueryHandler<List<Guid>, GetAllTeamsFromDepartmentQuery> getAllTeamsFromDepartmentQueryHandler,
+        ICommandHandler<Guid, CreateCommand> createEmployeeCommandHandler)
     {
         _createDepartmentHandler = createDepartmentHandler;
         _createTeamCommandHandler = createTeamCommandHandler;
@@ -43,6 +46,7 @@ public class TeamContract : ITeamContract
         _getDepartmentByIdQueryHandler = getDepartmentByIdQueryHandler;
         _getAllEmployeesFromTeamQueryHandler = getAllEmployeesFromTeamQueryHandler;
         _getAllTeamsFromDepartmentQueryHandler = getAllTeamsFromDepartmentQueryHandler;
+        _createEmployeeCommandHandler = createEmployeeCommandHandler;
     }
 
     public async Task<Result<Guid, ErrorList>> CreateDepartmentAsync(CreateDepartmentRequest request,
@@ -107,6 +111,17 @@ public class TeamContract : ITeamContract
         var query = new GetTeamByIdQuery(id);
 
         var result = await _getTeamByIdQueryHandler.HandleAsync(query, cancellationToken);
+        if (result.IsFailure)
+            return result.Error;
+        
+        return result.Value;
+    }
+
+    public async Task<Result<Guid, ErrorList>> CreateEmployeeAsync(CancellationToken cancellationToken)
+    {
+        var command = new CreateCommand();
+
+        var result = await _createEmployeeCommandHandler.HandleAsync(command, cancellationToken);
         if (result.IsFailure)
             return result.Error;
         

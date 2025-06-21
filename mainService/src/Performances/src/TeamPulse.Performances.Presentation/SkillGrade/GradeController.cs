@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Core.Abstractions;
 using TeamPulse.Framework;
+using TeamPulse.Framework.Authorization;
 using TeamPulse.Framework.Responses;
 using TeamPulse.Performances.Application.Commands.RecordSkill.EmployeeSelfReview;
 using TeamPulse.Performances.Application.Commands.SkillGrade;
@@ -11,6 +12,7 @@ namespace TeamPulse.Performances.Presentation.SkillGrade;
 
 public class GradeController : ApplicationController 
 {
+    [Permission(Permissions.Performances.CreateSkillGrade)]
     [HttpPost]
     public async Task<ActionResult<Guid>> CreateSkillGrade(
         [FromBody] CreateGradeRequest gradeRequest,
@@ -30,6 +32,7 @@ public class GradeController : ApplicationController
         return Ok(result.Value);
     }
 
+    [Permission(Permissions.Performances.EmployeeSelfReview)]
     [HttpPost("{employeeId:guid}/{groupId:guid}/{skillId:guid}")]
     public async Task<ActionResult> EmployeeSelfReview(
         [FromRoute] Guid employeeId, Guid groupId, Guid skillId, 

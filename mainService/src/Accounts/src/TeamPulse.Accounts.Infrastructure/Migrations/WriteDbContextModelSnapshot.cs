@@ -153,6 +153,110 @@ namespace TeamPulse.Accounts.Infrastructure.Migrations
                     b.ToTable("user_tokens", "accounts");
                 });
 
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.AccountModels.AdminAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("user_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_admin_accounts");
+
+                    b.HasIndex("user_id")
+                        .IsUnique()
+                        .HasDatabaseName("ix_admin_accounts_user_id");
+
+                    b.ToTable("admin_accounts", "accounts");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.AccountModels.EmployeeAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("employee_id");
+
+                    b.Property<Guid?>("user_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_employee_accounts");
+
+                    b.HasIndex("user_id")
+                        .IsUnique()
+                        .HasDatabaseName("ix_employee_accounts_user_id");
+
+                    b.ToTable("employee_accounts", "accounts");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permissions_code");
+
+                    b.ToTable("permissions", "accounts");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.RefreshSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresIn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_in");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid")
+                        .HasColumnName("jti");
+
+                    b.Property<Guid>("RefreshTokenId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("refresh_token_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_sessions");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_sessions_user_id");
+
+                    b.ToTable("refresh_sessions", "accounts");
+                });
+
             modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -183,6 +287,25 @@ namespace TeamPulse.Accounts.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("roles", "accounts");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permissions");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
+
+                    b.ToTable("role_Permissions", "accounts");
                 });
 
             modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.User", b =>
@@ -254,7 +377,7 @@ namespace TeamPulse.Accounts.Infrastructure.Migrations
                         .HasColumnName("user_name");
 
                     b.HasKey("Id")
-                        .HasName("pk_asp_net_users");
+                        .HasName("pk_users");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -263,7 +386,7 @@ namespace TeamPulse.Accounts.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", "accounts");
+                    b.ToTable("users", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -321,6 +444,71 @@ namespace TeamPulse.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_tokens_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.AccountModels.AdminAccount", b =>
+                {
+                    b.HasOne("TeamPulse.Accounts.Domain.Models.User", "User")
+                        .WithOne("AdminAccount")
+                        .HasForeignKey("TeamPulse.Accounts.Domain.Models.AccountModels.AdminAccount", "user_id")
+                        .HasConstraintName("fk_admin_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.AccountModels.EmployeeAccount", b =>
+                {
+                    b.HasOne("TeamPulse.Accounts.Domain.Models.User", "User")
+                        .WithOne("EmployeeAccount")
+                        .HasForeignKey("TeamPulse.Accounts.Domain.Models.AccountModels.EmployeeAccount", "user_id")
+                        .HasConstraintName("fk_employee_accounts_users_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.RefreshSession", b =>
+                {
+                    b.HasOne("TeamPulse.Accounts.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_sessions_user_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.RolePermission", b =>
+                {
+                    b.HasOne("TeamPulse.Accounts.Domain.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
+
+                    b.HasOne("TeamPulse.Accounts.Domain.Models.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("TeamPulse.Accounts.Domain.Models.User", b =>
+                {
+                    b.Navigation("AdminAccount");
+
+                    b.Navigation("EmployeeAccount");
                 });
 #pragma warning restore 612, 618
         }
