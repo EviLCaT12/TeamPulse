@@ -15,6 +15,8 @@ public class WriteDbContext(string connectionString)
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     
+    public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+    
     public DbSet<EmployeeAccount> EmployeeAccounts => Set<EmployeeAccount>();
     
     public DbSet<AdminAccount> AdminAccounts => Set<AdminAccount>();

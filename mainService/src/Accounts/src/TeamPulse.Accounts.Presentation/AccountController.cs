@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TeamPulse.Accounts.Application.Commands.Login;
+using TeamPulse.Accounts.Application.Commands.RefreshTokens;
 using TeamPulse.Accounts.Application.Commands.RegisterUser;
 using TeamPulse.Accounts.Contracts.Requests;
 using TeamPulse.Framework;
@@ -45,4 +46,23 @@ public class AccountController : ApplicationController
         
         return Ok(result.Value);
     }
+    
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Login(
+        [FromBody] RefreshTokenRequest request,
+        [FromServices] RefreshTokensHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var command = new RefreshTokensCommand(
+            request.AccessToken,
+            request.RefreshToken);
+        
+        var result = await handler.HandleAsync(command, cancellationToken);
+
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+        
+        return Ok(result.Value);
+    }
+    
 }

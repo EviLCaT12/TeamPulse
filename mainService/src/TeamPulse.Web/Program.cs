@@ -128,12 +128,28 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionMiddleware();
 
+app.UseCors(options =>
+{
+    options
+        .WithOrigins("http://localhost:5173")
+        .AllowCredentials()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
+
 app.UseSerilogRequestLogging();
 app.MapControllers();
 
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("/api/users", () =>
+{
+    List<string> users = ["user1", "user2", "user3", "user4", "user5"];
+
+    return Results.BadRequest();
+});
 
 app.Run();
 

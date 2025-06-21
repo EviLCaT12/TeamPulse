@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TeamPulse.Accounts.Application;
+using TeamPulse.Accounts.Application.Models;
 using TeamPulse.Accounts.Domain.Models;
 using TeamPulse.Accounts.Infrastructure.Contexts;
 using TeamPulse.Accounts.Infrastructure.Options;
@@ -26,7 +27,7 @@ public class JwtTokenProvider : ITokenProvider
         _context = context;
         _options = options.Value;
     }
-    public async Task<string> GenerateTokenAsync(User user, CancellationToken cancellationToken)
+    public async Task<JwtTokenResult> GenerateAccessTokenAsync(User user, CancellationToken cancellationToken)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -37,9 +38,12 @@ public class JwtTokenProvider : ITokenProvider
             .SelectMany(u => u.Roles)
             .Select(r => new Claim(ClaimTypes.Role, r.Name ?? string.Empty))
             .ToListAsync(cancellationToken);
+
+        var jti = Guid.NewGuid();
         
         Claim[] claims = [
             new (CustomClaims.Id, user.Id.ToString()),
+            new (CustomClaims.Jti, jti.ToString()),
             new (CustomClaims.Email, user.Email ?? string.Empty)
         ];
          
@@ -53,8 +57,28 @@ public class JwtTokenProvider : ITokenProvider
             claims: claims);
         
         var jwtStringToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        
+        return new JwtTokenResult(jwtStringToken, jti);
+    }
 
-        return jwtStringToken;
+    public async Task<Guid> GenerateRefreshTokenAsync(User user, Guid accessTokenJti,
+        CancellationToken cancellationToken)
+    {
+        var refreshSession = new RefreshSession
+        {
+            User = user,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresIn = DateTime.UtcNow.AddDays(_options.ExpiredDaysTime),
+            Jti = accessTokenJti,
+            RefreshTokenId = Guid.NewGuid()
+        };
+        
+        await _context.RefreshSessions.AddAsync(refreshSession, cancellationToken);
+        
+        await _context.SaveChangesAsync(cancellationToken);
+        
+        return refreshSession.RefreshTokenId;
+        
     }
 
     public async Task<Result<IReadOnlyList<Claim>, ErrorList>> GetUserClaims(
